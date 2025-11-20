@@ -303,7 +303,15 @@ const fields = () => {
             label: "Maximum Experience (Years)",
             placeholder: "10",
             colSpan: "col-span-12 md:col-span-4",
-            rules: { min: { value: 0, message: "Must be ≥ 0" } },
+            rules: {
+                min: { value: 0, message: "Must be ≥ 0" },
+                validate: (value, formValues) => {
+                    if (!value || !formValues.experience_years_min) return true;
+
+                    return Number(value) >= Number(formValues.experience_years_min)
+                        || "Maximum experience cannot be less than minimum experience";
+                }
+            },
             inputProps: { min: 0, step: "1" },
         },
         
@@ -350,6 +358,12 @@ const fields = () => {
             rules: {
                 required: "Filled positions is required",
                 min: { value: 0, message: "Must be ≥ 0" },
+                validate: (value, formValues) => {
+                    if (!value || !formValues.total_positions) return true;
+
+                    return Number(value) <= Number(formValues.total_positions)
+                        || "Filled positions cannot be greater than total positions";
+                }
             },
             inputProps: { min: 0, step: "1" },
         },
@@ -362,6 +376,17 @@ const fields = () => {
             rules: {
                 required: "Vacant positions is required",
                 min: { value: 0, message: "Must be ≥ 0" },
+                validate: (value, formValues) => {
+                    const total = Number(formValues.total_positions);
+                    const filled = Number(formValues.filled_positions);
+
+                    if (!total || filled < 0) return true;
+
+                    const expectedVacant = total - filled;
+
+                    return Number(value) === expectedVacant
+                        || `Vacant positions must be ${expectedVacant}`;
+                }
             },
             inputProps: { min: 0, step: "1" },
         },
@@ -418,12 +443,12 @@ const fields = () => {
             ],
             rules: { required: "Status is required" },
         },
-        {
-            name: "is_enabled",
-            type: "checkbox",
-            label: "Enabled",
-            colSpan: "col-span-12 md:col-span-4",
-        },
+        // {
+        //     name: "is_enabled",
+        //     type: "checkbox",
+        //     label: "Enabled",
+        //     colSpan: "col-span-12 md:col-span-4",
+        // },
         
     ];
 };

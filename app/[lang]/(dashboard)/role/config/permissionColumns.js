@@ -7,7 +7,7 @@ const permissionColumns = (action,form) =>
               id: "resource",
               accessorKey: "resource",
               header: "Permission Group",
-            },
+            }, 
             {
               id: "actions",
               header: "Permissions",
@@ -55,6 +55,11 @@ const permissionColumns = (action,form) =>
                   </div>
                 );
               },
+            },
+            {
+              id: "check-all",
+              accessorKey: "check-all",
+              header: "Check Al",
             },
           ];
     }

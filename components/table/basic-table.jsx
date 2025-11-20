@@ -210,6 +210,7 @@ export function BasicDataTable({
                                 }}
                                 className="w-full sm:w-[350px] h-10 border-default-300 text-sm"
                             />} 
+                            
                         </div>
                     )}
 
@@ -336,7 +337,7 @@ export function BasicDataTable({
                 <div className="flex items-center flex-wrap gap-4 px-4 py-4">
                     {/* Show server-side pagination info if pagination object has server data */}
                     {typeof pagination === "object" && pagination.total ? (
-                        <>
+                        <>   
                             <div className="flex-1 text-sm text-muted-foreground whitespace-nowrap">
                                 {translate("Showing",translation_state)}  {pagination.from || 0} to{" "}
                                 {pagination.to || 0} of {pagination.total || 0}{" "}
@@ -434,12 +435,12 @@ export function BasicDataTable({
                         /* Fallback to client-side pagination */
                         <>
                             <div className="flex-1 text-sm text-muted-foreground whitespace-nowrap">
-                                {
+                                {/* {
                                     table.getFilteredSelectedRowModel().rows
                                         .length
                                 }{" "}
                                 of {table.getFilteredRowModel().rows.length}{" "}
-                                row(s) selected.
+                                row(s) selected. */}
                             </div>
 
                             <div className="flex gap-2  items-center">

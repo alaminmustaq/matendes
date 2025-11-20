@@ -6,9 +6,11 @@ import { Icon } from "@iconify/react";
 import { Cup, Eye, Increase, Session } from "@/components/svg";
 import { useDashboardFetchQuery } from "@/domains/dashboard/services/dashboardApi";
 import { useSelector } from "react-redux";
+import { translate } from "@/lib/utils";
 
 const ReportsArea = () => {
     const { dashboardData } = useSelector((state) => state.dashboard);
+    const translation_state = useSelector((state) => state.auth.translation);
  
 
     
@@ -33,7 +35,10 @@ const ReportsArea = () => {
                     <Card key={`report-card-${index}`}>
                         <CardHeader className="flex-col-reverse sm:flex-row flex-wrap gap-2  border-none mb-0 pb-0">
                             <span className="text-sm font-medium text-default-900 flex-1">
-                                {item.name}
+                                   {translate(item.name,
+                                                                                translation_state
+                                                                            )}
+                               
                             </span>
                             <span
                                 className={cn(
@@ -55,7 +60,9 @@ const ReportsArea = () => {
                         </CardHeader>
                         <CardContent className="pb-4 px-4">
                             <div className="text-2xl font-semibold text-default-900 mb-2.5">
-                                {item.count}
+                                  {translate(item.count,
+                                                                                translation_state
+                                                                            )}
                             </div>
                             <div className="flex items-center font-semibold gap-1">
                                 {item.isUp ? (

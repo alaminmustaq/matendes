@@ -87,6 +87,8 @@ export const useEmploy = () => {
                     "job_position_id",
                     "manager_id",
                     'role_id',
+                    'marital_status',
+                    'blood_group'
                 ]);
 
                 const response = await EmployCreate(
@@ -261,6 +263,8 @@ export const useEmploy = () => {
                     "job_position_id",
                     "manager_id",
                     "role_id",
+                    'marital_status',
+                    'blood_group'
                 ]);
              
                 //set to api

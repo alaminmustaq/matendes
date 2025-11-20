@@ -6,6 +6,7 @@ import Link from "next/link";
 import { cn } from "@/lib/utils";
 import { usePathname, useParams } from "next/navigation";
 import { Fragment } from "react";
+import { permissionChecker } from "@/utility/helpers";
 
 const Header = () => {
     const location = usePathname(); // e.g., "/en/project-details/employee"

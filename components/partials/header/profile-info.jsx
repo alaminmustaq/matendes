@@ -12,17 +12,21 @@ import {
     DropdownMenuSubContent,
     DropdownMenuSubTrigger,
     DropdownMenuTrigger,
-} from "@/components/ui/dropdown-menu"; 
-import { Icon } from "@iconify/react"; 
+} from "@/components/ui/dropdown-menu";
+import { Icon } from "@iconify/react";
 import { useRouter } from "next/navigation";
 import Link from "next/link";
 import { useAppSelector } from "@/hooks/use-redux";
 import { useProfile } from "@/domains/profile/hook/useProfile";
+import { useSelector } from "react-redux";
+import { translate } from "@/lib/utils";
 
 const ProfileInfo = () => {
     const { actions: profileActions } = useProfile();
+    const translation_state = useSelector((state) => state.auth.translation);
     const router = useRouter();
-    const { user } = useAppSelector((state) => state.auth);
+    const { user } = useAppSelector((state) => state.auth); 
+    
     const session = [];
     return (
         <DropdownMenu>
@@ -46,9 +50,17 @@ const ProfileInfo = () => {
                         height={36}
                         className="rounded-full"
                     />
+                    {console.log(user)}
                     <div>
                         <div className="text-sm font-medium text-default-800 capitalize ">
-                            {user?.user?.name || "Unknown"}
+                            {
+                                user?.user?.name 
+                                || (user?.employee?.first_name || user?.employee?.last_name 
+                                        ? `${user.employee.first_name ?? ""} ${user.employee.last_name ?? ""}`.trim()
+                                        : null)
+                                || user?.company?.name
+                                || "Unknown"
+                            }
                         </div>
                         <Link
                             href="/dashboard"
@@ -61,19 +73,19 @@ const ProfileInfo = () => {
 
                 <DropdownMenuSeparator className="mb-0 dark:bg-background" />
                 <DropdownMenuItem
-                asChild
-                className="flex items-center gap-2 text-sm font-medium text-default-600 capitalize my-1 px-3 dark:hover:bg-background cursor-pointer"
+                    asChild
+                    className="flex items-center gap-2 text-sm font-medium text-default-600 capitalize my-1 px-3 dark:hover:bg-background cursor-pointer"
                 >
-                <div
-                    className="flex items-center w-full gap-2 cursor-pointer"
-                    onClick={() => {
-                        profileActions.getProfile(); // fetch + store in Redux
-                        router.push("/user-profile");        // navigate programmatically
-                    }}
-                >
-                    <Icon icon="heroicons:user" className="w-4 h-4" />
-                    Profile
-                </div>
+                    <div
+                        className="flex items-center w-full gap-2 cursor-pointer"
+                        onClick={() => {
+                            profileActions.getProfile(); // fetch + store in Redux
+                            router.push("/user-profile"); // navigate programmatically
+                        }}
+                    >
+                        <Icon icon="heroicons:user" className="w-4 h-4" />
+                        {translate("Profile", translation_state)}
+                    </div>
                 </DropdownMenuItem>
 
                 <DropdownMenuItem
@@ -84,7 +96,7 @@ const ProfileInfo = () => {
                     className="flex items-center gap-2 text-sm font-medium text-default-600 capitalize my-1 px-3 dark:hover:bg-background cursor-pointer"
                 >
                     <Icon icon="heroicons:power" className="w-4 h-4" />
-                    Log out
+                    {translate("Log out", translation_state)}
                 </DropdownMenuItem>
             </DropdownMenuContent>
         </DropdownMenu>

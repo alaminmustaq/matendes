@@ -12,6 +12,7 @@ import { setJobPositionData } from "@/domains/dashboard/model/dashboardSlice";
 import { useThemeStore } from "@/store";
 import { useTheme } from "next-themes";
 import { themes } from "@/config/themes";
+import { translate } from "@/lib/utils";
 
 const UserDeviceReport = ({ height = 250 }) => {
     const dispatch = useDispatch();
@@ -21,6 +22,7 @@ const UserDeviceReport = ({ height = 250 }) => {
 
     // Redux & API
     const { dashboardData } = useSelector((state) => state.dashboard);
+    const translation_state = useSelector((state) => state.auth.translation);
     const { data, isLoading } = useDashboardFetchQuery();
 
     // ✅ On API success, store formatted job position data
@@ -117,8 +119,12 @@ const UserDeviceReport = ({ height = 250 }) => {
         },
     });
 
-    const labels = dashboardData.employee_by_jobposition?.map((i) => i.job_position);
-    const series = dashboardData.employee_by_jobposition?.map((i) => i.employee_count);
+    const labels = dashboardData.employee_by_jobposition?.map(
+        (i) => i.job_position
+    );
+    const series = dashboardData.employee_by_jobposition?.map(
+        (i) => i.employee_count
+    );
 
     //  Loading and empty states
     if (isLoading) return <p>Loading...</p>;
@@ -134,7 +140,10 @@ const UserDeviceReport = ({ height = 250 }) => {
             <CardHeader className="border-none pb-0 mb-5">
                 <div className="flex items-center gap-1">
                     <h3 className="text-sm font-medium text-center mb-2 text-default-700">
-                    {dashboardData?.pieChartTwoTitle}
+                        {translate(
+                            dashboardData?.pieChartTwoTitle,
+                            translation_state
+                        )}
                     </h3>
                 </div>
             </CardHeader>

@@ -16,13 +16,13 @@ const fields = [
         colSpan: "col-span-12 md:col-span-6",
         rules: { required: "Display Name is required" },
     }, 
-    {
-        name: "is_system",
-        type: "checkbox",
-        label: "Is System",
-        placeholder: "Is system",
-        colSpan: "col-span-12 md:col-span-6",
-    },
+    // {
+    //     name: "is_system",
+    //     type: "checkbox",
+    //     label: "Is System",
+    //     placeholder: "Is system",
+    //     colSpan: "col-span-12 md:col-span-6",
+    // },
     {
         name: "level",
         type: "select",

@@ -24,10 +24,8 @@ const DynamicTabForm = ({
             ? fields()
             : Array.isArray(fields)
             ? fields
-            : [];
-    console.log(fieldDefs);
-    const steps = fieldDefs.map((field) => field.tab);
-    console.log(steps);
+            : []; 
+    const steps = fieldDefs.map((field) => field.tab); 
     const isStepOptional = (step) => {
         return step === 1;
     };

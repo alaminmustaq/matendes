@@ -20,7 +20,7 @@ const RolePage = () => {
         <PageLayout>
             {/* Role Table */}
             <BasicTableLayout
-                addPermission={"edit-branch"}
+                addPermission={"manage-settings"}
                 addButtonLabel="Add Role"
                 columns={columns(actions)}
                 state={rolesState}
@@ -42,6 +42,32 @@ const RolePage = () => {
                 fields={isPermissionMode ? [] : fields}
                 actions={actions}
             >
+                <div className="text-right mb-2">
+                    <label className="inline-flex items-center cursor-pointer">
+                        <input
+                        type="checkbox"
+                        className="form-checkbox h-5 w-5 text-blue-600"
+                        onChange={async (e) => {
+                            const roleId = form.getValues("id"); // get current role id
+                            if (!roleId) return;
+
+                            if (e.target.checked) {
+                            // Call your hook action to check all permissions
+                            await actions.onCheckAllPermissions(roleId);
+                            
+                            // Optionally, update the selectedPermission array in the form
+                            const allPermissionIds = rolesState.permissions.map(p => p.id);
+                            form.setValue("selectedPermission", allPermissionIds);
+                            } else {
+                            // Optional: uncheck all permissions
+                            form.setValue("selectedPermission", []);
+                            }
+                        }}
+                        />
+                        <span className="ml-2">Check all</span>
+                    </label>
+                </div>
+                
                 <BasicTableLayout
                     addButtonLabel={false}
                     columns={permissionColumns(actions, form)}

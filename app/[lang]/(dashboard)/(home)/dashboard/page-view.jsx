@@ -16,23 +16,21 @@ import { useSelector } from "react-redux";
 import { translate } from "@/lib/utils";
 
 const DashboardPageView = ({ trans }) => {
+    const { dashboardData } = useSelector((state) => state.dashboard);
+    const translation_state = useSelector((state) => state.auth.translation);
 
-   
-   
-  const { dashboardData } = useSelector((state) => state.dashboard);
-  const translation_state = useSelector((state) => state.auth.translation);
-
-  const { data } = useDashboard();
-  return (
-    <div className="space-y-6">
-      <div className="flex items-center flex-wrap justify-between gap-4">
-        <div className="text-2xl font-medium text-default-800 ">
-          {translate("Analytics",translation_state)} {trans?.dashboard}
-        </div>
-        {/* <DatePickerWithRange /> */}
-      </div>
-      {/* Coming soon placeholder */}
-      {/* <div className="flex flex-col items-center justify-center py-20 border border-dashed border-default-300 rounded-2xl bg-default-50">
+    const { data } = useDashboard();
+    return (
+        <div className="space-y-6">
+            <div className="flex items-center flex-wrap justify-between gap-4">
+                <div className="text-2xl font-medium text-default-800 ">
+                    {translate("Analytics", translation_state)}{" "}
+                    {trans?.dashboard}
+                </div>
+                {/* <DatePickerWithRange /> */}
+            </div>
+            {/* Coming soon placeholder */}
+            {/* <div className="flex flex-col items-center justify-center py-20 border border-dashed border-default-300 rounded-2xl bg-default-50">
         <img
           src="https://cdn-icons-png.flaticon.com/512/2027/2027710.png"
           alt="Coming Soon"
@@ -45,49 +43,57 @@ const DashboardPageView = ({ trans }) => {
         </p>
       </div> */}
 
-      {/* reports area */}
-      <div className="grid grid-cols-12  gap-6 ">
-        {permissionChecker('workforce-overview') && 
-          <div className="col-span-12 lg:col-span-8">
-            <ReportsSnapshot />
-          </div>}
-        {permissionChecker('tool-distribution') &&
-        <div className="col-span-12 lg:col-span-4">
-          <UsersStat />
-        </div>
-        }
-      </div>
-      <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
-      {permissionChecker('dashboard-stats') &&
-        <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
-          <ReportsArea />
-        </div>}
-        {permissionChecker('pie-chart-1') &&
-        <Card>
-          <CardHeader className="border-none p-6 pt-5 mb-0">
-            <CardTitle className="text-lg font-semibold text-default-900 p-0">
-              {dashboardData?.pieChartOneTitle}
-            </CardTitle>
-          </CardHeader>
-          <CardContent>
-              <UserStats />
-          </CardContent>
-        </Card>}
-        {permissionChecker('pie-chart-2') &&
-        <Card>
-          <CardHeader className="border-none p-6 pt-5 mb-0">
-            <CardTitle className="text-lg font-semibold text-default-900 p-0">
-            {dashboardData?.pieChartTwoTitle}
-            </CardTitle>
-          </CardHeader>
-          <CardContent>
-            <div className="dashtail-legend">
-              <UserDeviceReport />
+            {/* reports area */}
+            <div className="grid grid-cols-12  gap-6 ">
+                {permissionChecker("workforce-overview") && (
+                    <div className="col-span-12 lg:col-span-8">
+                        <ReportsSnapshot />
+                    </div>
+                )}
+                {permissionChecker("tool-distribution") && (
+                    <div className="col-span-12 lg:col-span-4">
+                        <UsersStat />
+                    </div>
+                )}
             </div>
-          </CardContent>
-        </Card>}
-      </div>
-      {/* <div className="col-span-2">
+            <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
+                {permissionChecker("dashboard-stats") && (
+                    <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                        <ReportsArea />
+                    </div>
+                )}
+                {permissionChecker("pie-chart-1") && (
+                    <Card>
+                        <CardHeader className="border-none p-6 pt-5 mb-0">
+                            <CardTitle className="text-lg font-semibold text-default-900 p-0">
+                                {translate(dashboardData?.pieChartOneTitle,
+                                    translation_state
+                                )}
+                            </CardTitle>
+                        </CardHeader>
+                        <CardContent>
+                            <UserStats />
+                        </CardContent>
+                    </Card>
+                )}
+                {permissionChecker("pie-chart-2") && (
+                    <Card>
+                        <CardHeader className="border-none p-6 pt-5 mb-0">
+                            <CardTitle className="text-lg font-semibold text-default-900 p-0">
+                                {translate(dashboardData?.pieChartTwoTitle,
+                                    translation_state
+                                )}
+                            </CardTitle>
+                        </CardHeader>
+                        <CardContent>
+                            <div className="dashtail-legend">
+                                <UserDeviceReport />
+                            </div>
+                        </CardContent>
+                    </Card>
+                )}
+            </div>
+            {/* <div className="col-span-2">
         <Card>
           <CardHeader className="border-none pb-0">
             <div className="flex flex-wrap items-center gap-2">
@@ -119,8 +125,8 @@ const DashboardPageView = ({ trans }) => {
           </Card>
         </div>
       </div> */}
-    </div>
-  );
+        </div>
+    );
 };
 
 export default DashboardPageView;

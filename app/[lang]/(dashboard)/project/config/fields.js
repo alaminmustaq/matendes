@@ -65,7 +65,7 @@ const fields = () => {
             label: "End Warning (days)",
             placeholder: "e.g. 30",
             colSpan: "col-span-12 md:col-span-6",
-            inputProps: { min: 0, step: "1" },
+            inputProps: { min: 0, step: "1" }, 
         },
 
         // =============== Budget & Client ===============

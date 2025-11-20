@@ -87,13 +87,7 @@ const fields = () => {
                     type: "input",
                     label: "Preferred Name",
                     colSpan: "col-span-12 md:col-span-4",
-                },
-                {
-                    name: "display_name",
-                    type: "input",
-                    label: "Display Name",
-                    colSpan: "col-span-12 md:col-span-4",
-                },
+                }, 
             ],
         },
 
@@ -148,19 +142,36 @@ const fields = () => {
                     type: "date",
                     label: "Passport Expiry",
                     colSpan: "col-span-12 md:col-span-4",
-                },
+                }, 
                 {
                     name: "marital_status",
-                    type: "input",
+                    type: "select",
                     label: "Marital Status",
                     colSpan: "col-span-12 md:col-span-4",
+                    options: [
+                        { label: "Single", value: "single" },
+                        { label: "Married", value: "married" },
+                        { label: "Divorced", value: "divorced" },
+                        { label: "Widowed", value: "widowed" },
+                    ], 
                 },
                 {
                     name: "blood_group",
-                    type: "input",
+                    type: "select",
                     label: "Blood Group",
                     colSpan: "col-span-12 md:col-span-4",
+                    options: [
+                        { label: "A+", value: "A+" },
+                        { label: "A-", value: "A-" },
+                        { label: "B+", value: "B+" },
+                        { label: "B-", value: "B-" },
+                        { label: "O+", value: "O+" },
+                        { label: "O-", value: "O-" },
+                        { label: "AB+", value: "AB+" },
+                        { label: "AB-", value: "AB-" },
+                    ], 
                 },
+
             ],
         },
 
@@ -670,12 +681,12 @@ const fields = () => {
                     colSpan: "col-span-12",
                 },
 
-                {
-                    name: "is_system_user",
-                    type: "checkbox",
-                    label: "System User",
-                    colSpan: "col-span-12 md:col-span-4",
-                },
+                // {
+                //     name: "is_system_user",
+                //     type: "checkbox",
+                //     label: "System User",
+                //     colSpan: "col-span-12 md:col-span-4",
+                // },
             ],
         },
     ];

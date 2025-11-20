@@ -5,7 +5,7 @@ const fields = (actions) => {
         {
             name: "branch_id",
             type: "async-select",
-            label: "Branch",
+            label: "Branch *",
             loadOptions: [
                 "organization/branches",
                 "branches",
@@ -14,6 +14,7 @@ const fields = (actions) => {
             ],
             placeholder: "Optional",
             colSpan: "col-span-12 md:col-span-6",
+            rules: { required: "Branch is required" },
         },  
         {
             name: "department_id",

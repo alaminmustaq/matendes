@@ -6,6 +6,7 @@ import { useThemeStore } from "@/store";
 import { useTheme } from "next-themes";
 import { themes } from "@/config/themes";
 import { useSelector } from "react-redux";
+import { translate } from "@/lib/utils";
 
 const UserStats = ({ height = 250 }) => {
   const { theme: config, isRtl } = useThemeStore();
@@ -14,6 +15,7 @@ const UserStats = ({ height = 250 }) => {
 
   // ✅ Get both dashboard data and users by department
   const { dashboardData } = useSelector((state) => state.dashboard);
+    const translation_state = useSelector((state) => state.auth.translation);
   // const usersData = useSelector((state) => state.dashboard.usersData || []);
 
   const getColors = () => [
@@ -93,7 +95,7 @@ const UserStats = ({ height = 250 }) => {
   // const dashboardLabels = dashboardData.map((item) => item.text);
   // const dashboardSeries = dashboardData.map((item) => item.total);
 
-  const usersLabels = dashboardData.department_by_employee?.map((item) => item.department);
+  const usersLabels = dashboardData.department_by_employee?.map((item) =>  item.department);
   const usersSeries = dashboardData.department_by_employee?.map((item) => item.employee_count); 
 
   if (!usersSeries?.length) {
@@ -106,7 +108,10 @@ const UserStats = ({ height = 250 }) => {
       {usersSeries?.length > 0 && (
         <div>
           <h3 className="text-sm font-medium text-center mb-2 text-default-700">
-            {dashboardData.pieChartOneTitle}
+             {translate(dashboardData?.pieChartOneTitle,
+                                                translation_state
+                                            )}
+           
           </h3>
           <Chart
             options={baseOptions(usersLabels)}

@@ -6,10 +6,11 @@ import {
     useRoleFetchQuery,
     useRolePermissionsFetchQuery,
     useRolePermissionsUpdateMutation, // ✅ add this
+    useRoleCheckAllPermissionsMutation, // ✅ add this
 } from "../services/roleApi";
 import toast from "react-hot-toast";
 import { useForm } from "react-hook-form";
-import { formReset } from "@/utility/helpers";
+import { formReset,setFilterParams } from "@/utility/helpers";
 import { debounce } from "@/utility/helpers";
 import { roleSearchTemplate } from "@/utility/templateHelper";
 import { getFilterParams } from "@/utility/helpers";
@@ -20,6 +21,7 @@ export const useRole = () => {
     const [userUpdate] = useRoleUpdateMutation();
     const [userDelete] = useRoleDeleteMutation();
     const [permissionsUpdate] = useRolePermissionsUpdateMutation();
+    const [checkAllPermissions] = useRoleCheckAllPermissionsMutation(); // ✅ new
     const {
         data: roleAndPermission,
         refetch,
@@ -83,7 +85,7 @@ export const useRole = () => {
         
                 // If you have any data normalization like employee, do it here
                 // let preparedData = normalizeSelectValues(other, ["some_field"]);
-        
+                setFilterParams("page", 1);
                 const response = await userUpdate({
                     id,
                     credentials: other, // or preparedData if normalized
@@ -94,6 +96,10 @@ export const useRole = () => {
                     refetch();
                     formReset(form);
                     form.setValue("openModel", false);
+                }
+                if (response?.message === "Permissions updated successfully") {
+                    toast.success("Permissions updated successfully");
+                     
                 }
         
                 return response;
@@ -141,6 +147,19 @@ export const useRole = () => {
             form.setValue("openModel", true);
             form.setValue("openPermissionMode", true);
             form.setValue("selectedPermission", [...ids]);
+
+            setFilterParams("page", 1);
+        },
+        // ✅ New action: Check All Permissions for a role
+        onCheckAllPermissions: async (roleId) => {
+            try {
+                const response = await checkAllPermissions(roleId).unwrap();
+                toast.success("All permissions assigned successfully!");
+                refetch(); // refresh roles & permissions
+            } catch (error) {
+                console.error("Check all permissions error:", error);
+                toast.error("Failed to assign all permissions.");
+            }
         },
     };
 
