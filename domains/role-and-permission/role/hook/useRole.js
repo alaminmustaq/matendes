@@ -10,7 +10,7 @@ import {
 } from "../services/roleApi";
 import toast from "react-hot-toast";
 import { useForm } from "react-hook-form";
-import { formReset,setFilterParams } from "@/utility/helpers";
+import { formReset, setFilterParams } from "@/utility/helpers";
 import { debounce } from "@/utility/helpers";
 import { roleSearchTemplate } from "@/utility/templateHelper";
 import { getFilterParams } from "@/utility/helpers";
@@ -27,8 +27,7 @@ export const useRole = () => {
         refetch,
         isFetching,
     } = useRoleFetchQuery();
-    
-    
+
     const form = useForm({
         mode: "onBlur",
         reValidateMode: "onSubmit",
@@ -42,7 +41,7 @@ export const useRole = () => {
         refetch,
         pagination: roleAndPermission?.data?.pagination || {},
         isFetching,
-    }; 
+    };
     const actions = {
         onCreate: async (data) => {
             try {
@@ -78,11 +77,11 @@ export const useRole = () => {
             form.setValue("selectedPermission", []);
 
             form.setValue("openModel", true);
-        }, 
+        },
         onUpdate: async (data) => {
             try {
                 let { openModel, id, ...other } = data;
-        
+
                 // If you have any data normalization like employee, do it here
                 // let preparedData = normalizeSelectValues(other, ["some_field"]);
                 setFilterParams("page", 1);
@@ -90,7 +89,7 @@ export const useRole = () => {
                     id,
                     credentials: other, // or preparedData if normalized
                 }).unwrap();
-        
+
                 if (response?.message === "Role updated successfully") {
                     toast.success("Role Update Successfully");
                     refetch();
@@ -99,32 +98,33 @@ export const useRole = () => {
                 }
                 if (response?.message === "Permissions updated successfully") {
                     toast.success("Permissions updated successfully");
-                     
                 }
-        
+
                 return response;
             } catch (apiErrors) {
                 // set server-side validation errors
                 handleServerValidationErrors(apiErrors, form.setError);
-        
+
                 // optional: show general error toast
-                toast.error("Failed to update role. Please check the inputs and try again.");
+                toast.error(
+                    "Failed to update role. Please check the inputs and try again."
+                );
             }
         },
         onDelete: async (id) => {
             try {
                 if (confirm("Are you sure you want to delete this role?")) {
-                    const response = await userDelete({ id }); 
-                    
+                    const response = await userDelete({ id });
+
                     // If your API returns success in response.data.success
                     if (response?.data?.success) {
                         toast.success("Role deleted successfully");
                         refetch(); // refresh the list if needed
-                    } 
+                    }
                     // If API returns error in a structured format
                     else if (response?.error?.data?.message) {
                         toast.error(response?.error?.data?.message);
-                    } 
+                    }
                     // Fallback error
                     else {
                         toast.error("Failed to delete role. Please try again.");
@@ -132,14 +132,16 @@ export const useRole = () => {
                 }
             } catch (error) {
                 console.error("Delete role error:", error);
-        
+
                 if (error?.response?.data?.message) {
                     toast.error(error.response.data.message);
                 } else {
-                    toast.error("Something went wrong while deleting the role.");
+                    toast.error(
+                        "Something went wrong while deleting the role."
+                    );
                 }
             }
-        }, 
+        },
         onManagePermissions: (data) => {
             const ids = data.permissions.map((data) => data.id);
 
@@ -151,11 +153,15 @@ export const useRole = () => {
             setFilterParams("page", 1);
         },
         // ✅ New action: Check All Permissions for a role
-        onCheckAllPermissions: async (roleId) => {
+        onCheckAllPermissions: async (roleId, type) => {
             try {
-                const response = await checkAllPermissions(roleId).unwrap();
+                const response = await checkAllPermissions({
+                    role_id: roleId,
+                    type: type,
+                }).unwrap();
+
                 toast.success("All permissions assigned successfully!");
-                refetch(); // refresh roles & permissions
+                return response;
             } catch (error) {
                 console.error("Check all permissions error:", error);
                 toast.error("Failed to assign all permissions.");

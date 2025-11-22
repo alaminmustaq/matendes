@@ -91,7 +91,7 @@ const Header = () => {
           </div>
 
           {/* Navigation Tabs */}
-          <div className="flex flex-wrap justify-end gap-4 lg:gap-8 pt-7 lg:pt-5 pb-4 px-6">
+          {/* <div className="flex flex-wrap justify-end gap-4 lg:gap-8 pt-7 lg:pt-5 pb-4 px-6">
             {navLinks.map((item, index) => (
               <Link
                 key={`user-profile-link-${index}`}
@@ -106,7 +106,7 @@ const Header = () => {
                 {item.title}
               </Link>
             ))}
-          </div>
+          </div> */}
         </CardContent>
       </Card>
     </Fragment>

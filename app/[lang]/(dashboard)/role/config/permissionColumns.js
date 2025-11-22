@@ -59,7 +59,7 @@ const permissionColumns = (action,form) =>
             {
               id: "check-all",
               accessorKey: "check-all",
-              header: "Check Al",
+              header: "Check All",
             },
           ];
     }

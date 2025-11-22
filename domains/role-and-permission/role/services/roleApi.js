@@ -65,9 +65,10 @@ export const roleApi = createApi({
 
         // ✅ Check all permissions for a specific role
         roleCheckAllPermissions: builder.mutation({
-            query: (roleId) => ({
-                url: `admin/roles-permissions/roles/${roleId}/permissions/check-all`,
+            query: (data) => ({
+                url: `admin/roles-permissions/roles/role/permissions/check-all`,
                 method: "POST",
+                body: data,
             }),
             invalidatesTags: ["Role"],
         }),

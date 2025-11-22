@@ -82,7 +82,7 @@ const EmployeeInfo = () => {
     <Card className="w-full">
       <CardHeader className="border-none mb-0">
         <CardTitle className="text-lg font-semibold text-default-800 tracking-tight">
-          Employee Details
+          Employee Details 2
         </CardTitle>
       </CardHeader>
 

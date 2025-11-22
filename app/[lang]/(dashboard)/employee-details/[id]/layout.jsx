@@ -1,4 +1,4 @@
-import ProfileLayout from "./profile-layout"
+import EmployeeLayout from "./employee-layout"
 
 export const metadata = {
   title: "User Profile",
@@ -6,9 +6,9 @@ export const metadata = {
 const Layout = ({ children }) => {
 
   return (
-    <ProfileLayout>
+    <EmployeeLayout>
       {children}
-    </ProfileLayout>
+    </EmployeeLayout>
   )
 };
 
