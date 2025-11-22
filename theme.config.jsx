@@ -3,7 +3,7 @@ export default {
   logo: (
     <span className=" inline-flex gap-2.5 items-center">
       <SiteLogo className="w-8 h-8 text-primary" />{" "}
-      <span className="  text-lg font-bold text-primary ">DashTail</span>
+      <span className="  text-lg font-bold text-primary ">Matendes</span>
     </span>
   ),
   project: {

@@ -26,7 +26,7 @@ const fields = () => {
                 "branches",
                 "branchSearchTemplate",
             ],
-            placeholder: "Optional",
+            placeholder: "Branch",
             colSpan: "col-span-12 md:col-span-6",
         }, 
         {

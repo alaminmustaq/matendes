@@ -36,7 +36,7 @@ const fields = () => [
     {
       name: "sort_order",
       type: "number",
-      label: "Sort Order",
+      label: "Sort Order *",
       placeholder: "0",
       colSpan: "col-span-12 md:col-span-4",
       rules: { min: { value: 0, message: "Sort order cannot be negative" } },
@@ -59,7 +59,7 @@ const fields = () => [
     {
       name: "direction",
       type: "select",
-      label: "Text Direction",
+      label: "Text Direction *",
       colSpan: "col-span-12 md:col-span-4",
       options: [
         { label: "Left-to-Right (LTR)", value: "ltr" },

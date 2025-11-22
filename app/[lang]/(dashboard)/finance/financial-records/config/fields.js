@@ -152,6 +152,7 @@ export default function fields(defaultForm) {
                     colSpan: `col-span-6 ${defaultForm.watch("financial_type") === "expense"? 'md:col-span-2': 'md:col-span-3'} `,
                     rules: {
                         required: "Amount is required",
+                        min: { value: 1, message: "Amount must be at least 1" },
                     },
                 },
                 {

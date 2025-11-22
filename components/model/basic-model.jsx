@@ -54,7 +54,7 @@ export default function BasicModel({
                 </DialogHeader>
 
                 {/* Scrollable form area */}
-                <div className="flex-1 overflow-y-auto px-6 py-4">
+                <div className="flex-1 overflow-y-auto px-6 py-4 pb-20">
                     <DynamicForm
                         form={form}
                         fields={fields}
@@ -72,7 +72,7 @@ export default function BasicModel({
                 </div>
 
                 {/* Footer (fixed) */}
-                <DialogFooter className="px-6 py-3  flex items-center justify-end gap-3">
+                <DialogFooter className="px-6 py-3 flex items-center justify-end gap-3">
                     <DialogClose asChild>
                         <Button type="button" variant="outline">
                             {cancelLabel || "Cancel"}

@@ -65,21 +65,24 @@ const fields = () => [
     {
         name: "unit_price",
         type: "input",
-        label: "Unit Price",
+        label: "Unit Price *",
         placeholder: "Enter unit price",
         colSpan: "col-span-12 md:col-span-6",
         rules: {
+            required: "Unit price is required",
             min: { value: 0, message: "Cannot be negative" },
         },
         inputProps: { type: "number", min: 0, step: "0.01" },
     },
+
     {
         name: "unit_id",
         type: "async-select",
-        label: "Unit of Measure",
+        label: "Unit of Measure *",
         loadOptions: ["inventory/tool-units", "units", "unitSearchTemplate"],
         placeholder: "Select unit",
         colSpan: "col-span-12 md:col-span-6",
+        rules: { required: "Unit of measure is required" }, // Added
     },
     // {
     //   name: "location",
