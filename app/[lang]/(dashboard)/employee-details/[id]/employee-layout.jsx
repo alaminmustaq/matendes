@@ -6,7 +6,7 @@ const EmployeeLayout = ({ children }) => {
   const { actions, employState } = useEmploy();
   return (
     <React.Fragment>
-      {/* <Header /> */}
+      <Header />
       {children}
     </React.Fragment>
   );
