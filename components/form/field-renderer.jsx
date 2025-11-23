@@ -436,7 +436,7 @@ const GroupFormField = ({ fieldConfig, form, addButtonLabel }) => {
             {fields.map((item, index) => (
                 <div
                     key={item.id}
-                    className="grid grid-cols-12 gap-4 items-end"
+                    className="grid grid-cols-12 gap-4"
                 >
                     {childFields.map((childField) => {
                         const fieldName = `${name}.${index}.${childField.name}`;

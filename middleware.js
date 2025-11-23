@@ -17,7 +17,30 @@ const protectedRoutes = [
     "/users",
     "/roles",
     "/permissions",
-    "/attendance",
+    "/attendance", 
+    "/attendance/view-attendance",
+    "/attendance/manual-attendance",
+    "/generate-qr",
+    "/attendance/qr-attendance",
+    "/salary/generate",
+    "/client",
+    "/inventory/tool/category",
+    "/inventory/tool/unit",
+    "/inventory/tool/tool-list",
+    "/inventory/purchase",
+    "/inventory/tool-distribution",
+    "/inventory/damage",
+    "/inventory/warehouse",
+    "/inventory/stock-transfers",
+    "/bank",
+    "/finance/payment-type",
+    "/finance/financial-records",
+    "/project",
+    "/document/document-type",
+    "/document/documents",
+    "/role",
+    "/language",
+    "/activity"
 ];
 // Public routes that should redirect to dashboard if authenticated
 const authRoutes = ["/login", "/register", "/forgot-password"];
@@ -127,5 +150,6 @@ export const config = {
         //"/((?!api|assets|.*\\..*|_next).*)",
         "/((?!api|assets|docs|.*\\..*|_next).*)",
         // Optional: only run on root (/) URL
+        
     ],
 };

@@ -32,6 +32,8 @@ const fields = () => [
       label: "Flag Icon",
       placeholder: "e.g., 🇺🇸, 🇫🇷, 🇵🇹",
       colSpan: "col-span-12 md:col-span-4",
+      note: "Enter an Alt-codes Flag Symbol",
+      refLink: 'https://www.alt-codes.net/flags',
     },
     {
       name: "sort_order",
@@ -42,13 +44,13 @@ const fields = () => [
       rules: { min: { value: 0, message: "Sort order cannot be negative" } },
       inputProps: { min: 0 },
     },
-    {
-      name: "is_active",
-      type: "checkbox",
-      label: "Active",
-      colSpan: "col-span-12 md:col-span-4",
-      valuePropName: "checked", // ensures boolean is sent
-    },
+    // {
+    //   name: "is_active",
+    //   type: "checkbox",
+    //   label: "Active",
+    //   colSpan: "col-span-12 md:col-span-4",
+    //   valuePropName: "checked", // ensures boolean is sent
+    // },
     {
       name: "is_default",
       type: "checkbox",

@@ -90,7 +90,7 @@ export const useFinancialRecords = () => {
                     "bank_id",
                     "bank_branch_id",
                     "project_id",
-                    "transaction_status",
+                    "transaction_status", 
                 ]);
 
                 const detailList = (data.transaction_details || []).map(
@@ -168,7 +168,7 @@ export const useFinancialRecords = () => {
                     "bank_id",
                     "bank_branch_id",
                     "project_id",
-                    "transaction_status",
+                    "transaction_status", 
                 ]);
 
                 normalizedHeader.transaction_details = (
