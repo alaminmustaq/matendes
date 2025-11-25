@@ -42,7 +42,7 @@ export const employTemplate = (res) => {
     return res.map((data) => ({
         label: `${data?.personal_info?.first_name ?? data.first_name} ${
             data?.personal_info?.last_name ?? data.last_name
-        } (${data?.contact_info?.work_email ?? ""})`,
+        } (${data?.contact_info?.work_email ?? data?.work_email})`,
         value: data.id,
     }));
 };

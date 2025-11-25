@@ -69,7 +69,10 @@ let columns = (actions) => {
             header: " ",
             thClass: "!text-center w-[70px] whitespace-nowrap",
             tdClass: "!text-center w-[70px] whitespace-nowrap",
-            cell: ({ row }) => (
+            cell: ({ row }) => {
+                console.log(row.original.is_global_default);
+                if(!row?.original?.is_global_default){
+                return (
                 <TableActions
                     data={row.original}
                     label="Actions"
@@ -98,7 +101,8 @@ let columns = (actions) => {
                         },
                     ]}
                 />
-            ),
+            )}
+        }
         },
     ];
 };

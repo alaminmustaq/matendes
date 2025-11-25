@@ -23,6 +23,7 @@ const fields = (actions,form) => {
                 form.setValue('department_id',null)
                 form.setValue('project_id',null) 
             },
+            disabled:form.watch('id'),
             rules: { required: "Status is required" },
         },
         {
@@ -43,6 +44,7 @@ const fields = (actions,form) => {
                 form.setValue('branch_id',e) 
                 actions.onAttendanceTypeChange();
             },
+            disabled:form.watch('id'),
         },  
         {
             name: "department_id",
@@ -59,6 +61,7 @@ const fields = (actions,form) => {
                 form.setValue('department_id',e) 
                 actions.onAttendanceTypeChange();
             },
+            disabled:form.watch('id'),
             placeholder: "Optional",
             colSpan: "col-span-12 md:col-span-6",
         },
@@ -73,13 +76,78 @@ const fields = (actions,form) => {
                 "projectTemplate",
             ],
             handleChange: (e) => {  
-              
                 form.setValue('project_id',e) 
                 actions.onAttendanceTypeChange();
             },
+            disabled:form.watch('id'),
             placeholder: "Optional",
             colSpan: "col-span-12 md:col-span-6",
         },
+        {
+            name: "attendance_scope", // renamed
+            type: "select",
+            label: "Attendance Scope *",
+            colSpan: "col-span-12 md:col-span-6",
+            options: [
+                {
+                    label: "All Attendance",
+                    value: "all_attendance",
+                },
+                {
+                    label: "Single Attendance",
+                    value: "single_attendance",
+                },
+            ],
+            handleChange: (e) => {   
+                form.setValue('attendance_scope', e.value);
+
+                // Clear single_attendance if switching to all attendance
+                if (e.value === "all_attendance") {
+                    form.setValue('single_attendance', null);
+                }
+            },
+            disabled:form.watch('id'),
+            rules: { required: "Attendance scope is required" },
+        }, 
+        {
+            name: "single_attendance",
+            type: "async-select",
+            label: "Single Attendance *",
+            visibility: form.watch("attendance_scope") === "single_attendance",
+            loadOptions: [
+                "hrm/filter-employees",
+                "employees",
+                "employTemplate",
+                ["department_id","branch_id",'project_id']
+              
+            ],
+            handleChange: (value) => {  
+                const existingEmployees =
+                        form.getValues("employees") || [];
+                        console.log(existingEmployees);
+                        
+                    const exists = existingEmployees.some(
+                        (emp) => emp.employee_id === value.value
+                    );
+
+                    if (exists) {
+                        toast.error("Employee already assigned!");
+                    } else {
+                        // Append new employee assignment with pre-filled data
+                        form.fields.append({
+                            name: `${value.label}`,
+                            employee_id: value.value,
+                            check_in_time: "",
+                            check_out_time: "",
+                        })
+                    }
+
+            },
+            placeholder: "Select employee",
+            colSpan: "col-span-12 md:col-span-6", 
+            rules: { required: "Single Attendance is required" },
+        },
+
 
         // Global Settings Section
         {
@@ -149,7 +217,7 @@ const fields = (actions,form) => {
             type: "group-form",
             label: "Employee Attendance",
             placeholder: "Add employees for attendance",
-            colSpan: "col-span-12",
+            colSpan: `col-span-12 ${form.watch('attendance_scope') == 'all_attendance' ? 'hidden':''}`,
             addButtonLabel: false,
             fields: [
                 {

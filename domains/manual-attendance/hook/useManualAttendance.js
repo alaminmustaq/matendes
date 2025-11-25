@@ -54,17 +54,17 @@ export const useManualAttendance = () => {
     // Debounced filter function
     async function handleEmployeeFilter(filterTerm) {
         try {
-            const response = await filterEmployees(filterTerm);
-            fieldArray.remove();
+            // const response = await filterEmployees(filterTerm);
+            // fieldArray.remove();
 
-            response?.data?.data?.forEach((item) => {
-                fieldArray.append({
-                    name: `${item.first_name} ${item.last_name}`,
-                    employee_id: item.id,
-                    check_in_time: "",
-                    check_out_time: "",
-                });
-            });
+            // response?.data?.data?.forEach((item) => {
+            //     fieldArray.append({
+            //         name: `${item.first_name} ${item.last_name}`,
+            //         employee_id: item.id,
+            //         check_in_time: "",
+            //         check_out_time: "",
+            //     });
+            // });
         } catch (error) {
             console.error("Employee filter error:", error);
             toast.error("Failed to filter employees");
@@ -138,7 +138,7 @@ return date.toISOString().split("T")[0]; // format as YYYY-MM-DD
             }
 
             // Validate each employee
-            data.employees?.forEach((emp, index) => {
+            data?.employees?.forEach((emp, index) => {
                 if (!emp.employee_id) {
                     errors.push(
                         `Employee ${index + 1}: Employee ID is required`
@@ -171,7 +171,7 @@ return date.toISOString().split("T")[0]; // format as YYYY-MM-DD
             try {
                 // Validate form data
                 const validationErrors = actions.validateFormData(data);
-                if (validationErrors.length > 0) {
+                if (validationErrors.length > 0 && data.attendance_scope != 'all_attendance') {
                     toast.error(`Validation failed: ${validationErrors[0]}`);
                     return;
                 }
@@ -232,6 +232,7 @@ return date.toISOString().split("T")[0]; // format as YYYY-MM-DD
                     // Handle raw API data structure
                     formData = {
                         id: masterAttendanceData.id,
+                        attendance_scope: masterAttendanceData.attendance_scope,
                         attendance_type: masterAttendanceData.attendance_type,
                         global_date: actions.formatDateForForm(
                             masterAttendanceData.global_date

@@ -56,8 +56,7 @@ const Language = () => {
             setRtl(lang.direction === "rtl");
 
             // 3️⃣ Navigate to the correct route
-            const restPath = pathname.split("/").slice(2).join("/") || "";
-            console.log(restPath);
+            const restPath = pathname.split("/").slice(2).join("/") || ""; 
             
             router.push(`/${lang.code}/${restPath}`);
             setTimeout(() => {
@@ -95,40 +94,43 @@ const Language = () => {
 
             <DropdownMenuContent className="p-2">
                 {languages.map((item, index) => {
-                    const itemCode = emojiToCountryCode(item.flag_icon);
-                    return (
-                        <DropdownMenuItem
-                            key={`lang-${index}`}
-                            className={cn(
-                                "py-1.5 px-2 cursor-pointer dark:hover:bg-background mb-[2px] last:mb-0",
-                                {
-                                    "bg-primary-100":
-                                        selectedLanguage &&
-                                        selectedLanguage.code === item.code,
-                                }
-                            )}
-                            onClick={() => handleSetDefaultAndRoute(item)}
-                        >
-                            <img
-                                src={`https://flagcdn.com/24x18/${itemCode}.png`}
-                                alt={itemCode}
-                                width={24}
-                                height={18}
-                                className="mr-2"
-                                onError={(e) =>
-                                    (e.currentTarget.src = "https://flagcdn.com/24x18/us.png")
-                                }
-                            />
-                            <span className="text-sm text-default-600 capitalize">
-                                {item.code}
-                            </span>
-
-                            {selectedLanguage &&
-                                selectedLanguage.code === item.code && (
-                                    <Check className="w-4 h-4 flex-none ltr:ml-auto rtl:mr-auto text-default-700" />
+                    if(item.is_active){
+                        const itemCode = emojiToCountryCode(item.flag_icon);
+                        return (
+                            <DropdownMenuItem
+                                key={`lang-${index}`}
+                                className={cn(
+                                    "py-1.5 px-2 cursor-pointer dark:hover:bg-background mb-[2px] last:mb-0",
+                                    {
+                                        "bg-primary-100":
+                                            selectedLanguage &&
+                                            selectedLanguage.code === item.code,
+                                    }
                                 )}
-                        </DropdownMenuItem>
-                    );
+                                onClick={() => handleSetDefaultAndRoute(item)}
+                            >
+                                <img
+                                    src={`https://flagcdn.com/24x18/${itemCode}.png`}
+                                    alt={itemCode}
+                                    width={24}
+                                    height={18}
+                                    className="mr-2"
+                                    onError={(e) =>
+                                        (e.currentTarget.src = "https://flagcdn.com/24x18/us.png")
+                                    }
+                                />
+                                <span className="text-sm text-default-600 capitalize">
+                                    {item.code}
+                                </span>
+
+                                {selectedLanguage &&
+                                    selectedLanguage.code === item.code && (
+                                        <Check className="w-4 h-4 flex-none ltr:ml-auto rtl:mr-auto text-default-700" />
+                                    )}
+                            </DropdownMenuItem>
+                        );
+                    }
+                    
                 })}
             </DropdownMenuContent>
         </DropdownMenu>

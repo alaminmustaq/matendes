@@ -38,31 +38,38 @@ export const useDynamicSelect = (
   }, [dynamicSearch, dataKey, transformResults]);
 
   // manual trigger (like getMe) 
-  const runTrigger = useCallback(
-    async (customSearch = " ") => {
-      try {
-        // Get the latest value of parent here
-        const currentDependencyValue = dependencyKey ? form.getValues(dependencyKey) : null;
-   
+ const runTrigger = useCallback(
+  async (customSearch = " ") => {
+    try {
+      let dependencyData = {};
 
-        const response = await triggerSearch({
-          data: {
-            search: customSearch,
-            url: urlValue,
-            ...(dependencyKey && currentDependencyValue
-              ? { [dependencyKey]: currentDependencyValue.value ?? currentDependencyValue }
-              : {}),
-          },
-        }).unwrap();
+      if (dependencyKey) {
+        const keys = Array.isArray(dependencyKey) ? dependencyKey : [dependencyKey];
 
-        return { success: true, data: response };
-      } catch (error) {
-        console.error("Dynamic select trigger error:", error);
-        return { success: false, error };
+        keys.forEach((key) => {
+          const value = form.getValues(key);
+          if (value !== undefined && value !== null) {
+            dependencyData[key] = value?.value ?? value;
+          }
+        });
       }
-    },
-    [triggerSearch, urlValue, dependencyKey, form]
-  );
+
+      const response = await triggerSearch({
+        data: {
+          search: customSearch,
+          url: urlValue,
+          ...dependencyData,
+        },
+      }).unwrap();
+
+      return { success: true, data: response };
+    } catch (error) {
+      console.error("Dynamic select trigger error:", error);
+      return { success: false, error };
+    }
+  },
+  [triggerSearch, urlValue, dependencyKey, form]
+);
 
 
   // debounced search for async-select
