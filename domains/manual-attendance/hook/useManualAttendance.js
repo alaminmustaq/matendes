@@ -169,12 +169,15 @@ return date.toISOString().split("T")[0]; // format as YYYY-MM-DD
 
         onCreate: async (data) => {
             try {
-                // Validate form data
-                const validationErrors = actions.validateFormData(data);
-                if (validationErrors.length > 0 && data.attendance_scope != 'all_attendance') {
-                    toast.error(`Validation failed: ${validationErrors[0]}`);
-                    return;
+                if(data.attendance_scope != 'all_attendance'){
+                    const validationErrors = actions.validateFormData(data);
+                    if (validationErrors.length > 0) {
+                        toast.error(`Validation failed: ${validationErrors[0]}`);
+                        return;
+                    }
                 }
+                // Validate form data
+                
                 let value = normalizeSelectValues(data, [
                     "branch_id",
                     "department_id",
