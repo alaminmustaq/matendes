@@ -43,7 +43,7 @@ export default function BasicModel({
             }}
         >
             <DialogContent
-                size={size}
+                size="5xl"
                 className="p-0 max-h-[85vh] flex flex-col overflow-hidden"
             >
                 {/* Header (fixed) */}
@@ -72,7 +72,7 @@ export default function BasicModel({
                 </div>
 
                 {/* Footer (fixed) */}
-                <DialogFooter className="px-6 py-3 flex items-center justify-end gap-3">
+                <DialogFooter className="px-6 py-3 flex">
                     <DialogClose asChild>
                         <Button type="button" variant="outline">
                             {cancelLabel || "Cancel"}

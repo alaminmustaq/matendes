@@ -40,12 +40,33 @@ const columns = (actions) => {
             cell: ({ row }) => row.original?.badge_number || "—",
         },
         {
+            id: "branch",
+            header: "Branch",
+            thClass: "!text-center",
+            tdClass: "!text-center",
+            cell: ({ row }) => row.original?.branch?.name || "—",
+        },
+        {
             id: "department",
             header: "Department",
             thClass: "!text-center",
             tdClass: "!text-center",
             cell: ({ row }) => row.original?.department?.name || "—",
         },
+        {
+            id: "role",
+            header: "Role",
+            thClass: "!text-center",
+            tdClass: "!text-center",
+            cell: ({ row }) => {
+                const roles = row.original?.user?.roles || [];
+                if (!roles.length) return "—";
+
+                // Prefer display_name, fallback to name
+                return roles.map((r) => r.display_name || r.name).join(", ");
+            },
+        },
+
         {
             id: "job_position_id",
             header: "Position",

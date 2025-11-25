@@ -13,22 +13,44 @@ import DatePickerWithRange from "@/components/date-picker-with-range";
 import { useDashboard } from "@/domains/dashboard/hook/useDashboard";
 import { permissionChecker } from "@/utility/helpers";
 import { useSelector } from "react-redux";
+import { useAppSelector } from "@/hooks/use-redux";
 import { translate } from "@/lib/utils";
 
 const DashboardPageView = ({ trans }) => {
     const { dashboardData } = useSelector((state) => state.dashboard);
     const translation_state = useSelector((state) => state.auth.translation);
+    const { user } = useAppSelector((state) => state.auth); 
+    console.log(user);
+    
+    const employee = user?.employee ?? null;
+
+    const companyName = user?.company?.name || "—";
+    const branchName = employee?.branch?.name || "—";
 
     const { data } = useDashboard();
     return (
         <div className="space-y-6">
             <div className="flex items-center flex-wrap justify-between gap-4">
-                <div className="text-2xl font-medium text-default-800 ">
-                    {translate("Analytics", translation_state)}{" "}
-                    {trans?.dashboard}
+                <div className="text-2xl font-medium text-default-800">
+                    {/* Company | Branch */}
+                    <div className="flex items-center gap-3 mb-1">
+                        <span className="text-lg font-semibold">
+                            {companyName}
+                        </span>
+                        <span className="text-default-400">|</span>
+                        <span className="text-sm text-default-600">
+                            {branchName}
+                        </span>
+                    </div>
+
+                    {/* Analytics Title */}
+                    <div>
+                        {translate("Analytics", translation_state)}{" "}
+                        {trans?.dashboard}
+                    </div>
                 </div>
-                {/* <DatePickerWithRange /> */}
             </div>
+
             {/* Coming soon placeholder */}
             {/* <div className="flex flex-col items-center justify-center py-20 border border-dashed border-default-300 rounded-2xl bg-default-50">
         <img
@@ -66,7 +88,8 @@ const DashboardPageView = ({ trans }) => {
                     <Card>
                         <CardHeader className="border-none p-6 pt-5 mb-0">
                             <CardTitle className="text-lg font-semibold text-default-900 p-0">
-                                {translate(dashboardData?.pieChartOneTitle,
+                                {translate(
+                                    dashboardData?.pieChartOneTitle,
                                     translation_state
                                 )}
                             </CardTitle>
@@ -80,7 +103,8 @@ const DashboardPageView = ({ trans }) => {
                     <Card>
                         <CardHeader className="border-none p-6 pt-5 mb-0">
                             <CardTitle className="text-lg font-semibold text-default-900 p-0">
-                                {translate(dashboardData?.pieChartTwoTitle,
+                                {translate(
+                                    dashboardData?.pieChartTwoTitle,
                                     translation_state
                                 )}
                             </CardTitle>
