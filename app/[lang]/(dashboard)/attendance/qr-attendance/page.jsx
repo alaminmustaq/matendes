@@ -106,8 +106,8 @@ export default function QRAttendance() {
             // First try back camera (environment)
             try {
                 stream = await navigator.mediaDevices.getUserMedia({
-                    video: { facingMode: { exact: "environment" } },
-                    audio: false,
+                    video: { facingMode: { ideal: "environment" } },
+                    audio: false
                 });
                 
                 // If successful, set constraints for back camera
@@ -301,7 +301,7 @@ export default function QRAttendance() {
     // Buttons (updated to handle new states)
     const buttonConfig = {
         closed: {
-            label: isRequesting ? "Opening…" : "📷 Start Scanning",
+            label: isRequesting ? translate("Opening",translation_state)+"…" : "📷"+ translate("Start Scanning",translation_state),
             action: openScanner,
             disabled: isRequesting || !locationGranted,
         },
@@ -536,7 +536,7 @@ export default function QRAttendance() {
                         disabled={isProcessingAttendance}
                         className="w-full inline-flex items-center justify-center gap-2 rounded-xl border border-slate-300 bg-white text-slate-700 px-4 py-2 text-sm font-medium shadow-sm hover:bg-slate-50 disabled:opacity-60"
                     >
-                        📷 Scan Another QR
+                        📷 {translate("Scan Another QR",translation_state)}
                     </button>
                 )}
             </div>

@@ -3,9 +3,12 @@ import { useRouter, useParams } from "next/navigation";
 import { setEmployData } from "@/domains/employ/model/employSlice";
 import { useAppDispatch } from "@/hooks/use-redux";
 import { useEmploy } from "@/domains/employ/hook/useEmploy";
+import { useAppSelector } from "@/hooks/use-redux";
 
 const columns = (actions) => {
     const { actions: employeeActions } = useEmploy();
+    const { user } = useAppSelector((state) => state.auth); 
+    // console.log(user?.user?.id);
     const router = useRouter();
     const params = useParams();
     const lang = params?.lang || "en";
@@ -104,45 +107,54 @@ const columns = (actions) => {
             thClass: "!text-center w-[70px] whitespace-nowrap",
             tdClass: "!text-center w-[70px] whitespace-nowrap",
             cell: ({ row }) => {
+
                 const data = row.original;
+                const isCurrentUser = row?.original?.user.id === user?.user?.id;
+
+                const allActions = [
+                    {
+                        label: "View",
+                        onClick: (rowData) => {
+                            router.push(`/${lang}/employee-details/${rowData?.id}`);
+                        },
+                        permission: "details-employee",
+                    },
+                    {
+                        label: "Edit",
+                        onClick: (rowData) => {
+                            router.push(`/${lang}/employees/edit/${rowData?.id}`);
+                        },
+                        permission: "edit-employee",
+                    },
+                    {
+                        label: "Delete",
+                        onClick: actions?.onDelete,
+                        danger: true,
+                        passId: true,
+                        permission: "delete-employee",
+                    },
+                ];
+
+                const viewOnly = [
+                    {
+                        label: "View",
+                        onClick: (rowData) => {
+                            router.push(`/${lang}/employee-details/${rowData?.id}`);
+                        },
+                        permission: "details-employee",
+                    },
+                ];
+
                 return (
                     <TableActions
                         data={data}
                         label="Actions"
-                        items={[
-                            {
-                                label: "View",
-                                onClick: (rowData) => {
-                                    // Define the custom handler here
-                                    // employeeActions.getEmploy(rowData?.id);
-                                    router.push(
-                                        `/${lang}/employee-details/${rowData?.id}`
-                                    );
-                                },
-                                permission: "details-employee",
-                            },
-                            {
-                                label: "Edit",
-                                onClick: (rowData) => {
-                                    // Define the custom handler here
-                                    router.push(
-                                        `/${lang}/employees/edit/${rowData?.id}`
-                                    );
-                                },
-                                permission: "edit-employee",
-                            },
-                            {
-                                label: "Delete",
-                                onClick: actions?.onDelete,
-                                danger: true,
-                                passId: true,
-                                permission: "delete-employee",
-                            }, // needs only ID
-                        ]}
+                        items={isCurrentUser ? viewOnly : allActions}
                     />
                 );
             },
-        },
+        }
+
     ];
 };
 
