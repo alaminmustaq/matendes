@@ -101,62 +101,41 @@ export default function QRAttendance() {
         setIsRequesting(true);
 
         try {
-            let stream = null;
-            
-            // First try back camera (environment)
-            try {
-                stream = await navigator.mediaDevices.getUserMedia({
-                    video: { facingMode: { ideal: "environment" } },
-                    audio: false
-                });
-                
-                // If successful, set constraints for back camera
-                setVideoConstraints({
-                    facingMode: { exact: "environment" }
-                }); 
-                
-            } catch (backCameraError) { 
-                
-                // If back camera fails, try front camera (user)
-                try {
-                    stream = await navigator.mediaDevices.getUserMedia({
-                        video: { facingMode: { exact: "user" } },
-                        audio: false,
-                    });
-                    
-                    // If successful, set constraints for front camera
-                    setVideoConstraints({
-                        facingMode: { exact: "user" }
-                    });
-                     
-                    
-                } catch (frontCameraError) { 
-                    
-                    // If both specific cameras fail, try any available camera
-                    stream = await navigator.mediaDevices.getUserMedia({
-                        video: true,
-                        audio: false,
-                    });
-                    
-                    // Set generic constraints
-                    setVideoConstraints({
-                        video: true
-                    });
-                     
-                }
+            // List all video input devices
+            const devices = await navigator.mediaDevices.enumerateDevices();
+            const videoDevices = devices.filter((d) => d.kind === "videoinput");
+
+            if (videoDevices.length === 0) {
+                throw new Error("No camera found");
             }
-            
-            // Stop the test stream
-            if (stream) {
-                stream.getTracks().forEach((t) => t.stop());
-            }
+
+            // Try to find a back camera (label usually contains "back", "rear", or "environment")
+            let backCamera = videoDevices.find((d) =>
+                /back|rear|environment/i.test(d.label)
+            );
+
+            // If no back camera found, fallback to the first available camera
+            const deviceId = backCamera
+                ? backCamera.deviceId
+                : videoDevices[0].deviceId;
+
+            // Open the selected camera
+            const stream = await navigator.mediaDevices.getUserMedia({
+                video: { deviceId: { exact: deviceId } },
+                audio: false,
+            });
+
+            setVideoConstraints({ deviceId: { exact: deviceId } });
+
+            // Stop the stream after test (if needed)
+            if (stream) stream.getTracks().forEach((t) => t.stop());
 
             setHasPermission(true);
             setStep("scanner");
             setMountScanner(false);
-            setTimeout(() => setMountScanner(true), 0); // remount to ensure clean start
-            
+            setTimeout(() => setMountScanner(true), 0);
         } catch (e) {
+            console.error("Camera error:", e);
             setHasPermission(false);
             setStep("closed");
             setErrorMsg(
@@ -224,8 +203,7 @@ export default function QRAttendance() {
 
         setIsProcessingAttendance(true);
 
-        try { 
-
+        try {
             // For now, we'll assume check-in by default
             // You could enhance this to detect check-in/check-out based on QR content or current status
             const result = await qrCheckIn(
@@ -234,7 +212,6 @@ export default function QRAttendance() {
                 coords.lng,
                 branch
             );
- 
 
             if (result.success) {
                 setAttendanceResult({
@@ -301,7 +278,9 @@ export default function QRAttendance() {
     // Buttons (updated to handle new states)
     const buttonConfig = {
         closed: {
-            label: isRequesting ? translate("Opening",translation_state)+"…" : "📷"+ translate("Start Scanning",translation_state),
+            label: isRequesting
+                ? translate("Opening", translation_state) + "…"
+                : "📷" + translate("Start Scanning", translation_state),
             action: openScanner,
             disabled: isRequesting || !locationGranted,
         },
@@ -347,8 +326,14 @@ export default function QRAttendance() {
                                             }`}
                                         >
                                             {attendanceResult.success
-                                                ? translate("Attendance Success",translation_state)
-                                                : translate("Attendance Failed",translation_state)}
+                                                ? translate(
+                                                      "Attendance Success",
+                                                      translation_state
+                                                  )
+                                                : translate(
+                                                      "Attendance Failed",
+                                                      translation_state
+                                                  )}
                                         </div>
                                         <div
                                             className={`text-lg ${
@@ -390,7 +375,11 @@ export default function QRAttendance() {
                                                 onClick={copyText}
                                                 className="inline-flex items-center rounded-lg border border-slate-300 bg-white px-3 py-1.5 text-xs font-medium hover:bg-slate-50"
                                             >
-                                                📋 {translate("Copy QR",translation_state)}
+                                                📋{" "}
+                                                {translate(
+                                                    "Copy QR",
+                                                    translation_state
+                                                )}
                                             </button>
                                             {!attendanceResult.success && (
                                                 <button
@@ -400,7 +389,11 @@ export default function QRAttendance() {
                                                     }
                                                     className="inline-flex items-center rounded-lg border border-slate-300 bg-white px-3 py-1.5 text-xs font-medium hover:bg-slate-50 disabled:opacity-50"
                                                 >
-                                                    🔄 {translate("Retry",translation_state)}
+                                                    🔄{" "}
+                                                    {translate(
+                                                        "Retry",
+                                                        translation_state
+                                                    )}
                                                 </button>
                                             )}
                                         </div>
@@ -408,7 +401,10 @@ export default function QRAttendance() {
                                 ) : (
                                     <>
                                         <div className="text-xs text-slate-500">
-                                            {translate("Scanned QR",translation_state)}
+                                            {translate(
+                                                "Scanned QR",
+                                                translation_state
+                                            )}
                                         </div>
                                         <div className="max-h-36 overflow-auto rounded-lg bg-white p-3 text-slate-800 text-left break-words">
                                             {scannedText}
@@ -418,7 +414,11 @@ export default function QRAttendance() {
                                                 onClick={copyText}
                                                 className="inline-flex items-center rounded-lg border border-slate-300 bg-white px-3 py-1.5 text-xs font-medium hover:bg-slate-50"
                                             >
-                                                📋 {translate("Copy",translation_state)}
+                                                📋{" "}
+                                                {translate(
+                                                    "Copy",
+                                                    translation_state
+                                                )}
                                             </button>
                                         </div>
                                     </>
@@ -430,10 +430,17 @@ export default function QRAttendance() {
                             <div className="space-y-3">
                                 <div className="text-4xl animate-spin">⏳</div>
                                 <div className="text-sm font-medium">
-                                    {translate("Processing Attendance",translation_state)}...
+                                    {translate(
+                                        "Processing Attendance",
+                                        translation_state
+                                    )}
+                                    ...
                                 </div>
                                 <div className="text-xs text-slate-500">
-                                    {translate("Submitting QR data with location",translation_state)}
+                                    {translate(
+                                        "Submitting QR data with location",
+                                        translation_state
+                                    )}
                                 </div>
                             </div>
                         </div>
@@ -454,10 +461,19 @@ export default function QRAttendance() {
                     ) : (
                         <div className="w-full h-full grid place-items-center text-center p-4 text-slate-500 text-sm">
                             {isRequesting
-                                ? translate("Requesting camera permission",translation_state)+"…"
+                                ? translate(
+                                      "Requesting camera permission",
+                                      translation_state
+                                  ) + "…"
                                 : hasPermission === false
-                                ? translate("Camera blocked. Allow access in browser settings.",translation_state)
-                                : translate("Scanner idle. Click Start Scanning.",translation_state)}
+                                ? translate(
+                                      "Camera blocked. Allow access in browser settings.",
+                                      translation_state
+                                  )
+                                : translate(
+                                      "Scanner idle. Click Start Scanning.",
+                                      translation_state
+                                  )}
                         </div>
                     )}
 
@@ -488,7 +504,10 @@ export default function QRAttendance() {
                 </p>
                 {step !== "result" && step !== "processing" && (
                     <p className="text-[11px] text-slate-500">
-                        {translate("Hold the QR inside the frame; good lighting helps.",translation_state)}
+                        {translate(
+                            "Hold the QR inside the frame; good lighting helps.",
+                            translation_state
+                        )}
                     </p>
                 )}
                 {errorMsg && (
@@ -506,8 +525,11 @@ export default function QRAttendance() {
                         className="w-full inline-flex items-center justify-center gap-2 rounded-xl border border-slate-300 bg-slate-900 text-white px-4 py-2.5 text-sm font-medium shadow-sm hover:bg-slate-800 disabled:opacity-60"
                     >
                         {isRequestingLocation
-                            ? translate("Requesting location",translation_state)+"…"
-                            : translate("Allow Location",translation_state)}
+                            ? translate(
+                                  "Requesting location",
+                                  translation_state
+                              ) + "…"
+                            : translate("Allow Location", translation_state)}
                     </button>
                 )}
 
@@ -536,14 +558,17 @@ export default function QRAttendance() {
                         disabled={isProcessingAttendance}
                         className="w-full inline-flex items-center justify-center gap-2 rounded-xl border border-slate-300 bg-white text-slate-700 px-4 py-2 text-sm font-medium shadow-sm hover:bg-slate-50 disabled:opacity-60"
                     >
-                        📷 {translate("Scan Another QR",translation_state)}
+                        📷 {translate("Scan Another QR", translation_state)}
                     </button>
                 )}
             </div>
 
             {/* Privacy + location note */}
             <div className="mt-4 text-[11px] leading-relaxed text-slate-500 border-t border-slate-100 pt-3">
-                {translate("We only read QR content for attendance. Location confirms presence. On iOS/Safari, camera needs HTTPS and a user gesture.",translation_state)}
+                {translate(
+                    "We only read QR content for attendance. Location confirms presence. On iOS/Safari, camera needs HTTPS and a user gesture.",
+                    translation_state
+                )}
                 {coords && (
                     <span className="block mt-1">
                         Location: {coords.lat?.toFixed(6)},{" "}
@@ -578,7 +603,7 @@ export default function QRAttendance() {
                     disabled={isProcessingAttendance}
                     className="mt-3 w-full inline-flex items-center justify-center gap-2 rounded-xl border border-slate-300 bg-[#846CF9] text-white px-4 py-2.5 text-sm font-medium shadow-sm hover:bg-blue-700 disabled:opacity-60"
                 >
-                    🧍 {translate("Manual Attendance",translation_state)}
+                    🧍 {translate("Manual Attendance", translation_state)}
                 </button>
             )}
         </PageLayout>
