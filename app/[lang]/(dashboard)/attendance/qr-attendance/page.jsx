@@ -110,10 +110,10 @@ export default function QRAttendance() {
             } catch (backCameraError) {
                 try {
                     stream = await navigator.mediaDevices.getUserMedia({
-                        video: { facingMode: { exact: "user" } },
+                        video: { facingMode: { exact: "environment" } },
                         audio: false,
                     });
-                    setVideoConstraints({ facingMode: { exact: "user" } });
+                    setVideoConstraints({ facingMode: { exact: "environment" } });
                 } catch (frontCameraError) {
                     stream = await navigator.mediaDevices.getUserMedia({
                         video: true,
@@ -205,22 +205,7 @@ export default function QRAttendance() {
                 coords.lat,
                 coords.lng,
                 branch
-            );
-
-            if (result.success) {
-                setAttendanceResult({
-                    success: true,
-                    message: result.message,
-                    data: result.data,
-                });
-                toast.success(result.message);
-            } else {
-                setAttendanceResult({
-                    success: false,
-                    message: result.error,
-                });
-                toast.error(result.error);
-            }
+            ); 
         } catch (error) {
             console.error("QR Attendance processing error:", error);
             const errorMessage =
@@ -443,6 +428,7 @@ export default function QRAttendance() {
                       mountScanner ? (
                         <QrReader
                             constraints={videoConstraints}
+                            key="environment"
                             onResult={handleScanResult}
                             scanDelay={300}
                             containerStyle={{ width: "100%", height: "100%" }}
@@ -577,6 +563,7 @@ export default function QRAttendance() {
                 <div className="hidden">
                     <QrReader
                         ref={legacyRef}
+                        key="environment"
                         onResult={(res, err) => {
                             if (res) handleScanResult(res, null);
                         }}
