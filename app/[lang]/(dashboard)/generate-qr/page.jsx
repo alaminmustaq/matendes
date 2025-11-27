@@ -25,18 +25,26 @@ export default function FaceAttendance() {
     `,
   });
 
+  const generate12DigitCode = () => {
+      let code = '';
+      for (let i = 0; i < 12; i++) {
+          code += Math.floor(Math.random() * 10); // 0-9
+      }
+      return code;
+  };
 
+  const randomCode = generate12DigitCode();
     return (
         <PageLayout>
             <div className="w-full max-w-[30%] mx-auto h-auto">
                 {/* QR Code */}
                 <div ref={qrRef} className="w-full h-auto max-w-full">
                     <QRCode
-                        size={256}
-                        className="w-full h-auto max-w-full"
-                        value="1"
-                        viewBox="0 0 256 256"
-                    />
+                      size={256}
+                      className="w-full h-auto max-w-full"
+                      value={randomCode} // use the 12-digit code
+                      viewBox="0 0 256 256"
+                  />
                 </div>
 
                 {/* Print Button */}

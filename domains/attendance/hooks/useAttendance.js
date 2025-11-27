@@ -204,29 +204,15 @@ const useAttendance = () => {
             try {
                 // Use provided branch data or fallback to hook's branch
                 const useBranch = branchData || branch;
-                const currentLocation = await getLatestBranchLocation();
-               
-                console.log("QR Check-in branch data:", {
-                    providedBranch: !!branchData,
-                    hookBranch: !!branch,
-                    usedBranch: !!useBranch,
-                    branchLatitude: currentLocation?.data?.latitude,
-                    branchLongitude:  currentLocation?.data?.longitude,
-                    branchRange:  currentLocation?.data?.allowed_range_meters,
-                });
+                const currentLocation = await getLatestBranchLocation(); 
 
                 // Get current location if not provided
                 if (!latitude || !longitude) {
                     try {
                         const location = await getCurrentLocation();
                         latitude = location.latitude;
-                        longitude = location.longitude;
+                        longitude = location.longitude; 
 
-                        console.log("QR Check-in: Location retrieved:", {
-                            latitude,
-                            longitude,
-                            accuracy: location.accuracy,
-                        });
                     } catch (locationError) {
                         console.error(
                             "QR Check-in: Location error:",
@@ -258,20 +244,7 @@ const useAttendance = () => {
                     latitude,
                     longitude,
                     allowedRange
-                );
-
-                console.log("QR Check-in location validation:", {
-                    targetLat: targetLat,
-                    targetLng: targetLng,
-                    currentLat: latitude,
-                    currentLng: longitude,
-                    allowedRange: allowedRange,
-                    targetLatType: typeof targetLat,
-                    targetLngType: typeof targetLng,
-                    distance: locationCheck.distance,
-                    isWithin: locationCheck.isWithin,
-                    branchData:  currentLocation?.data,
-                });
+                ); 
 
                 if (!locationCheck.isWithin) {
                     const errorMessage = `You are outside the allowed range for check-in. Distance: ${locationCheck.distance}m (Max: ${allowedRange}m)`;
@@ -315,7 +288,7 @@ const useAttendance = () => {
                     })
                 );
 
-                toast.success(response.message || "Check-in successful!");
+                // toast.success(response.message || "Check-in successful!");
 
                 return {
                     success: true,
