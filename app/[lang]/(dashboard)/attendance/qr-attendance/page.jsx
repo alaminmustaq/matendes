@@ -114,53 +114,57 @@ export default function QRAttendance() {
     }, []);
 
     // --- Open camera/scanner (asks for permission first) ---
-    const openScanner = async () => {
-        setErrorMsg("");
-        setIsRequesting(true);
-        try {
-            let stream = null;
-            try {
-                stream = await navigator.mediaDevices.getUserMedia({
-                    video: { facingMode: { exact: "environment" } },
-                    audio: false,
-                });
-                setVideoConstraints({ facingMode: { exact: "environment" } });
-            } catch (backCameraError) {
-                try {
-                    stream = await navigator.mediaDevices.getUserMedia({
-                        video: { facingMode: { exact: "environment" } },
-                        audio: false,
-                    });
-                    setVideoConstraints({
-                        facingMode: { exact: "environment" },
-                    });
-                } catch (frontCameraError) {
-                    stream = await navigator.mediaDevices.getUserMedia({
-                        video: true,
-                        audio: false,
-                    });
-                    setVideoConstraints({ video: true });
-                }
-            }
-            if (stream) {
-                stream.getTracks().forEach((t) => t.stop());
-            }
-            setHasPermission(true);
-            setStep("scanner");
-            setMountScanner(false);
-            setTimeout(() => setMountScanner(true), 0);
-        } catch (e) {
-            setHasPermission(false);
-            setStep("closed");
-            setErrorMsg(
-                typeof e?.message === "string"
-                    ? e.message
-                    : "Camera access denied or unavailable. Allow access in your browser settings."
-            );
-        } finally {
-            setIsRequesting(false);
-        }
-    };
+ const openScanner = async () => {
+    setErrorMsg("");
+    setIsRequesting(true);
+    try {
+        // Get list of video devices
+        const devices = await navigator.mediaDevices.enumerateDevices();
+        const videoDevices = devices.filter(d => d.kind === "videoinput");
+
+        // Try to find a back camera
+        let backCamera = videoDevices.find(d =>
+            d.label.toLowerCase().includes("back")
+        );
+
+        // Fallback to first camera if no "back" found
+        if (!backCamera) backCamera = videoDevices[0];
+
+        if (!backCamera) throw new Error("No camera found");
+
+        // Set constraints using deviceId
+        const constraints = {
+            video: { deviceId: { exact: backCamera.deviceId } },
+            audio: false,
+        };
+
+        // Test if we can access this camera
+        const stream = await navigator.mediaDevices.getUserMedia(constraints);
+
+        // Stop the stream immediately (we just needed permission & deviceId)
+        stream.getTracks().forEach(t => t.stop());
+
+        // Set video constraints for your QR reader
+        setVideoConstraints(constraints);
+        setHasPermission(true);
+        setStep("scanner");
+
+        // Remount scanner to apply new constraints
+        setMountScanner(false);
+        setTimeout(() => setMountScanner(true), 0);
+
+    } catch (e) {
+        setHasPermission(false);
+        setStep("closed");
+        setErrorMsg(
+            typeof e?.message === "string"
+                ? e.message
+                : "Camera access denied or unavailable. Allow access in your browser settings."
+        );
+    } finally {
+        setIsRequesting(false);
+    }
+};
 
     // --- Handle scanning results ---
     const handleScanResult = useCallback(
