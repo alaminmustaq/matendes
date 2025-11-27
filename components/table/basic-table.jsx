@@ -444,12 +444,12 @@ export function BasicDataTable({
                         /* Fallback to client-side pagination */
                         <>
                             <div className="flex-1 text-sm text-muted-foreground whitespace-nowrap">
-                                {/* {
+                                {
                                     table.getFilteredSelectedRowModel().rows
                                         .length
                                 }{" "}
                                 of {table.getFilteredRowModel().rows.length}{" "}
-                                row(s) selected. */}
+                                row(s) selected.
                             </div>
 
                             <div className="flex gap-2  items-center">

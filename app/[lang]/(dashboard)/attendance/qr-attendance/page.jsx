@@ -16,6 +16,9 @@ const QrReader = dynamic(
 );
 export default function QRAttendance() {
     const translation_state = useSelector((state) => state.auth.translation);
+
+    const isScanningRef = useRef(false);
+
     // Use attendance hook for API calls
     const { qrCheckIn, qrCheckOut, isCheckingIn, isCheckingOut, branch } =
         useAttendance();
@@ -146,6 +149,9 @@ export default function QRAttendance() {
     const handleScanResult = useCallback(
         async (result, error) => {
             if (!!result) {
+                if (isScanningRef.current) return; // ⛔ ignore repeated scans
+                isScanningRef.current = true; // 🔒 lock scanning
+
                 const text =
                     result?.getText?.() ?? result?.text ?? String(result);
 
@@ -238,6 +244,7 @@ export default function QRAttendance() {
     };
 
     const rescan = () => {
+        isScanningRef.current = false; // 🔓 unlock scanning
         setScannedText(null);
         setAttendanceResult(null);
         setErrorMsg("");
@@ -253,6 +260,7 @@ export default function QRAttendance() {
     };
 
     const closeResult = () => {
+        isScanningRef.current = false;   // 🔓 unlock scanning
         setScannedText(null);
         setAttendanceResult(null);
         setErrorMsg("");
