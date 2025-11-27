@@ -12,22 +12,23 @@ const QrScanner = dynamic(
     () => import("react-qr-scanner"),
     { ssr: false }
 );
-const [videoConstraints, setVideoConstraints] = useState({
-    facingMode: "environment", // start with back camera
-});
 
-const [isBack, setIsBack] = useState(true);
-
-const switchCamera = () => {
-    const next = !isBack;
-    setIsBack(next);
-
-    setVideoConstraints({
-        facingMode: next ? "environment" : "user"
-    });
-};
 
 export default function QRAttendance() {
+    const [videoConstraints, setVideoConstraints] = useState({
+    facingMode: "environment", // start with back camera
+    });
+
+    const [isBack, setIsBack] = useState(true);
+
+    const switchCamera = () => {
+        const next = !isBack;
+        setIsBack(next);
+
+        setVideoConstraints({
+            facingMode: next ? "environment" : "user"
+        });
+    };
     // inside your component
     const [isBackCamera, setIsBackCamera] = useState(true); // default: back camera
     
@@ -75,11 +76,7 @@ export default function QRAttendance() {
 
     // for legacy image scan
     const legacyRef = useRef(null);
-
-    // Camera constraints - will be updated dynamically
-    const [videoConstraints, setVideoConstraints] = useState({
-        facingMode: { ideal: "environment" }, // back camera by default
-    });
+ 
 
     // --- Location gating (unchanged behavior) ---
     const allowLocation = () => {
