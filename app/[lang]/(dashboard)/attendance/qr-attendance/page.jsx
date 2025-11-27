@@ -42,6 +42,7 @@ export default function QRAttendance() {
     const [locationGranted, setLocationGranted] = useState(false);
     const [isRequestingLocation, setIsRequestingLocation] = useState(false);
     const [coords, setCoords] = useState(null);
+    const [deviceId, setDeviceId] = useState(null);
 
     // attendance processing
     const [isProcessingAttendance, setIsProcessingAttendance] = useState(false);
@@ -95,6 +96,23 @@ export default function QRAttendance() {
         // eslint-disable-next-line react-hooks/exhaustive-deps
     }, []);
 
+    useEffect(() => {
+        // Get list of cameras
+        navigator.mediaDevices.enumerateDevices().then((devices) => {
+            const videoDevices = devices.filter(
+                (device) => device.kind === "videoinput"
+            );
+
+            // Pick the back camera
+            const backCamera =
+                videoDevices.find((device) =>
+                    device.label.toLowerCase().includes("back")
+                ) || videoDevices[0]; // fallback to first camera if no "back" found
+
+            setDeviceId(backCamera.deviceId);
+        });
+    }, []);
+
     // --- Open camera/scanner (asks for permission first) ---
     const openScanner = async () => {
         setErrorMsg("");
@@ -113,7 +131,9 @@ export default function QRAttendance() {
                         video: { facingMode: { exact: "environment" } },
                         audio: false,
                     });
-                    setVideoConstraints({ facingMode: { exact: "environment" } });
+                    setVideoConstraints({
+                        facingMode: { exact: "environment" },
+                    });
                 } catch (frontCameraError) {
                     stream = await navigator.mediaDevices.getUserMedia({
                         video: true,
@@ -170,7 +190,7 @@ export default function QRAttendance() {
             }
         },
         [coords]
-    ); 
+    );
 
     // Employee Manual Attendance
     const handleManualAttendance = async () => {
@@ -205,7 +225,7 @@ export default function QRAttendance() {
                 coords.lat,
                 coords.lng,
                 branch
-            ); 
+            );
         } catch (error) {
             console.error("QR Attendance processing error:", error);
             const errorMessage =
@@ -427,7 +447,7 @@ export default function QRAttendance() {
                       hasPermission !== false &&
                       mountScanner ? (
                         <QrReader
-                            constraints={videoConstraints}
+                            constraints={{ deviceId: { exact: deviceId } }}
                             key="environment"
                             onResult={handleScanResult}
                             scanDelay={300}
@@ -568,7 +588,7 @@ export default function QRAttendance() {
                             if (res) handleScanResult(res, null);
                         }}
                         scanDelay={500}
-                        constraints={{}} // ignored in legacy
+                        constraints={{ deviceId: { exact: deviceId } }}
                         containerStyle={{ width: 0, height: 0 }}
                         videoStyle={{ width: 0, height: 0 }}
                         // @ts-ignore — legacy method exists at runtime
