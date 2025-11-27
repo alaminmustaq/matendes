@@ -178,9 +178,7 @@ export default function QRAttendance() {
                     setStep("processing");
 
                     // Stop camera immediately after scan
-                    setMountScanner(false);
-
-                    toast.success("QR scanned! Processing attendance...");
+                    setMountScanner(false); 
                     try {
                         navigator.vibrate?.(60);
                     } catch {}
