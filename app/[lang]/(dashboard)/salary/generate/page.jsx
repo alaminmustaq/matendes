@@ -14,16 +14,20 @@ const SalaryGeneratePage = () => {
     return (
         <PageLayout>
             <BasicTableLayout
-                addPermission={"generate_salary"}
-                addButtonLabel={{"GenerateSalary":{
-                    label: "Generate Salary",
-                    action: actions.onGenerateSalary
-                },"ApprovedSalary":{
-                    label: "Approved Salary",
-                    action: actions.onApproveSalary
-                }}}
+                addButtonLabel={{
+                    GenerateSalary: {
+                        label: "Generate Salary",
+                        action: actions.onGenerateSalary,
+                        permission: "generate_salary",
+                    },
+                    ApprovedSalary: {
+                        label: "Approved Salary",
+                        action: actions.onApproveSalary,
+                        permission: "approved-salary",
+                    },
+                }}
                 columns={columns(actions)}
-                state={salaryState }
+                state={salaryState}
                 filterCustom={{
                     salary_month: {
                         multiple: true,
@@ -41,9 +45,8 @@ const SalaryGeneratePage = () => {
                             { key: "11", value: "November" },
                             { key: "12", value: "December" },
                         ],
-                    }
+                    },
                 }}
-                
             />
             <BasicModel
                 title={
@@ -58,7 +61,7 @@ const SalaryGeneratePage = () => {
                 }
                 cancelLabel="Cancel"
                 size="2xl"
-                form={salaryState.form} 
+                form={salaryState.form}
                 fields={
                     salaryState?.form?.watch("model_for") == "approved_salary"
                         ? ApprovedFields(actions)

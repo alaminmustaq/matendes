@@ -41,10 +41,9 @@ export const useSalary = () => {
     const salaryState = { data: salary?.data || [], 
         form,
          refetch,
-        pagination:  salary?.data?.pagination || {},
+        pagination:  salary?.pagination || {},
         isFetching,
-     };
-
+     }; 
     const actions = {
         onCreate: async (data) => {
          

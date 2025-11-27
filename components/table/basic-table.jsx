@@ -53,7 +53,7 @@ export function BasicDataTable({
     loading = false,
     filterCustom = [],
     searchKey = false,
-    search=true,
+    search = true,
     addPermission,
 }) {
     const translation_state = useSelector((state) => state.auth.translation);
@@ -67,10 +67,12 @@ export function BasicDataTable({
     );
     const { user } = useAppSelector((state) => state.auth);
 
-    const permissionNames = user?.permissions?.map(p => p.name) || []; 
+    const permissionNames = user?.permissions?.map((p) => p.name) || [];
     const addButtonVisible = permissionNames.includes(addPermission);
-     
-    addButtonLabel = translate(addButtonLabel,translation_state);
+
+    console.log("permissionNames:", permissionNames);
+
+    addButtonLabel = translate(addButtonLabel, translation_state);
     // Create debounced search function
     const debouncedSearch = React.useCallback(
         debounce((searchTerm) => {
@@ -182,7 +184,7 @@ export function BasicDataTable({
                                             index={key}
                                             searchKey={
                                                 searchKey
-                                                    ? ` ${searchKey}_`+ key
+                                                    ? ` ${searchKey}_` + key
                                                     : "" + key
                                             }
                                             title={key
@@ -198,24 +200,28 @@ export function BasicDataTable({
                                     );
                                 }
                             )}
-                            {search && <Input
-                                placeholder={`${translate('Search',translation_state)}...`}
-                                value={searchValue}
-                                onChange={(e) => {
-                                    const value = e.target.value;
-                                    // Update local state immediately for UI feedback
-                                    setSearchValue(value);
-                                    // Use debounced search for server requests
-                                    debouncedSearch(value);
-                                }}
-                                className="w-full sm:w-[350px] h-10 border-default-300 text-sm"
-                            />} 
-                            
+                            {search && (
+                                <Input
+                                    placeholder={`${translate(
+                                        "Search",
+                                        translation_state
+                                    )}...`}
+                                    value={searchValue}
+                                    onChange={(e) => {
+                                        const value = e.target.value;
+                                        // Update local state immediately for UI feedback
+                                        setSearchValue(value);
+                                        // Use debounced search for server requests
+                                        debouncedSearch(value);
+                                    }}
+                                    className="w-full sm:w-[350px] h-10 border-default-300 text-sm"
+                                />
+                            )}
                         </div>
                     )}
 
-                    {/* Right side actions — optional */} 
-                    {addButtonLabel && addButtonVisible && (
+                    {/* Right side actions — optional */}
+                    {addButtonLabel && (
                         <div className="flex items-center gap-2">
                             {typeof addButtonLabel === "string" ? (
                                 to ? (
@@ -230,8 +236,13 @@ export function BasicDataTable({
                                         onClick={() => {
                                             form.reset({
                                                 ...Object.fromEntries(
-                                                    Object.entries(form.getValues()).map(([key, value]) => {
-                                                        if (Array.isArray(value)) return [key, []];
+                                                    Object.entries(
+                                                        form.getValues()
+                                                    ).map(([key, value]) => {
+                                                        if (
+                                                            Array.isArray(value)
+                                                        )
+                                                            return [key, []];
                                                         return [key, ""];
                                                     })
                                                 ),
@@ -243,18 +254,32 @@ export function BasicDataTable({
                                     </Button>
                                 )
                             ) : (
-                                Object.entries(addButtonLabel).map(([key, config]) => (
-                                    <Button
-                                        key={key}
-                                        onClick={() => {
-                                            console.log(config);
-                                            
-                                            config.action();
-                                        }}
-                                    >
-                                        {config.label}
-                                    </Button>
-                                ))
+                                Object.entries(addButtonLabel).map(
+                                    ([key, config]) => {
+                                        console.log(config);
+                                        const hasPermission =
+                                            permissionNames.includes(
+                                                config.permission
+                                            );
+
+                                        if (!hasPermission) {
+                                            console.log(config.label);
+                                            return null;
+                                        }
+
+                                        return (
+                                            <Button
+                                                key={key}
+                                                onClick={() => {
+                                                    console.log(config);
+                                                    config.action();
+                                                }}
+                                            >
+                                                {config.label}
+                                            </Button>
+                                        );
+                                    }
+                                )
                             )}
                         </div>
                     )}
@@ -277,9 +302,12 @@ export function BasicDataTable({
                                         >
                                             {header.isPlaceholder
                                                 ? null
-                                                : flexRender(translate(header.column.columnDef
-                                                          .header,translation_state)
-                                                      ,
+                                                : flexRender(
+                                                      translate(
+                                                          header.column
+                                                              .columnDef.header,
+                                                          translation_state
+                                                      ),
                                                       header.getContext()
                                                   )}
                                         </TableHead>
@@ -346,11 +374,12 @@ export function BasicDataTable({
                 <div className="flex items-center flex-wrap gap-4 px-4 py-4">
                     {/* Show server-side pagination info if pagination object has server data */}
                     {typeof pagination === "object" && pagination.total ? (
-                        <>   
+                        <>
                             <div className="flex-1 text-sm text-muted-foreground whitespace-nowrap">
-                                {translate("Showing",translation_state)}  {pagination.from || 0} to{" "}
-                                {pagination.to || 0} of {pagination.total || 0}{" "}
-                                {translate("entries",translation_state)}
+                                {translate("Showing", translation_state)}{" "}
+                                {pagination.from || 0} to {pagination.to || 0}{" "}
+                                of {pagination.total || 0}{" "}
+                                {translate("entries", translation_state)}
                             </div>
 
                             <div className="flex gap-2 items-center">

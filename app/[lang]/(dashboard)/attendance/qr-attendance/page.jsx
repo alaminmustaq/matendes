@@ -16,9 +16,6 @@ const QrReader = dynamic(
 );
 export default function QRAttendance() {
     const translation_state = useSelector((state) => state.auth.translation);
-
-    const isScanningRef = useRef(false);
-
     // Use attendance hook for API calls
     const { qrCheckIn, qrCheckOut, isCheckingIn, isCheckingOut, branch } =
         useAttendance();
@@ -102,37 +99,36 @@ export default function QRAttendance() {
     const openScanner = async () => {
         setErrorMsg("");
         setIsRequesting(true);
+
         try {
-            let stream = null;
-            try {
-                stream = await navigator.mediaDevices.getUserMedia({
-                    video: { facingMode: { exact: "environment" } },
-                    audio: false,
-                });
-                setVideoConstraints({ facingMode: { exact: "environment" } });
-            } catch (backCameraError) {
-                try {
-                    stream = await navigator.mediaDevices.getUserMedia({
-                        video: { facingMode: { exact: "user" } },
-                        audio: false,
-                    });
-                    setVideoConstraints({ facingMode: { exact: "user" } });
-                } catch (frontCameraError) {
-                    stream = await navigator.mediaDevices.getUserMedia({
-                        video: true,
-                        audio: false,
-                    });
-                    setVideoConstraints({ video: true });
-                }
-            }
-            if (stream) {
-                stream.getTracks().forEach((t) => t.stop());
-            }
+            // 1️⃣ Get all video input devices
+            const devices = await navigator.mediaDevices.enumerateDevices();
+            const backCamera = devices.find(
+                (d) =>
+                    d.kind === "videoinput" &&
+                    d.label.toLowerCase().includes("back")
+            );
+
+            // 2️⃣ Request media stream with back camera if found
+            const constraints = backCamera
+                ? { video: { deviceId: { exact: backCamera.deviceId } }, audio: false }
+                : { video: { facingMode: { ideal: "environment" } }, audio: false };
+
+            const stream = await navigator.mediaDevices.getUserMedia(constraints);
+
+            // Stop the stream immediately (we just need permission)
+            stream.getTracks().forEach((t) => t.stop());
+
+            // 3️⃣ Save constraints for QR reader
+            setVideoConstraints(backCamera ? { deviceId: { exact: backCamera.deviceId } } : { facingMode: { ideal: "environment" } });
+
+            // 4️⃣ Update UI
             setHasPermission(true);
             setStep("scanner");
             setMountScanner(false);
             setTimeout(() => setMountScanner(true), 0);
         } catch (e) {
+            console.error(e);
             setHasPermission(false);
             setStep("closed");
             setErrorMsg(
@@ -149,9 +145,6 @@ export default function QRAttendance() {
     const handleScanResult = useCallback(
         async (result, error) => {
             if (!!result) {
-                if (isScanningRef.current) return; // ⛔ ignore repeated scans
-                isScanningRef.current = true; // 🔒 lock scanning
-
                 const text =
                     result?.getText?.() ?? result?.text ?? String(result);
 
@@ -244,7 +237,6 @@ export default function QRAttendance() {
     };
 
     const rescan = () => {
-        isScanningRef.current = false; // 🔓 unlock scanning
         setScannedText(null);
         setAttendanceResult(null);
         setErrorMsg("");
@@ -260,7 +252,6 @@ export default function QRAttendance() {
     };
 
     const closeResult = () => {
-        isScanningRef.current = false;   // 🔓 unlock scanning
         setScannedText(null);
         setAttendanceResult(null);
         setErrorMsg("");
