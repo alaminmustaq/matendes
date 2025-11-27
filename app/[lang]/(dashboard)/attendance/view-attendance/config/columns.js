@@ -5,12 +5,12 @@ let columns = (actions) => [
   {
     id: "name",
     header: "Name",
-    cell: ({ row }) => val(row.original?.employee?.name),
+    cell: ({ row }) => `${row.original?.employee?.first_name }  ${row.original?.employee?.last_name}` ,
   },
   {
     id: "employee_number",
     header: "Employee Code",
-    cell: ({ row }) => val(row.original?.employee?.employee_number),
+    cell: ({ row }) => val(row.original?.employee?.employee_code),
   },
 
   
@@ -19,17 +19,10 @@ let columns = (actions) => [
   {
     id: "branch",
     header: "Branch",
-    cell: ({ row }) => row.original?.branch?.name ?? "-",
+    cell: ({ row }) => row.original?.employee?.branch?.name ?? "-",
   },
 
-  // Department
-  {
-    id: "department",
-    header: "Department",
-    cell: ({ row }) =>
-      row.original?.department?.name ?? row.original?.employee?.department ?? "-",
-  },
-
+  
   // Date
   {
     id: "date",

@@ -1,6 +1,7 @@
 import { createApi } from "@reduxjs/toolkit/query/react";
 import { baseQuery } from "../../../utility/baseQuery";
 
+import { getFilterParams } from "@/utility/helpers";
 export const attendanceApi = createApi({
     reducerPath: "attendanceApi",
     baseQuery: baseQuery,
@@ -81,8 +82,10 @@ export const attendanceApi = createApi({
             query: () => ({
                 url: "hrm/attendance",
                 method: "GET",
+             params: { ...getFilterParams() }, // fetch all branches
             }),
             providesTags: ["Attendance"],
+
         }),
         getAttendanceHistory: builder.query({
             query: (params = {}) => ({

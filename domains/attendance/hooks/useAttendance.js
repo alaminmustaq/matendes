@@ -58,13 +58,15 @@ const useAttendance = () => {
     const { data, refetch, isFetching } = useViewAttendanceQuery();
 
     const attendanceState = {
-        data: data?.data || [],
+        data: data?.data?.attendance || [],
 
         refetch,
         pagination: data?.data?.pagination || {},
         isFetching,
     };
 
+
+    
     // State for location configuration
     const [TARGET_LATITUDE, setTargetLatitude] = useState(null);
     const [TARGET_LONGITUDE, setTargetLongitude] = useState(null);
@@ -288,9 +290,9 @@ const useAttendance = () => {
                     })
                 );
                 
-                // setTimeout(() => {
-                //     toast.success(response.message || "Check-in successful!");
-                // }, 100);
+                setTimeout(() => {
+                    toast.success(response.message || "Check-in successful!");
+                }, 100);
                 
 
                 return {
