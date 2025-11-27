@@ -232,7 +232,9 @@ export function BasicDataTable({
                                         {addButtonLabel}
                                     </Link>
                                 ) : (
-                                    <Button
+                                    permissionNames.includes(
+                                                addPermission
+                                            ) && <Button
                                         onClick={() => {
                                             form.reset({
                                                 ...Object.fromEntries(

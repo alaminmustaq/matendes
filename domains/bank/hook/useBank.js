@@ -36,6 +36,7 @@ export const useBank = () => {
         data: bankData?.data?.banks || [],
         form: { ...form, fields: fieldArray },
         refetch,
+        pagination: bankData?.data?.pagination || {},
         isFetching,
     };
 

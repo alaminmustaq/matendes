@@ -48,6 +48,7 @@ export const useLanguage = () => {
         isFetching,
         values: languageValues?.data || [],
         refetchValues,
+        pagination: languagesData?.data?.pagination || {},
         isFetchingValues,
         languageValues,
     };
@@ -140,7 +141,6 @@ export const useLanguage = () => {
                     language_id: language_id,
                     isSingle,
                 };
- 
 
                 await updateSingleTranslation({ data }).unwrap();
                 toast.success("Translations updated successfully");
@@ -149,8 +149,7 @@ export const useLanguage = () => {
             }
         },
         onUpdateAllTranslation: async (values, isSingle) => {
-            try { 
-
+            try {
                 const data = { value: values, isSingle };
 
                 await updateSingleTranslation({ data }).unwrap();
@@ -160,18 +159,15 @@ export const useLanguage = () => {
             }
         },
         onSetDefaultLanguage: async (values) => {
-            try {   
+            try {
                 const data = values;
 
                 await setDefaultLanguage(data).unwrap();
                 toast.success("Default language set successfully");
- 
             } catch (error) {
                 handleServerValidationErrors(error, form.setError);
             }
         },
-
-        
     };
 
     return { form, actions, languageState };

@@ -28,6 +28,7 @@ export const useClient = () => {
         data: client?.data?.clients || [],
         form,
         refetch,
+        pagination: client?.data?.pagination || {},
         isFetching,
     };
 

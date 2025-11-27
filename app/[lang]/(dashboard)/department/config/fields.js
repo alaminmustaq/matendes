@@ -1,7 +1,7 @@
 const fields = () => {
     return [
         // =============== Relations ===============
-    
+
         {
             name: "branch_id",
             type: "async-select",
@@ -13,7 +13,7 @@ const fields = () => {
             ],
             placeholder: "Optional",
             colSpan: "col-span-12 md:col-span-6",
-        }, 
+        },
 
         // =============== Core ===============
         {
@@ -37,9 +37,8 @@ const fields = () => {
             options: [
                 { label: "Technical", value: "technical" },
                 { label: "Business", value: "business" },
-                { label: "Support", value: "support" },
-                { label: "Administ", value: "administ" },
-            ], 
+                { label: "Support", value: "support" }, 
+            ],
         },
         {
             name: "code",
@@ -58,7 +57,7 @@ const fields = () => {
         //     type: "async-select",
         //     label: "Select Manager",
         //     loadOptions: ["managers", "managers", "commonSearchTemplate"],
-        //     colSpan: "col-span-12 md:col-span-6", 
+        //     colSpan: "col-span-12 md:col-span-6",
         // },
         {
             name: "type",
@@ -149,7 +148,6 @@ const fields = () => {
             inputProps: { maxLength: 20 },
             rules: { maxLength: { value: 20, message: "Max 20 characters" } },
         },
-      
 
         // =============== Dates & Numbers ===============
         {
@@ -157,7 +155,7 @@ const fields = () => {
             type: "date",
             label: "Established Date",
             colSpan: "col-span-12 md:col-span-6",
-        }, 
+        },
 
         // =============== Hierarchy ===============
         {
@@ -172,6 +170,7 @@ const fields = () => {
                 min: { value: 0, message: "Must be unsigned (≥ 0)" },
                 max: { value: 255, message: "Too large for TINYINT UNSIGNED" },
             },
+            note: "Write the level of this department in the organizational hierarchy (1 for top level)",
         },
         {
             name: "hierarchy_path",
@@ -181,6 +180,7 @@ const fields = () => {
             colSpan: "col-span-12 md:col-span-6",
             inputProps: { maxLength: 500 },
             rules: { maxLength: { value: 500, message: "Max 500 characters" } },
+            note: "Show the full chain of hierarchy from the top level to this department",
         },
         {
             name: "sort_order",
@@ -193,6 +193,7 @@ const fields = () => {
                 required: "Sort order is required",
                 min: { value: 0, message: "Must be unsigned (≥ 0)" },
             },
+            note: "Controls the display order of items at the same level.",
         },
 
         // =============== Status ===============
@@ -209,7 +210,7 @@ const fields = () => {
                 { label: "Dissolved", value: "dissolved" },
             ],
             rules: { required: "Status is required" },
-        }, 
+        },
     ];
 };
 

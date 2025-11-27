@@ -91,6 +91,12 @@ let columns = (actions) => [
         header: "Status",
         cell: ({ row }) => safe(row.original?.status),
     },
+
+     {
+        id: "admin_status",
+        header: "Admin Status",
+        cell: ({ row }) => safe(row.original?.admin_status),
+    },
     // Notes
     // {
     //     id: "notes",

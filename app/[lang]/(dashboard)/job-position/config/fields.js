@@ -1,7 +1,6 @@
 import { useCompany } from "@/domains/company/hook/useCompany";
 import { useDepartment } from "@/domains/department/hook/useDepartment";
 
-
 const fields = () => {
     // Hooks to get search actions for async selects
     // const { actions: companyActions } = useCompany();
@@ -12,7 +11,7 @@ const fields = () => {
 
     return [
         // ============= Relations =============
-  
+
         {
             name: "branch_id",
             type: "async-select",
@@ -21,11 +20,10 @@ const fields = () => {
                 "organization/branches",
                 "branches",
                 "branchSearchTemplate",
-            
             ],
             placeholder: "Optional",
             colSpan: "col-span-12 md:col-span-4",
-        },  
+        },
         {
             name: "department_id",
             type: "async-select",
@@ -66,6 +64,7 @@ const fields = () => {
             colSpan: "col-span-12 md:col-span-4",
             inputProps: { min: 1, step: "1" },
             rules: { min: { value: 1, message: "Must be ≥ 1" } },
+            note: "Write the level of this Job position in the organizational hierarchy (1 for top level)",
         },
         {
             name: "hierarchy_path",
@@ -75,6 +74,7 @@ const fields = () => {
             colSpan: "col-span-12 md:col-span-4",
             inputProps: { maxLength: 500 },
             rules: { maxLength: { value: 500, message: "Max 500 characters" } },
+            note: "Show the full chain of hierarchy from the top level to this Job position",
         },
 
         // ============= Core Info =============
@@ -123,7 +123,7 @@ const fields = () => {
             placeholder: "Required qualifications, skills, experience...",
             colSpan: "col-span-12 md:col-span-6",
         },
-        
+
         // ============= Classification =============
         {
             name: "employment_type",
@@ -201,7 +201,7 @@ const fields = () => {
         //     placeholder: "e.g., Master's degree in Business Administration",
         //     colSpan: "col-span-12 md:col-span-6",
         // },
-        
+
         // ============= Salary & Compensation =============
         // {
         //     name: "min_salary",
@@ -260,7 +260,7 @@ const fields = () => {
         //     label: "Commission Eligible",
         //     colSpan: "col-span-12 md:col-span-4",
         // },
-        
+
         // ============= Skills & Experience =============
         // {
         //     name: "required_skills",
@@ -308,13 +308,16 @@ const fields = () => {
                 validate: (value, formValues) => {
                     if (!value || !formValues.experience_years_min) return true;
 
-                    return Number(value) >= Number(formValues.experience_years_min)
-                        || "Maximum experience cannot be less than minimum experience";
-                }
+                    return (
+                        Number(value) >=
+                            Number(formValues.experience_years_min) ||
+                        "Maximum experience cannot be less than minimum experience"
+                    );
+                },
             },
             inputProps: { min: 0, step: "1" },
         },
-        
+
         // ============= Work Style & Recruitment =============
         {
             name: "travel_requirement",
@@ -361,9 +364,11 @@ const fields = () => {
                 validate: (value, formValues) => {
                     if (!value || !formValues.total_positions) return true;
 
-                    return Number(value) <= Number(formValues.total_positions)
-                        || "Filled positions cannot be greater than total positions";
-                }
+                    return (
+                        Number(value) <= Number(formValues.total_positions) ||
+                        "Filled positions cannot be greater than total positions"
+                    );
+                },
             },
             inputProps: { min: 0, step: "1" },
         },
@@ -384,9 +389,11 @@ const fields = () => {
 
                     const expectedVacant = total - filled;
 
-                    return Number(value) === expectedVacant
-                        || `Vacant positions must be ${expectedVacant}`;
-                }
+                    return (
+                        Number(value) === expectedVacant ||
+                        `Vacant positions must be ${expectedVacant}`
+                    );
+                },
             },
             inputProps: { min: 0, step: "1" },
         },
@@ -428,7 +435,7 @@ const fields = () => {
         //     placeholder: "List of benefits...",
         //     colSpan: "col-span-12",
         // },
-        
+
         // ============= Operational & Metadata =============
         {
             name: "status",
@@ -449,7 +456,6 @@ const fields = () => {
         //     label: "Enabled",
         //     colSpan: "col-span-12 md:col-span-4",
         // },
-        
     ];
 };
 

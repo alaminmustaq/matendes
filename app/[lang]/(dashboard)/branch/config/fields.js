@@ -55,6 +55,7 @@ const fields = [
             required: "Hierarchy level is required",
             min: { value: 1, message: "Must be ≥ 1" },
         },
+        note: "Write the level of this branch in the organizational hierarchy (1 for top level)",
     },
     {
         name: "hierarchy_path",
@@ -64,6 +65,7 @@ const fields = [
         colSpan: "col-span-12 md:col-span-6",
         inputProps: { maxLength: 500 },
         rules: { maxLength: { value: 500, message: "Max 500 characters" } },
+        note: "Show the full chain of hierarchy from the top level to this branch",
     },
 
     {
@@ -230,6 +232,7 @@ const fields = [
             required: "Sort order is required",
             min: { value: 0, message: "Must be ≥ 0" },
         },
+        note: "Controls the display order of items at the same level.",
     },
 ];
 
