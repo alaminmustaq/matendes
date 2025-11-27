@@ -288,9 +288,9 @@ const useAttendance = () => {
                     })
                 );
                 
-                setTimeout(() => {
-                    toast.success(response.message || "Check-in successful!");
-                }, 100);
+                // setTimeout(() => {
+                //     toast.success(response.message || "Check-in successful!");
+                // }, 100);
                 
 
                 return {

@@ -109,7 +109,7 @@ export default function QRAttendance() {
                     device.label.toLowerCase().includes("back")
                 ) || videoDevices[0]; // fallback to first camera if no "back" found
 
-            setDeviceId(backCamera.deviceId);
+            setDeviceId(backCamera?.deviceId);
         });
     }, []);
 
