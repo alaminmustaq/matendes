@@ -8,12 +8,25 @@ import useAttendance from "@/hooks/useAttendance";
 import { useSelector } from "react-redux";
 import { translate } from "@/lib/utils";
 // load QR reader only on client
-const QrReader = dynamic(
-    () => import("react-qr-reader").then((m) => m.QrReader),
-    {
-        ssr: false,
-    }
+const QrScanner = dynamic(
+    () => import("react-qr-scanner"),
+    { ssr: false }
 );
+const [videoConstraints, setVideoConstraints] = useState({
+    facingMode: "environment", // start with back camera
+});
+
+const [isBack, setIsBack] = useState(true);
+
+const switchCamera = () => {
+    const next = !isBack;
+    setIsBack(next);
+
+    setVideoConstraints({
+        facingMode: next ? "environment" : "user"
+    });
+};
+
 export default function QRAttendance() {
     // inside your component
     const [isBackCamera, setIsBackCamera] = useState(true); // default: back camera
@@ -116,37 +129,29 @@ export default function QRAttendance() {
         try {
             let stream = null;
             try {
-                // Try back camera first
                 stream = await navigator.mediaDevices.getUserMedia({
                     video: { facingMode: { exact: "environment" } },
                     audio: false,
                 });
                 setVideoConstraints({ facingMode: { exact: "environment" } });
             } catch (backCameraError) {
-                // Back camera not available or permission denied
-                console.warn("Back camera unavailable:", backCameraError);
                 try {
-                    // Try front camera as fallback
                     stream = await navigator.mediaDevices.getUserMedia({
                         video: { facingMode: { exact: "user" } },
                         audio: false,
                     });
                     setVideoConstraints({ facingMode: { exact: "user" } });
-                    toast.warning("Back camera not accessible. Using front camera.");
                 } catch (frontCameraError) {
-                    // Fallback to any available camera
                     stream = await navigator.mediaDevices.getUserMedia({
                         video: true,
                         audio: false,
                     });
                     setVideoConstraints({ video: true });
-                    toast.error("No camera access available.");
                 }
             }
-
-            // Stop the test stream; we'll remount the scanner with constraints
-            if (stream) stream.getTracks().forEach((t) => t.stop());
-
+            if (stream) {
+                stream.getTracks().forEach((t) => t.stop());
+            }
             setHasPermission(true);
             setStep("scanner");
             setMountScanner(false);
@@ -463,12 +468,13 @@ export default function QRAttendance() {
                     ) : step === "scanner" &&
                       hasPermission !== false &&
                       mountScanner ? (
-                        <QrReader
+                        <QrScanner
+                            onScan={(data) => {
+                                if (data) handleScanResult(data);
+                            }}
+                            onError={(err) => console.error(err)}
                             constraints={videoConstraints}
-                            onResult={handleScanResult}
-                            scanDelay={300}
-                            containerStyle={{ width: "100%", height: "100%" }}
-                            videoStyle={{
+                            style={{
                                 width: "100%",
                                 height: "100%",
                                 objectFit: "cover",
@@ -597,17 +603,17 @@ export default function QRAttendance() {
             {/* Hidden legacy reader for image files only (no live video) */}
             {step === "scanner" && (
                 <div className="hidden">
-                    <QrReader
-                        ref={legacyRef}
-                        onResult={(res, err) => {
-                            if (res) handleScanResult(res, null);
+                    <QrScanner
+                        onScan={(data) => {
+                            if (data) handleScanResult(data);
                         }}
-                        scanDelay={500}
-                        constraints={{}} // ignored in legacy
-                        containerStyle={{ width: 0, height: 0 }}
-                        videoStyle={{ width: 0, height: 0 }}
-                        // @ts-ignore — legacy method exists at runtime
-                        legacyMode={true}
+                        onError={(err) => console.error(err)}
+                        constraints={videoConstraints}
+                        style={{
+                            width: "100%",
+                            height: "100%",
+                            objectFit: "cover",
+                        }}
                     />
                 </div>
             )}

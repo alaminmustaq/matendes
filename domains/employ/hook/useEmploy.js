@@ -65,7 +65,8 @@ export const useEmploy = () => {
         pagination: employ?.data?.pagination || {},
         isFetching,
       };
-  
+      console.log(employ);
+      
 
     const actions = {
         // ✅ New: fetch single employee by ID
