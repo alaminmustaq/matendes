@@ -116,29 +116,37 @@ export default function QRAttendance() {
         try {
             let stream = null;
             try {
+                // Try back camera first
                 stream = await navigator.mediaDevices.getUserMedia({
                     video: { facingMode: { exact: "environment" } },
                     audio: false,
                 });
                 setVideoConstraints({ facingMode: { exact: "environment" } });
             } catch (backCameraError) {
+                // Back camera not available or permission denied
+                console.warn("Back camera unavailable:", backCameraError);
                 try {
+                    // Try front camera as fallback
                     stream = await navigator.mediaDevices.getUserMedia({
                         video: { facingMode: { exact: "user" } },
                         audio: false,
                     });
                     setVideoConstraints({ facingMode: { exact: "user" } });
+                    toast.warning("Back camera not accessible. Using front camera.");
                 } catch (frontCameraError) {
+                    // Fallback to any available camera
                     stream = await navigator.mediaDevices.getUserMedia({
                         video: true,
                         audio: false,
                     });
                     setVideoConstraints({ video: true });
+                    toast.error("No camera access available.");
                 }
             }
-            if (stream) {
-                stream.getTracks().forEach((t) => t.stop());
-            }
+
+            // Stop the test stream; we'll remount the scanner with constraints
+            if (stream) stream.getTracks().forEach((t) => t.stop());
+
             setHasPermission(true);
             setStep("scanner");
             setMountScanner(false);
