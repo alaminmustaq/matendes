@@ -8,13 +8,40 @@ import useAttendance from "@/hooks/useAttendance";
 import { useSelector } from "react-redux";
 import { translate } from "@/lib/utils";
 // load QR reader only on client
-const QrReader = dynamic(
-    () => import("react-qr-reader").then((m) => m.QrReader),
-    {
-        ssr: false,
-    }
+const QrScanner = dynamic(
+    () => import("react-qr-scanner"),
+    { ssr: false }
 );
+const [videoConstraints, setVideoConstraints] = useState({
+    facingMode: "environment", // start with back camera
+});
+
+const [isBack, setIsBack] = useState(true);
+
+const switchCamera = () => {
+    const next = !isBack;
+    setIsBack(next);
+
+    setVideoConstraints({
+        facingMode: next ? "environment" : "user"
+    });
+};
+
 export default function QRAttendance() {
+    // inside your component
+    const [isBackCamera, setIsBackCamera] = useState(true); // default: back camera
+    
+    const toggleCamera = () => {
+        setIsBackCamera((prev) => !prev);
+        setVideoConstraints({
+            facingMode: { exact: !isBackCamera ? "environment" : "user" },
+        });
+
+        // Remount the scanner to apply new constraints
+        setMountScanner(false);
+        setTimeout(() => setMountScanner(true), 0);
+    };
+
     const translation_state = useSelector((state) => state.auth.translation);
     // Use attendance hook for API calls
     const { qrCheckIn, qrCheckOut, isCheckingIn, isCheckingOut, branch } =
@@ -51,9 +78,8 @@ export default function QRAttendance() {
 
     // Camera constraints - will be updated dynamically
     const [videoConstraints, setVideoConstraints] = useState({
-          audio: false,
-          video: { facingMode: { exact: "environment" } },
-        });
+        facingMode: { ideal: "environment" }, // back camera by default
+    });
 
     // --- Location gating (unchanged behavior) ---
     const allowLocation = () => {
@@ -107,29 +133,20 @@ export default function QRAttendance() {
                     video: { facingMode: { exact: "environment" } },
                     audio: false,
                 });
-                setVideoConstraints({
-          audio: false,
-          video: { facingMode: { exact: "environment" } },
-        });
+                setVideoConstraints({ facingMode: { exact: "environment" } });
             } catch (backCameraError) {
                 try {
                     stream = await navigator.mediaDevices.getUserMedia({
-                        video: { facingMode: { exact: "environment" } },
+                        video: { facingMode: { exact: "user" } },
                         audio: false,
                     });
-                    setVideoConstraints({
-          audio: false,
-          video: { facingMode: { exact: "environment" } },
-        });
+                    setVideoConstraints({ facingMode: { exact: "user" } });
                 } catch (frontCameraError) {
                     stream = await navigator.mediaDevices.getUserMedia({
                         video: true,
                         audio: false,
                     });
-                    setVideoConstraints({
-          audio: false,
-          video: { facingMode: { exact: "environment" } },
-        });
+                    setVideoConstraints({ video: true });
                 }
             }
             if (stream) {
@@ -217,7 +234,20 @@ export default function QRAttendance() {
                 branch
             );
 
-         
+            if (result.success) {
+                setAttendanceResult({
+                    success: true,
+                    message: result.message,
+                    data: result.data,
+                });
+                toast.success(result.message);
+            } else {
+                setAttendanceResult({
+                    success: false,
+                    message: result.error,
+                });
+                toast.error(result.error);
+            }
         } catch (error) {
             console.error("QR Attendance processing error:", error);
             const errorMessage =
@@ -438,13 +468,13 @@ export default function QRAttendance() {
                     ) : step === "scanner" &&
                       hasPermission !== false &&
                       mountScanner ? (
-                        <QrReader
+                        <QrScanner
+                            onScan={(data) => {
+                                if (data) handleScanResult(data);
+                            }}
+                            onError={(err) => console.error(err)}
                             constraints={videoConstraints}
-                            key="environment"
-                            onResult={handleScanResult}
-                            scanDelay={300}
-                            containerStyle={{ width: "100%", height: "100%" }}
-                            videoStyle={{
+                            style={{
                                 width: "100%",
                                 height: "100%",
                                 objectFit: "cover",
@@ -573,18 +603,17 @@ export default function QRAttendance() {
             {/* Hidden legacy reader for image files only (no live video) */}
             {step === "scanner" && (
                 <div className="hidden">
-                    <QrReader
-                        ref={legacyRef}
-                        onResult={(res, err) => {
-                            if (res) handleScanResult(res, null);
+                    <QrScanner
+                        onScan={(data) => {
+                            if (data) handleScanResult(data);
                         }}
-                        scanDelay={500}
-                        constraints={{}} // ignored in legacy
-                        key="environment"
-                        containerStyle={{ width: 0, height: 0 }}
-                        videoStyle={{ width: 0, height: 0 }}
-                        // @ts-ignore — legacy method exists at runtime
-                        legacyMode={true}
+                        onError={(err) => console.error(err)}
+                        constraints={videoConstraints}
+                        style={{
+                            width: "100%",
+                            height: "100%",
+                            objectFit: "cover",
+                        }}
                     />
                 </div>
             )}
@@ -597,6 +626,16 @@ export default function QRAttendance() {
                     className="mt-3 w-full inline-flex items-center justify-center gap-2 rounded-xl border border-slate-300 bg-[#846CF9] text-white px-4 py-2.5 text-sm font-medium shadow-sm hover:bg-blue-700 disabled:opacity-60"
                 >
                     🧍 {translate("Manual Attendance", translation_state)}
+                </button>
+            )}
+
+            {/* Camera Switch Button */}
+            {(
+                <button
+                    onClick={toggleCamera}
+                    className="mt-2 w-full inline-flex items-center justify-center gap-2 rounded-xl border border-slate-300 bg-slate-700 text-white px-4 py-2 text-sm font-medium shadow-sm hover:bg-slate-800"
+                >
+                    🔄 Switch Camera ({isBackCamera ? "Back" : "Front"})
                 </button>
             )}
         </PageLayout>
