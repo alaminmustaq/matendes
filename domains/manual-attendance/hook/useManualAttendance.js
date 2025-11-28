@@ -199,7 +199,7 @@ return date.toISOString().split("T")[0]; // format as YYYY-MM-DD
                     }
                 }
                 // Handle server validation errors
-                // handleServerValidationErrors(apiErrors, form);
+                handleServerValidationErrors(apiErrors, form.setError);
 
                 // Show specific error messages for duplicate attendance
 
