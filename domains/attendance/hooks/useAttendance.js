@@ -292,7 +292,7 @@ const useAttendance = () => {
                 
                 setTimeout(() => {
                     toast.success(response.message || "Check-in successful!");
-                }, 100);
+                }, 500);
                 
 
                 return {
