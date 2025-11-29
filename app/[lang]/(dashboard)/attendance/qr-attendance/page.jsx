@@ -219,6 +219,8 @@ export default function QRAttendance() {
             return;
         }
 
+        // Prevent multiple submissions
+        if (isProcessingAttendance) return;
         setIsProcessingAttendance(true);
 
         try {
