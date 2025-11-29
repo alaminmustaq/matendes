@@ -10,9 +10,13 @@ import {
 } from "@/components/ui/table";
 import { useDispatch, useSelector } from "react-redux";
 import { translate } from "@/lib/utils";
+import { useAppSelector } from "@/hooks/use-redux";
 
 const UsersDataTable = ({ toolSnapshotTable }) => {
     const translation_state = useSelector((state) => state.auth.translation);
+    const { user } = useAppSelector((state) => state.auth); 
+    const roleName = user?.user?.roles?.length > 0 ? user?.user?.roles[0].name : "No Role";
+    const level = user?.user?.roles?.length > 0 ? user?.user?.roles[0].level : "No Role";
     return (
         <div className="h-[250px]">
             <ScrollArea className="h-full">
@@ -20,13 +24,22 @@ const UsersDataTable = ({ toolSnapshotTable }) => {
                     <TableHeader>
                         <TableRow className="border-b border-border">
                             <TableHead className="text-sm h-10 font-medium text-default-800">
-                                {translate(
+                                {level == 0 && roleName == "root_admin" ? translate(
+                                    "Company",
+                                    translation_state
+                                ) : translate(
                                     "Distribution Type",
                                     translation_state
                                 )}
                             </TableHead>
                             <TableHead className="text-sm h-10 font-medium text-default-800 text-right">
-                                {translate("Quantity", translation_state)}
+                                {level == 0 && roleName == "root_admin" ? translate(
+                                    "Employee count",
+                                    translation_state
+                                ) : translate(
+                                    "Quantity",
+                                    translation_state
+                                )} 
                             </TableHead>
                         </TableRow>
                     </TableHeader>

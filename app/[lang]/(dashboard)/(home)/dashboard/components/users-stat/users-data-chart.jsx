@@ -6,10 +6,13 @@ import { useTheme } from "next-themes";
 import { themes } from "@/config/themes";
 import { getGridConfig } from "@/lib/apex-chart-options";
 import { useSelector } from "react-redux";
+import { useAppSelector } from "@/hooks/use-redux";
 
 const UsersDataChart = ({ height = 160 }) => {
   const { dashboardData } = useSelector((state) => state.dashboard);
-
+  const { user } = useAppSelector((state) => state.auth); 
+  const roleName = user?.user?.roles?.length > 0 ? user?.user?.roles[0].name : "No Role";
+  const level = user?.user?.roles?.length > 0 ? user?.user?.roles[0].level : "No Role";
   // Extract snapshot data
   const toolSnapshot = dashboardData?.toolSnapshotTable || [];
 
@@ -21,12 +24,24 @@ const UsersDataChart = ({ height = 160 }) => {
   const { theme: mode } = useTheme();
   const theme = themes.find((theme) => theme.name === config);
 
-  const series = [
-    {
-      name: "Tools",
-      data: counts,
-    },
-  ];
+  let series = [];
+
+  if (level === 0 && roleName === "root_admin") {
+    series = [
+      {
+        name: "Employees",
+        data: counts,
+      },
+    ];
+  } else {
+    series = [
+      {
+        name: "Tools",
+        data: counts,
+      },
+    ];
+  }
+
 
   const options = {
     chart: {

@@ -33,7 +33,7 @@ const DashboardPageView = ({ trans }) => {
             <div className="flex items-center flex-wrap justify-between gap-4">
                 <div className="text-2xl font-medium text-default-800">
                     {/* Company | Branch */}
-                    <div className="flex items-center gap-3 mb-1">
+                    {companyName != "—" && branchName != "—" ? <div className="flex items-center gap-3 mb-1">
                         <span className="text-lg font-semibold">
                             {companyName}
                         </span>
@@ -41,7 +41,12 @@ const DashboardPageView = ({ trans }) => {
                         <span className="text-sm text-default-600">
                             {branchName}
                         </span>
-                    </div>
+                    </div> : <div className="flex items-center gap-3 mb-1">
+                        <span className="text-xs">
+                            Root Admin
+                        </span> 
+                    </div>}
+                    
 
                     {/* Analytics Title */}
                     <div>

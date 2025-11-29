@@ -5,21 +5,24 @@ import UsersDataChart from "./users-data-chart";
 import UsersDataTable from "./users-data-table";
 import { useSelector } from "react-redux";
 import { translate } from "@/lib/utils";
+import { useAppSelector } from "@/hooks/use-redux";
 
 const UsersStat = () => {
     const { dashboardData } = useSelector((state) => state.dashboard); 
     const translation_state = useSelector((state) => state.auth.translation); 
-    
+    const { user } = useAppSelector((state) => state.auth); 
+    const roleName = user?.user?.roles?.length > 0 ? user?.user?.roles[0].name : "No Role";
+    const level = user?.user?.roles?.length > 0 ? user?.user?.roles[0].level : "No Role";
     return (
         <Card>
             <CardHeader className="border-none pb-0 mb-5">
                 <div className="flex items-center gap-1">
                     <div className="flex-1">
                         <div className="text-xl font-semibold text-default-900">
-                            {translate("Tool Distribution",translation_state)}
+                            {level == 0 && roleName == "root_admin" ? translate("Employee Distribution",translation_state): translate("Tool Distribution",translation_state)} 
                         </div>
                         <span className="text-xs text-default-600 ml-1">
-                            {translate("Status of Tools in Last 30 Days",translation_state)}
+                            {level == 0 && roleName == "root_admin" ? translate("Employees count in Last 30 Days",translation_state): translate("Status of Tools in Last 30 Days",translation_state)}
                         </span>
                     </div>
                     {/* <div className="flex-none flex items-center gap-1">
@@ -34,7 +37,7 @@ const UsersStat = () => {
             </CardHeader>
             <CardContent className="px-5 pb-0">
                 <p className="text-xs font-medium text-default-800">
-                  {translate("Tools Issued vs Returned",translation_state)}
+                    {level == 0 && roleName == "root_admin" ? translate("Employees Count by company",translation_state): translate("Tools Issued vs Returned",translation_state)} 
                 </p>
                 <UsersDataChart />
                 <UsersDataTable
