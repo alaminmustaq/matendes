@@ -58,8 +58,36 @@ const permissionColumns = (action,form) =>
             },
             {
               id: "check-all",
-              accessorKey: "check-all",
               header: "Check All",
+              cell: ({ row }) => {
+                const groupChild = row.original.group_child || [];
+                const selected = form?.watch("selectedPermission") || [];
+
+                // Check if all permissions in this group are selected
+                const allChecked = groupChild.every((child) => selected.includes(child.id));
+
+                const handleCheckAll = (checked) => {
+                  const current = form.getValues("selectedPermission") || [];
+                  if (checked) {
+                    // Add all child IDs if not already included
+                    const newSelected = [...new Set([...current, ...groupChild.map(c => c.id)])];
+                    form.setValue("selectedPermission", newSelected);
+                  } else {
+                    // Remove all child IDs from selected
+                    form.setValue(
+                      "selectedPermission",
+                      current.filter((id) => !groupChild.some(c => c.id === id))
+                    );
+                  }
+                };
+
+                return (
+                  <Checkbox
+                    checked={allChecked}
+                    onCheckedChange={handleCheckAll}
+                  />
+                );
+              },
             },
           ];
     }

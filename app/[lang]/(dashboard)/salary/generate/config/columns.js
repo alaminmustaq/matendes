@@ -6,6 +6,8 @@ let columns = (actions) => [
     header: "Name",
     accessorKey: "employee", // pass the whole employee object
     cell: ({ row }) => {
+        console.log(row);
+        
         const emp = row.original.employee;
         return `${emp.first_name ?? ""} ${emp.last_name ?? ""}`;
     }
@@ -84,6 +86,11 @@ let columns = (actions) => [
         id: "net_payable",
         header: "Net Payable",
         cell: ({ row }) => safe(row.original?.net_payable),
+    },
+    {
+        id: "total_hours",
+        header: "Total Hours",
+        cell: ({ row }) => safe(row.original?.total_hours),
     },
     // Status
     {

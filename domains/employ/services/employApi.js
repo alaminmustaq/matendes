@@ -9,14 +9,13 @@ export const employApi = createApi({
     endpoints: (builder) => ({
         // Fetch employee optionally by ID
         getEmploy: builder.query({
-    query: ({ id = false }) => ({
-        url: "hrm/employees",
-        method: "GET",
-        params: id ? { id } : getFilterParams(),
-    }),
-    providesTags: ["Employ"],
-}),
-
+            query: ({ id = false }) => ({
+                url: "hrm/employees",
+                method: "GET",
+                params: id ? { id } : getFilterParams(),
+            }),
+            providesTags: ["Employ"],
+        }),
 
         // Create employee
         employCreate: builder.mutation({
@@ -52,7 +51,9 @@ export const employApi = createApi({
             query: ({ id } = {}) => ({
                 url: "hrm/employees",
                 method: "GET",
-                params: id ? { ...getFilterParams(), id } : { ...getFilterParams() },
+                params: id
+                    ? { ...getFilterParams(), id , employeePageKey:true}
+                    : { ...getFilterParams() , employeePageKey:true},
             }),
             providesTags: ["Employ"],
         }),

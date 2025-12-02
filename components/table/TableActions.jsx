@@ -21,6 +21,7 @@ import { useSelector } from "react-redux";
  * @param {string} [props.label="Actions"] - Dropdown label.
  * @param {string} [props.alignmentClass="flex justify-center"] - Tailwind alignment class.
  * @param {Function} [props.onLoginAsCompany] - Optional “Login as Company” callback.
+ * @param {Function} [props.onLoginAsBranch] - Optional “Login as Branch” callback.
  */
 export const TableActions = ({
   data,
@@ -28,6 +29,7 @@ export const TableActions = ({
   label = "Actions",
   alignmentClass = "flex justify-center",
   onLoginAsCompany, 
+  onLoginAsBranch, 
 }) => {
   const translation_state = useSelector((state) => state.auth.translation);
   const showSrOnlySpan = alignmentClass !== "flex justify-center";
@@ -54,6 +56,15 @@ export const TableActions = ({
             <>
               <DropdownMenuItem onClick={() => onLoginAsCompany(data)}>
                 {translate("Login as Company",translation_state)}
+              </DropdownMenuItem>
+              <DropdownMenuSeparator />
+            </>
+          )}
+
+          {onLoginAsBranch && (
+            <>
+              <DropdownMenuItem onClick={() => onLoginAsBranch(data)}>
+                {translate("Login as Branch",translation_state)}
               </DropdownMenuItem>
               <DropdownMenuSeparator />
             </>

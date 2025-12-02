@@ -42,6 +42,8 @@ export const useRole = () => {
         pagination: roleAndPermission?.data?.pagination || {},
         isFetching,
     };
+    console.log(rolesState.permissions);
+    
     const actions = {
         onCreate: async (data) => {
             try {
@@ -149,6 +151,7 @@ export const useRole = () => {
             form.setValue("openModel", true);
             form.setValue("openPermissionMode", true);
             form.setValue("selectedPermission", [...ids]);
+            form.setValue("name", data.display_name);
 
             setFilterParams("page", 1);
         },

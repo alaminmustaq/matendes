@@ -1,3 +1,4 @@
+// services/documentApi.ts
 import { createApi } from "@reduxjs/toolkit/query/react";
 import { baseQuery } from "@/utility/baseQuery";
 import { getFilterParams } from "@/utility/helpers";
@@ -7,6 +8,7 @@ export const documentApi = createApi({
     baseQuery: baseQuery,
     tagTypes: ["Document"],
     endpoints: (builder) => ({
+        // Create document
         createDocument: builder.mutation({
             query: (credentials) => {
                 const isFormData = credentials instanceof FormData;
@@ -14,27 +16,28 @@ export const documentApi = createApi({
                     url: "document_management/documents",
                     method: "POST",
                     body: credentials,
-                    // Don't set Content-Type for FormData, let browser handle it
-                    headers: isFormData ? {} : { 'Content-Type': 'application/json' },
+                    headers: isFormData ? {} : { "Content-Type": "application/json" },
                 };
             },
             invalidatesTags: ["Document"],
         }),
+
+        // Update document
         updateDocument: builder.mutation({
             query: ({ id, credentials }) => {
                 const isFormData = credentials instanceof FormData;
+                if (isFormData) credentials.append("_method", "PUT");
                 return {
                     url: `document_management/documents/${id}`,
-                    method: "POST", // Changed to POST for FormData with _method override
-                    body: isFormData ? (() => {
-                        credentials.append('_method', 'PUT');
-                        return credentials;
-                    })() : credentials,
-                    headers: isFormData ? {} : { 'Content-Type': 'application/json' },
+                    method: "POST",
+                    body: credentials,
+                    headers: isFormData ? {} : { "Content-Type": "application/json" },
                 };
             },
             invalidatesTags: ["Document"],
         }),
+
+        // Delete document
         deleteDocument: builder.mutation({
             query: ({ id }) => ({
                 url: `document_management/documents/${id}`,
@@ -42,6 +45,8 @@ export const documentApi = createApi({
             }),
             invalidatesTags: ["Document"],
         }),
+
+        // Delete document detail
         deleteDocumentDetail: builder.mutation({
             query: ({ documentId, detailId }) => ({
                 url: `document_management/documents/${documentId}/details/${detailId}`,
@@ -49,11 +54,32 @@ export const documentApi = createApi({
             }),
             invalidatesTags: ["Document"],
         }),
+
+        // Fetch all documents
+        // fetchDocuments: builder.query({
+        //     query: () => ({
+        //         url: "document_management/documents",
+        //         method: "GET",
+        //         params: { ...getFilterParams() },
+        //     }),
+        //     providesTags: ["Document"],
+        // }),
+
+        // Fetch single document by ID (with details)
+        getDocumentById: builder.query({
+            query: (id) => ({
+                url: `document_management/documents/${id}`,
+                method: "GET",
+            }),
+            providesTags: ["Document"],
+        }),
         fetchDocuments: builder.query({
-            query: () => ({
+            query: ({ id } = {}) => ({
                 url: "document_management/documents",
                 method: "GET",
-                params: { ...getFilterParams() },
+                params: id
+                    ? { ...getFilterParams(), id }
+                    : { ...getFilterParams() },
             }),
             providesTags: ["Document"],
         }),
@@ -66,4 +92,6 @@ export const {
     useDeleteDocumentMutation,
     useDeleteDocumentDetailMutation,
     useFetchDocumentsQuery,
+    useGetDocumentByIdQuery,        // fetch single document directly
+    useLazyGetDocumentByIdQuery,    // lazy fetch for single document (like useLazyEmployFetchQuery)
 } = documentApi;

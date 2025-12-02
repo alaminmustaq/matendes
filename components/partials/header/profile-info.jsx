@@ -54,13 +54,13 @@ const ProfileInfo = () => {
                     <div>
                         <div className="text-sm font-medium text-default-800 capitalize ">
                             {
-                                user?.user?.name 
-                                || (user?.employee?.first_name || user?.employee?.last_name 
-                                        ? `${user.employee.first_name ?? ""} ${user.employee.last_name ?? ""}`.trim()
-                                        : null)
-                                || user?.company?.name
-                                || "Unknown"
-                            }
+                                user?.employee
+                                    ? `${user.employee.first_name ?? ""} ${user.employee.last_name ?? ""}`.trim() 
+                                    + (user?.user?.roles?.length > 0 ? ` (${user.user.roles[0].display_name})` : "")
+                                    : user?.company?.name
+                                    ? `${user.company.name} (Company)`
+                                    : (user?.user?.roles?.length > 0 ? user.user.roles[0].display_name : "Unknown")
+                                }
                         </div>
                         <Link
                             href="/dashboard"

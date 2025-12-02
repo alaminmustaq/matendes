@@ -1,6 +1,13 @@
 import { TableActions } from "@/components/table/TableActions";
+import { useRouter,useParams } from "next/navigation";
 
-const columns = (actions) => [
+const columns = (actions) => 
+{
+    const router = useRouter(); 
+    const params = useParams();
+    const lang = params?.lang || "en";
+
+    return [
     {
         id: "title",
         header: "Title",
@@ -63,12 +70,19 @@ const columns = (actions) => [
                 label="Actions"
                 // alignmentClass is omitted here, so it defaults to "flex justify-center"
                 items={[
+                    {
+                        label: "View",
+                        onClick: (rowData) => {
+                            router.push(`/${lang}/document-details/${rowData?.id}`);
+                        },
+                        permission: "details-employee",
+                    },
                     { label: "Edit", onClick: actions?.onEdit, permission: "edit-document"},
                     { label: "Delete", onClick: actions?.onDelete, danger: true, passId: true, permission: "delete-document"}, // needs only ID
                 ]}
             />
         ),
     },
-];
+]};
 
 export default columns;

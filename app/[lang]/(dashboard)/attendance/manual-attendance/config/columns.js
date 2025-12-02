@@ -106,6 +106,20 @@ const columns = (actions) => [
             </span>
         ),
     },
+    {
+        accessorKey: "adjustment_type",
+        header: ({ column }) => (
+            <div className="flex items-center gap-2">
+              
+                Adjustment type
+            </div>
+        ),
+        cell: ({ row }) => (
+            <span className="text-xs text-muted-foreground">
+                {row.original?.attendances[0]?.adjustment_type || 'Manual Attendance'}
+            </span>
+        ),
+    },
 
     {
         accessorKey: "timeRange",
@@ -135,6 +149,8 @@ const columns = (actions) => [
                 row.original?.global_check_in_time,
                 row.original?.global_check_out_time
             );
+            console.log(row.original);
+            
             return <span className="text-sm font-medium">{total}h</span>;
         },
         sortingFn: (rowA, rowB) => {

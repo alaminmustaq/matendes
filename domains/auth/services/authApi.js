@@ -30,6 +30,13 @@ export const authApi = createApi({
                 body: company_id,
             }),
         }),
+        loginAsBranch: builder.mutation({
+            query: (data) => ({
+                url: "auth/login-as-branch",
+                method: "POST",
+                body: data,
+            }),
+        }),
         // fetchUser: builder.query({
         //   query: () => "/v1/auth/me",
         // }),
@@ -42,4 +49,5 @@ export const {
     useMeQuery,
     useLazyMeQuery,
     useLoginAsCompanyMutation,
+    useLoginAsBranchMutation,
 } = authApi;

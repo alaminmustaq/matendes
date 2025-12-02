@@ -105,7 +105,6 @@ export const useSalary = () => {
             form.reset({openModel: true}) 
         },
         onApproveSalary: async () => {
-
             form.reset({openModel: true, model_for: "approved_salary"}) 
         },
     };

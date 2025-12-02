@@ -16,18 +16,23 @@ import { debounce } from "@/utility/helpers";
 import { branchSearchTemplate } from "@/utility/templateHelper";
 import { getFilterParams } from "@/utility/helpers";
 import { useMemo } from "react";
+import useAuth from "@/domains/auth/hooks/useAuth";
 
 export const useBranch = () => {
     const [branchCreate] = useBranchCreateMutation();
     const [branchUpdate] = useBranchUpdateMutation();
     const [branchDelete] = useBranchDeleteMutation();
     const { data: branch, refetch, isFetching } = useBranchFetchQuery();
+    const { loginAsBranch } = useAuth();
 
     const form = useForm({
         mode: "onBlur",
         reValidateMode: "onSubmit",
         shouldFocusError: true,
     });
+    const defaultValue={
+        status: 'active',
+    }
 
     const { data: branchSearchResult} = useBranchSearchQuery(
         { search: form.watch("search") },
@@ -36,7 +41,10 @@ export const useBranch = () => {
 
     const branchesState = {
         data: branch?.data?.branches || [],
-        form,
+          form: {
+            ...form,
+            defaultValue: defaultValue
+          },
         refetch,
         pagination: branch?.data?.pagination || {},
         isFetching,
@@ -65,8 +73,7 @@ export const useBranch = () => {
             }
         },
         onEdit: (data) => {
-            console.log(data);
-            
+
             form.reset({
                 // IDs
                 id: data.id || "",
@@ -187,6 +194,19 @@ export const useBranch = () => {
             let res = branchSearchResult?.data?.branches || [];
             callback(branchSearchTemplate(res));
         }, 500),
+        onLoginAsBranch: async (data) => {
+            console.log(data);
+            
+            const res = await loginAsBranch(data);
+
+            if (res.success) {
+                toast.success("Login as Branch successfully");
+
+                setTimeout(() => {
+                    window.location.href = "/dashboard";
+                }, 1000);
+            }
+        },
     };
 
     return {

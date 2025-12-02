@@ -38,6 +38,32 @@ const fields = [
         },
     },
     {
+        name: "email",
+        type: "email",
+        label: "Email *",
+        placeholder: "info@acme.com",
+        colSpan: "col-span-12 md:col-span-6",
+        rules: {
+            pattern: {
+                value: /^[^\s@]+@[^\s@]+\.[^\s@]+$/,
+                message: "Enter a valid email address",
+            },
+            required: { value: true, message: "Email is required" },
+        },
+    },
+    {
+        name: "password",
+        type: "input",
+        label: "Login Password *",
+        placeholder: "******",
+        colSpan: "col-span-12 md:col-span-6",
+        inputProps: { type: "password", autoComplete: "new-password" },
+        rules: {
+            minLength: { value: 6, message: "Minimum length is 6" },
+            required: { value: true, message: "Password is required" },
+        },
+    },
+    {
         name: "description",
         type: "textarea",
         label: "Description",

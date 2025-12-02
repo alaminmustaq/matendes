@@ -82,11 +82,14 @@ export const attendanceApi = createApi({
             query: () => ({
                 url: "hrm/attendance",
                 method: "GET",
-             params: { ...getFilterParams() }, // fetch all branches
+                params: { ...getFilterParams() },
             }),
-            providesTags: ["Attendance"],
 
+            keepUnusedDataFor: 0,
+            refetchOnMountOrArgChange: true,
+            providesTags: ["Attendance"],
         }),
+
         getAttendanceHistory: builder.query({
             query: (params = {}) => ({
                 url: "api/v1/hrm/attendance",
@@ -141,11 +144,11 @@ export const attendanceApi = createApi({
         // getLatestBranchLocation: builder.mutation({
         //     query: () => ({
         //         url: `api/latest-branch-location`,
-        //         method: "GET", 
-        //     }), 
+        //         method: "GET",
+        //     }),
         //     invalidatesTags: ["Latest"],
         // }),
-         getLatestBranchLocation: builder.query({
+        getLatestBranchLocation: builder.query({
             query: () => ({
                 url: `hrm/get-branch-location `,
                 method: "GET",

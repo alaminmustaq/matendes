@@ -5,7 +5,7 @@ let columns = (actions) => [
   {
     id: "name",
     header: "Name",
-    cell: ({ row }) => `${row.original?.employee?.first_name }  ${row.original?.employee?.last_name}` ,
+    cell: ({ row }) => `${row.original?.employee?.first_name || "inactive" }  ${row.original?.employee?.last_name || 'Employee'}` ,
   },
   {
     id: "employee_number",
@@ -35,6 +35,12 @@ let columns = (actions) => [
     id: "check_in_time",
     header: "Check In Time",
     cell: ({ row }) => val(row.original?.check_in_time),
+  },
+  // Check Out / Check Out
+  {
+    id: "check_out_time",
+    header: "Check Out Time",
+    cell: ({ row }) => val(row.original?.check_out_time),
   },
 
 ];

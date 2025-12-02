@@ -29,7 +29,7 @@ import { useParams } from "next/navigation";
 
 export const useEmploy = () => {
     const dispatch = useAppDispatch(); 
-      const { id } = useParams();
+    const { id } = useParams();
     const [EmployCreate] = useEmployCreateMutation();
     const [EmployUpdate] = useEmployUpdateMutation();
     const [EmployDelete] = useEmployDeleteMutation();
@@ -64,8 +64,7 @@ export const useEmploy = () => {
         refetch,
         pagination: employ?.data?.pagination || {},
         isFetching,
-      };
-      console.log(employ);
+      }; 
       
 
     const actions = {
@@ -78,7 +77,7 @@ export const useEmploy = () => {
                 dispatch(setEmployData(result.data));
                 
             } 
-          },
+        },
         onCreate: async (data) => {
             try {
                 let { openModel, ...other } = data;

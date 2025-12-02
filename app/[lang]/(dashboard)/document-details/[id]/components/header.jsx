@@ -15,32 +15,12 @@ const Header = () => {
     // Remove locale prefix if present
     const normalizedPath = location?.replace(/^\/[a-z]{2}/, "") || "";
 
-    const navItems = [
-        {
-            title: "Employee Details",
-            link: `/employee-details/${id}`,
-            permission: "details-employee",
-        },
-        {
-            title: "Project Activity",
-            link: `/employee-details/${id}/project-activity`,
-            permission: "view-project-activity",
-        },
-        {
-            title: "Financial Information",
-            link: `/employee-details/${id}/financial-information`,
-            permission: "view-financial-information",
-        },
-        {
-            title: "Assigned Tools",
-            link: `/employee-details/${id}/tool-assignments`,
-            permission: "view-assigned-tools",
-        },
-          {
-            title: "Documents",
-            link: `/employee-details/${id}/employee-documents`,
-            permission: "view-assigned-tools",
-        },
+    const navItems = [ 
+        // {
+        //     title: "Document Details",
+        //     link: `/employee-details/${id}/project-activity`,
+        //     permission: "view-project-activity",
+        // }, 
     ];
 
     return (
@@ -50,8 +30,8 @@ const Header = () => {
                     <Home className="h-4 w-4" />
                 </BreadcrumbItem>
                 <BreadcrumbItem>Pages</BreadcrumbItem>
-                <BreadcrumbItem>Employee</BreadcrumbItem>
-                <BreadcrumbItem>Employee Details</BreadcrumbItem>
+                <BreadcrumbItem>Documents</BreadcrumbItem>
+                <BreadcrumbItem>Document Details</BreadcrumbItem>
             </Breadcrumbs>
 
             <Card className="mt-6 rounded-t-2xl">

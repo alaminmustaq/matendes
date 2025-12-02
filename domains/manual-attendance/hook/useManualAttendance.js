@@ -56,7 +56,6 @@ export const useManualAttendance = () => {
         try {
             // const response = await filterEmployees(filterTerm);
             // fieldArray.remove();
-
             // response?.data?.data?.forEach((item) => {
             //     fieldArray.append({
             //         name: `${item.first_name} ${item.last_name}`,
@@ -91,11 +90,9 @@ export const useManualAttendance = () => {
         formatDateForForm: (dateString) => {
             if (!dateString) return "";
             try {
-                const date = new Date(dateString);        // create date from your string
-date.setDate(date.getDate() + 1);         // add 1 day
-return date.toISOString().split("T")[0]; // format as YYYY-MM-DD
-
-
+                const date = new Date(dateString); // create date from your string
+                date.setDate(date.getDate() + 1); // add 1 day
+                return date.toISOString().split("T")[0]; // format as YYYY-MM-DD
             } catch (error) {
                 console.error("Date formatting error:", error);
                 return "";
@@ -169,15 +166,17 @@ return date.toISOString().split("T")[0]; // format as YYYY-MM-DD
 
         onCreate: async (data) => {
             try {
-                if(data.attendance_scope != 'all_attendance'){
+                if (data.attendance_scope != "all_attendance") {
                     const validationErrors = actions.validateFormData(data);
                     if (validationErrors.length > 0) {
-                        toast.error(`Validation failed: ${validationErrors[0]}`);
+                        toast.error(
+                            `Validation failed: ${validationErrors[0]}`
+                        );
                         return;
                     }
                 }
                 // Validate form data
-                
+
                 let value = normalizeSelectValues(data, [
                     "branch_id",
                     "department_id",
@@ -207,7 +206,8 @@ return date.toISOString().split("T")[0]; // format as YYYY-MM-DD
             }
         },
 
-        onEdit: (masterAttendanceData) => {
+        onEdit: (masterAttendanceData) => { 
+            
             try {
                 // Validate input data
                 if (!masterAttendanceData || !masterAttendanceData.id) {
@@ -236,7 +236,9 @@ return date.toISOString().split("T")[0]; // format as YYYY-MM-DD
                     formData = {
                         id: masterAttendanceData.id,
                         attendance_scope: masterAttendanceData.attendance_scope,
-                        attendance_type: masterAttendanceData.attendance_type,
+                        attendance_type: masterAttendanceData.attendance_type, 
+                        model_for: masterAttendanceData?.attendances[0]?.adjustment_type ? "adjust_hours" : false,
+                        adjustment_type: masterAttendanceData?.attendances[0]?.adjustment_type || null, 
                         global_date: actions.formatDateForForm(
                             masterAttendanceData.global_date
                         ),
@@ -333,7 +335,8 @@ return date.toISOString().split("T")[0]; // format as YYYY-MM-DD
             }
         },
         onUpdate: async (data) => {
-            try {
+            try { 
+                
                 // Validate form data
                 const validationErrors = actions.validateFormData(data);
                 if (validationErrors.length > 0) {
@@ -466,6 +469,12 @@ return date.toISOString().split("T")[0]; // format as YYYY-MM-DD
                 toast.error("Failed to filter employees");
                 return [];
             }
+        },
+        onAddAttendance: async () => {
+            form.reset({openModel: true}) 
+        },
+        onAdjustHours: async () => {
+            form.reset({openModel: true, model_for: "adjust_hours"})
         },
     };
 

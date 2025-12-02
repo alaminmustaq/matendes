@@ -33,14 +33,16 @@ const DashboardPageView = ({ trans }) => {
             <div className="flex items-center flex-wrap justify-between gap-4">
                 <div className="text-2xl font-medium text-default-800">
                     {/* Company | Branch */}
-                    {companyName != "—" && branchName != "—" ? <div className="flex items-center gap-3 mb-1">
+                    {(companyName != "—" || branchName != "—") ? <div className="flex items-center gap-3 mb-1">
                         <span className="text-lg font-semibold">
                             {companyName}
                         </span>
+                        
                         <span className="text-default-400">|</span>
-                        <span className="text-sm text-default-600">
+                        {branchName != "—" && <span className="text-sm text-default-600">
                             {branchName}
-                        </span>
+                        </span>}
+                        
                     </div> : <div className="flex items-center gap-3 mb-1">
                         <span className="text-xs">
                             Root Admin

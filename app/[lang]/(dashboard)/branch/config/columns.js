@@ -140,6 +140,7 @@ let columns = (actions) => [
         <TableActions
             data={row.original}
             label="Actions"
+            onLoginAsBranch={actions?.onLoginAsBranch} // ✅ just add this line
             // alignmentClass is omitted here, so it defaults to "flex justify-center"
             items={[
                 { label: "Edit", onClick: actions?.onEdit , permission: "edit-branch" },

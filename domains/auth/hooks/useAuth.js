@@ -4,6 +4,7 @@ import {
     useLogoutMutation,
     useLazyMeQuery,
     useLoginAsCompanyMutation,
+    useLoginAsBranchMutation,
 } from "../services/authApi";
 import { useAppDispatch, useAppSelector } from "../../../hooks/use-redux";
 import Cookies from "js-cookie";
@@ -17,6 +18,7 @@ const useAuth = () => {
     );
 
     const [loginAsCompanyMutation] = useLoginAsCompanyMutation();
+    const [loginAsBranchMutation] = useLoginAsBranchMutation();
     const [loginMutation, { isLoading: isLoggingIn, error: loginError }] =
         useLoginMutation();
 
@@ -42,8 +44,7 @@ const useAuth = () => {
     };
     const getMe = async () => {
         try {
-            const response = await triggerMe().unwrap();
-            console.log(response);
+            const response = await triggerMe().unwrap(); 
             
             dispatch(
                 setCredentials({
@@ -93,6 +94,22 @@ const useAuth = () => {
             return { success: false, error };
         }
     };
+    const loginAsBranch = async (data) => {
+        const branch_id = data.id
+        const email = data.email
+        try {
+            const response = await loginAsBranchMutation({
+                branch_id: branch_id,
+                email: email
+            }).unwrap();
+
+            Cookies.set("auth-token", response.data.token, { expires: 7 }); // expires in 7 days
+
+            return { success: true };
+        } catch (error) {
+            return { success: false, error };
+        }
+    };
 
     return {
         // Auth state
@@ -101,7 +118,7 @@ const useAuth = () => {
         isAuthenticated,
         getMe,
         loginAsCompany,
-
+        loginAsBranch,
         // Actions
         login,
         logout,

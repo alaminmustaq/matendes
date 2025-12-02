@@ -70,7 +70,7 @@ export function BasicDataTable({
     const permissionNames = user?.permissions?.map((p) => p.name) || [];
     const addButtonVisible = permissionNames.includes(addPermission);
 
-    console.log("permissionNames:", permissionNames);
+   
 
     addButtonLabel = translate(addButtonLabel, translation_state);
     // Create debounced search function
@@ -241,13 +241,15 @@ export function BasicDataTable({
                                                     Object.entries(
                                                         form.getValues()
                                                     ).map(([key, value]) => {
+                                                  
                                                         if (
                                                             Array.isArray(value)
                                                         )
-                                                            return [key, []];
+                                                        return [key, []];
                                                         return [key, ""];
                                                     })
                                                 ),
+                                                ...form.defaultValue,
                                                 openModel: true,
                                             });
                                         }}
@@ -258,14 +260,14 @@ export function BasicDataTable({
                             ) : (
                                 Object.entries(addButtonLabel).map(
                                     ([key, config]) => {
-                                        console.log(config);
+                                
                                         const hasPermission =
                                             permissionNames.includes(
                                                 config.permission
                                             );
 
                                         if (!hasPermission) {
-                                            console.log(config.label);
+                                  
                                             return null;
                                         }
 
@@ -273,7 +275,7 @@ export function BasicDataTable({
                                             <Button
                                                 key={key}
                                                 onClick={() => {
-                                                    console.log(config);
+                                                    
                                                     config.action();
                                                 }}
                                             >

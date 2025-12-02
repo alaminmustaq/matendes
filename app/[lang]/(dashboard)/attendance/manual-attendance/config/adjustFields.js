@@ -1,6 +1,6 @@
 import toast from "react-hot-toast";
 
-const fields = (actions,form) => {
+const adjustFields = (actions,form) => {
     return [
         {
             name: "attendance_type",
@@ -32,7 +32,6 @@ const fields = (actions,form) => {
             label: "Adjustment Type *",
             placeholder: "Select adjustment type",
             colSpan: "col-span-12 md:col-span-6",
-            visibility: form?.watch("model_for") == "adjust_hours",
             options: [
                 { label: "Increment", value: "increment" },
                 { label: "Decrement", value: "decrement" }, 
@@ -223,8 +222,7 @@ const fields = (actions,form) => {
                 toast.success("Global check-out time applied to all employees");
             },
             rules: { required: "Global check-out time is required" },
-        },
-
+        }, 
         {
             name: "employees",
             type: "group-form",
@@ -273,4 +271,4 @@ const fields = (actions,form) => {
     ];
 };
 
-export default fields;
+export default adjustFields;

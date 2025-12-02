@@ -14,8 +14,8 @@ const RolePage = () => {
     const form = rolesState.form;
     const isEdit = !!form?.watch("id");
     const isPermissionMode = !!form?.watch("openPermissionMode");
-    // console.log(rolesState.permissions);
-
+    // console.log(rolesState.permissions); 
+    
     return (
         <PageLayout>
             {/* Role Table */}
@@ -30,7 +30,7 @@ const RolePage = () => {
             <BasicModel
                 title={
                     isPermissionMode
-                        ? "Permission Update"
+                        ?  `Permission Update (${form.getValues("name") || ""})` // show role name
                         : isEdit
                         ? "Role Edit"
                         : "Role Create"
