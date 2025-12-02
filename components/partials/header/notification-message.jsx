@@ -36,7 +36,7 @@ const NotificationMessage = () => {
 
     const translation_state = useSelector((state) => state.auth.translation);
     const count = notificationData?.count;
-    console.log(count);
+    // console.log(count);
 
     const [counts, setCount] = useState(count);
     const notifications = notificationData?.notifications;
@@ -83,12 +83,12 @@ const NotificationMessage = () => {
                     <span className="text-base font-semibold text-white flex-1">
                         {translate("Notification", translation_state)}
                     </span>
-                    {!(user?.user?.roles[0]?.level == 0 || user?.user?.roles[0]?.level == 1) ?? <span
+                    {!(user?.user?.roles[0]?.level == 0 || user?.user?.roles[0]?.level == 1) ? <span
                         onClick={() => actions.markAllAsRead(setCount)}
                         className="text-xs font-medium text-white cursor-pointer hover:underline hover:decoration-default-100 dark:decoration-default-900"
                     >
                         Mark all as read
-                    </span>}
+                    </span>:''}
                     
                 </DropdownMenuLabel>
                 <div className="h-[300px] xl:h-[350px]">
