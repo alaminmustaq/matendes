@@ -19,7 +19,16 @@ import { useState } from "react";
 import { useEffect } from "react";
 import { useSelector } from "react-redux";
 import { translate } from "@/lib/utils";
+import { useRouter,useParams } from "next/navigation";
+
 const NotificationMessage = () => {
+    const router = useRouter(); 
+    const params = useParams();
+    const lang = params?.lang || "en";
+    const handleClick = () => {
+        router.push(`/${lang}/all-notification`);
+    };
+
     const { notificationData,user } = useAppSelector((state) => state.auth);
 
     console.log(user?.user?.roles[0]?.level);
@@ -136,9 +145,9 @@ const NotificationMessage = () => {
 
                 <DropdownMenuSeparator />
                 <div className="m-4 mt-5">
-          <Button asChild type="text" className="w-full">
-            <Link href="/dashboard">View All</Link>
-          </Button>
+                <Button asChild type="text" className="w-full" onClick={handleClick}>
+                    <p>View All</p>
+                </Button>
         </div>
             </DropdownMenuContent>
         </DropdownMenu>
