@@ -1,6 +1,12 @@
 import toast from "react-hot-toast";
+import useAuth from "@/domains/auth/hooks/useAuth";
+import {
+    branchSearchTemplate, 
+} from "@/utility/templateHelper";
 
 const fields = (actions,form) => {
+    const {user} = useAuth(); 
+    
     return [
         {
             name: "attendance_type",
@@ -19,7 +25,7 @@ const fields = (actions,form) => {
             ],
             handleChange: (e) => {   
                 form.setValue('attendance_type',e.value)
-                form.setValue('branch_id',null)
+                form.setValue('branch_id',branchSearchTemplate(user?.employee?.branch ? [user?.employee?.branch] : [])?.at(0) ?? null)
                 form.setValue('department_id',null)
                 form.setValue('project_id',null) 
             },
@@ -42,7 +48,7 @@ const fields = (actions,form) => {
         {
             name: "branch_id",
             type: "async-select",
-            label: "Branch",
+            label: "Branch *",
             visibility: form.watch("attendance_type") === "company_attendance",
             loadOptions: [
                 "organization/branches",
@@ -50,7 +56,7 @@ const fields = (actions,form) => {
                 "branchSearchTemplate",
             
             ],
-            placeholder: "Optional",
+            placeholder: "Select",
             colSpan: "col-span-12 md:col-span-6",
             handleChange: (e) => {  
             
@@ -68,6 +74,7 @@ const fields = (actions,form) => {
                 "organization/departments",
                 "departments",
                 "departmentSearchTemplate",
+                "branch_id"
             ],
             handleChange: (e) => {  
               

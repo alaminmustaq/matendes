@@ -59,6 +59,11 @@ export const useFinancialRecords = () => {
         },
     });
 
+     const defaultValue = {
+        transaction_type: "regular",
+    };
+
+
     const fields = useFieldArray({
         control: form.control,
         name: "transaction_details",
@@ -76,7 +81,7 @@ export const useFinancialRecords = () => {
 
     const financialState = {
         data: recordsResponse?.data?.financial_records || [],
-        form: { ...form, fields },
+        form: { ...form, fields, defaultValue: defaultValue, },
         refetch,
         pagination: recordsResponse?.data?.pagination || {},
         isFetching,

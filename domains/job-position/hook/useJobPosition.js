@@ -20,6 +20,7 @@ import {
 } from "@/utility/templateHelper";
 import { getFilterParams } from "@/utility/helpers";
 import { useMemo } from "react";
+import useAuth from "@/domains/auth/hooks/useAuth";
 
 export const useJobPosition = () => {
     const [JobPositionCreate] = useJobPositionCreateMutation();
@@ -31,11 +32,26 @@ export const useJobPosition = () => {
         isFetching,
     } = useJobPositionFetchQuery();
 
+    const { user } = useAuth();
+
     const form = useForm({
         mode: "onBlur",
         reValidateMode: "onSubmit",
         shouldFocusError: true,
     });
+
+    const defaultValue = {
+        branch_id:
+            branchSearchTemplate(
+                user?.employee?.branch ? [user?.employee?.branch] : []
+            )?.at(0) ?? null,
+
+        hierarchy_level: 1,
+        status: "active",
+        employment_type: "full_time",
+        job_level: "junior",
+         is_recruiting: true,
+    };
 
     const { data: JobPositionSearchResult } = useJobPositionSearchQuery(
         { search: form.watch("search") },
@@ -44,11 +60,14 @@ export const useJobPosition = () => {
 
     const jobPositionState = {
         data: JobPosition?.data?.job_positions || [],
-        form,
+        form: {
+            ...form,
+            defaultValue: defaultValue,
+        },
         refetch,
         pagination: JobPosition?.data?.pagination || {},
         isFetching,
-    }; 
+    };
 
     const actions = {
         onCreate: async (data) => {

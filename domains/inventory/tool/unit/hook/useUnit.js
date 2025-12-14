@@ -20,9 +20,17 @@ export const useUnit = () => {
         shouldFocusError: true,
     });
 
+    
+  const defaultValue = {
+        status: "active",
+    };
+
     const unitState = {
         data: unitData?.data?.units || [],
-        form,
+         form: {
+            ...form,
+            defaultValue: defaultValue,
+        },
         refetch,
         pagination: unitData?.data?.pagination || {},
         isFetching,

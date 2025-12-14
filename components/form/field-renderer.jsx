@@ -64,7 +64,8 @@ const FieldRenderer = ({ fieldConfig, form }) => {
         index = false,
         getValue, 
         defaultValue,
-        rows
+        rows,
+        firstChildren
     } = fieldConfig; 
     
     const translation_state = useSelector((state) => state.auth.translation);
@@ -312,6 +313,7 @@ const FieldRenderer = ({ fieldConfig, form }) => {
                                     loadOptions={loadOptions}
                                     field={field}
                                     form={form}
+                                    firstChildren={firstChildren}
                                     handleChange={handleChange}
                                     isDisabled={!!disabled}
                                 />

@@ -23,7 +23,7 @@ const fields = (form) => {
             name: "employee_id",
             type: "async-select",
             label: "Employee",
-            loadOptions: ["hrm/employees", "employees", "employTemplate"],
+            loadOptions: ["hrm/employees", "employees", "employTemplate", ["branch_id"]  ],
             placeholder: "Select an employee (optional)",
 
             handleChange: (selectedEmployee, form, field) => {

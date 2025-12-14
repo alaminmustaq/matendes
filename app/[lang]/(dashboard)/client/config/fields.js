@@ -1,6 +1,18 @@
 const clientFields = () => {
     return [
         // =============== Core ===============
+          {
+            name: "branch_id",
+            type: "async-select",
+            label: "Branch *",
+            loadOptions: [
+                "organization/branches",
+                "branches",
+                "branchSearchTemplate",
+            ],
+            placeholder: "Select",
+            colSpan: "col-span-12 md:col-span-6",
+        },
         {
             name: "name",
             type: "input",

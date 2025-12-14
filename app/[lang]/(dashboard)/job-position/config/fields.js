@@ -15,13 +15,13 @@ const fields = () => {
         {
             name: "branch_id",
             type: "async-select",
-            label: "Branch",
+            label: "Branch *",
             loadOptions: [
                 "organization/branches",
                 "branches",
                 "branchSearchTemplate",
             ],
-            placeholder: "Optional",
+            placeholder: "Select",
             colSpan: "col-span-12 md:col-span-4",
         },
         {
@@ -32,6 +32,7 @@ const fields = () => {
                 "organization/departments",
                 "departments",
                 "departmentSearchTemplate",
+                "branch_id",
             ],
             placeholder: "Optional",
             colSpan: "col-span-12 md:col-span-4",

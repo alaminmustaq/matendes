@@ -12,21 +12,23 @@ import {
     useSalaryFetchQuery,
     useSalaryFilterMutation, // filter salary by company/branch/department/job
 } from "../services/salaryApi";
+import {
+    branchSearchTemplate, 
+} from "@/utility/templateHelper";
 import { getFilterParams } from "@/utility/helpers";
 import { useMemo } from "react";
+import useAuth from "@/domains/auth/hooks/useAuth";
 
 export const useSalary = () => {
     const [salaryFilter] = useSalaryFilterMutation();
     const [salaryCreate] = useSalaryCreateMutation();
     const { data: salary, refetch, isFetching  } = useSalaryFetchQuery();
+    const {user} = useAuth(); 
 
     const form = useForm({
         mode: "onBlur",
         reValidateMode: "onSubmit",
-        shouldFocusError: true,
-        defaultValues: {
-            salary_month: new Date().toISOString().slice(0, 7), // YYYY-MM
-        },
+        shouldFocusError: true, 
     });
 
     const openModel = useWatch({ control: form.control, name: "openModel" });
@@ -38,8 +40,16 @@ export const useSalary = () => {
         }
     }, [openModel]);
 
+    const defaultValue={
+            branch_id: branchSearchTemplate(user?.employee?.branch ? [user?.employee?.branch] : [])?.at(0) ?? null,
+            salary_month: new Date().toISOString().slice(0, 7), // YYYY-MM
+        }
+
     const salaryState = { data: salary?.data || [], 
-        form,
+        form:{
+            ...form,
+            defaultValue: defaultValue,
+        },
          refetch,
         pagination:  salary?.pagination || {},
         isFetching,
@@ -105,7 +115,8 @@ export const useSalary = () => {
             form.reset({openModel: true}) 
         },
         onApproveSalary: async () => {
-            form.reset({openModel: true, model_for: "approved_salary"}) 
+           
+         form.reset({openModel: true, model_for: "approved_salary"}) 
         },
     };
 

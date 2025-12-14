@@ -41,7 +41,7 @@ const adjustFields = (actions,form) => {
         {
             name: "branch_id",
             type: "async-select",
-            label: "Branch",
+            label: "Branch *",
             visibility: form.watch("attendance_type") === "company_attendance",
             loadOptions: [
                 "organization/branches",
@@ -49,7 +49,7 @@ const adjustFields = (actions,form) => {
                 "branchSearchTemplate",
             
             ],
-            placeholder: "Optional",
+            placeholder: "Select",
             colSpan: "col-span-12 md:col-span-6",
             handleChange: (e) => {  
             

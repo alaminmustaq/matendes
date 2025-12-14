@@ -41,9 +41,18 @@ export const useLanguage = () => {
 
     const form = useForm({ mode: "onBlur", reValidateMode: "onSubmit" });
 
+      const defaultValue = {
+
+            is_active: true,
+        };
+    
+
     const languageState = {
         data: languagesData?.data?.languages || [],
-        form,
+        form: {
+            ...form,
+            defaultValue: defaultValue,
+        },
         refetch: refetchLanguages,
         isFetching,
         values: languageValues?.data || [],

@@ -105,17 +105,7 @@ const fields = [
             { label: "Subsidiary", value: "subsidiary" },
         ],
         rules: { required: "Type is required" },
-    },
-
-    // =============== Contact ===============
-    {
-        name: "email",
-        type: "email",
-        label: "Branch Email",
-        placeholder: "branch@example.com",
-        colSpan: "col-span-12 md:col-span-6",
-        rules: { maxLength: { value: 100, message: "Max 100 characters" } },
-    },
+    }, 
     {
         name: "phone",
         type: "input",

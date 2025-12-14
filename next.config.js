@@ -40,6 +40,12 @@ const nextConfig = {
       },
       {
         protocol: "https",
+        hostname: process.env.NEXT_PUBLIC_API_URL
+          ? new URL(process.env.NEXT_PUBLIC_API_URL).hostname
+          : "matendes-hrm.test",
+      },
+      {
+        protocol: "https",
         hostname: "lh3.googleusercontent.com",
       },
       {

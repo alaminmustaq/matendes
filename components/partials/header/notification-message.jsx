@@ -107,7 +107,7 @@ const NotificationMessage = () => {
                                     >
                                         <div className="flex-1 flex items-center gap-3">
                                             {/* Icon or Avatar */}
-                                            <div className="flex items-center justify-center h-10 w-10 rounded-full bg-primary text-white text-sm font-bold">
+                                            <div className="flex shrink-0 items-center justify-center h-10 w-10 rounded-full bg-primary text-white text-sm font-bold">
                                                 {isDocument ? "D" : "P"}
                                             </div>
 

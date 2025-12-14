@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useEffect } from "react";
 import { Stepper, Step, StepLabel } from "@/components/ui/steps";
 import { toast } from "@/components/ui/use-toast";
 import { Button } from "@/components/ui/button";
@@ -15,9 +15,19 @@ const DynamicTabForm = ({
     actions,
     isServerValidated = false,
 }) => { 
+    useEffect(()=>{
+        form.reset(form.defaultValue);
+    },[])
     const translation_state = useSelector((state) => state.auth.translation);
     const [activeStep, setActiveStep] = React.useState(0);
-    
+
+    const stepHasError = (index) => {
+        const fieldsInStep = fieldDefs[index]?.fields || [];
+        return fieldsInStep.some((f) => {
+            const fieldError = form.formState.errors[f.name];
+            return !!fieldError;
+        });
+    };
     
     const fieldDefs =
         typeof fields === "function"
@@ -83,8 +93,18 @@ const DynamicTabForm = ({
                     //   stepProps.completed = false;
                     // }
                     return (
-                        <Step key={label} {...stepProps}>
-                            <StepLabel {...labelProps}>{translate(label,translation_state)}</StepLabel>
+                        <Step
+                            key={label}
+                            {...stepProps}
+                            onClick={() => setActiveStep(index)}
+                            style={{ cursor: "pointer" }}
+                        >
+                            <StepLabel
+                                {...labelProps}
+                                error={stepHasError(index)}
+                            >
+                                {translate(label, translation_state)}
+                            </StepLabel>
                         </Step>
                     );
                 })}

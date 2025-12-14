@@ -10,7 +10,7 @@ const columns = (actions) => [
     },
     { accessorKey: "category.name", header: "Category" },
     {
-        accessorKey: "company_stock.quantity",
+        accessorKey: "total_quantity",
         header: "Stock Qty",
         thClass: "!text-center",
         tdClass: "!text-center",

@@ -18,14 +18,14 @@ const fields = (form) => {
         {
             name: "branch_id",
             type: "async-select",
-            label: "Branch",
+            label: "Branch*",
             visibility: form.watch("document_for") === "employee",
             loadOptions: [
                 "organization/branches",
                 "branches",
                 "branchSearchTemplate",
             ],
-            placeholder: "Optional",
+            placeholder: "Select",
             colSpan: "col-span-12 md:col-span-6",
         },
         {

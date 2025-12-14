@@ -36,6 +36,10 @@ export const usePurchase = () => {
         defaultValues: { details: [] }, // Field array default
     });
 
+    const defaultValue = {
+        quantity: 1,
+    };
+
     const fieldArray = useFieldArray({
         control: form.control,
         name: "details",
@@ -43,7 +47,7 @@ export const usePurchase = () => {
 
     const purchaseState = {
         data: purchasesData?.data?.purchases || [],
-        form: { ...form, fields: fieldArray },
+        form: { ...form, fields: fieldArray, defaultValue: defaultValue },
         refetch,
         isFetching,
     };

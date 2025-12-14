@@ -15,11 +15,15 @@ export const profileApi = createApi({
       providesTags: ["Profile"],
     }),
     updateProfile: builder.mutation({
-      query: (data) => ({
+      query: (data) => {
+        const isFormData = data instanceof FormData;
+        if (isFormData) data.append("_method", "PUT");
+        return {
         url: "/profile/profile",
-        method: "PATCH",
+        method: "POST",
         body: data,
-      }),
+        headers: isFormData ? {} : { "Content-Type": "application/json" },
+      }},
       invalidatesTags: ["Profile"],
     }),
     updatePassword: builder.mutation({

@@ -30,9 +30,9 @@ const fields = [
         placeholder: "Select Level",
         colSpan: "col-span-12 md:col-span-6",
         options: [
-            { label: "Level 1", value: "1" },
-            { label: "Level 2", value: "2" },
-            { label: "Level 3", value: "3" }, 
+            { label: "Admin", value: "1" },
+            { label: "Manager", value: "2" },
+            { label: "Employee", value: "3" }, 
         ],
     },
     {

@@ -52,8 +52,8 @@ export const employApi = createApi({
                 url: "hrm/employees",
                 method: "GET",
                 params: id
-                    ? { ...getFilterParams(), id , employeePageKey:true}
-                    : { ...getFilterParams() , employeePageKey:true},
+                    ? { ...getFilterParams(), id , employeePageKey:true, include_inactive_employees: true}
+                    : { ...getFilterParams() , employeePageKey:true, include_inactive_employees: true},
             }),
             providesTags: ["Employ"],
         }),

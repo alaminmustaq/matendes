@@ -14,6 +14,7 @@ import toast from "react-hot-toast";
 import { useForm } from "react-hook-form";
 import { useFieldArray } from "react-hook-form";
 import { projectTemplate, employTemplate, warehouseSearchTemplate,branchSearchTemplate } from "@/utility/templateHelper";
+import useAuth from "@/domains/auth/hooks/useAuth";
 
 export const useToolDistribution = () => {
     const [createToolDistribution] = useCreateToolDistributionMutation();
@@ -25,6 +26,8 @@ export const useToolDistribution = () => {
         refetch,
         isFetching,
     } = useFetchToolDistributionsQuery();
+
+     const { user } = useAuth();
 
     const form = useForm({
         mode: "onBlur",
@@ -44,6 +47,14 @@ export const useToolDistribution = () => {
         },
     });
 
+      const defaultValue = {
+            branch_id:
+                branchSearchTemplate(
+                    user?.employee?.branch ? [user?.employee?.branch] : []
+                )?.at(0) ?? null,
+    
+        };
+
     const fieldArray = useFieldArray({
         control: form.control,
         name: "assignTools", // This matches the field name in form
@@ -54,6 +65,7 @@ export const useToolDistribution = () => {
         form: {
             ...form,
             fields: fieldArray, // Merge fieldArray into form
+            defaultValue: defaultValue,
         },
         refetch,
         pagination: toolDistributionsData?.data?.pagination || {},

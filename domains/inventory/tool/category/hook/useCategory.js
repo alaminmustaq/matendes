@@ -23,9 +23,16 @@ export const useCategory = () => {
     shouldFocusError: true,
   });
 
+  const defaultValue = {
+        status: "active",
+    };
+
   const categoryState = {
     data: categoryData?.data?.categories || [],
-    form,
+     form: {
+            ...form,
+            defaultValue: defaultValue,
+        },
     refetch,
     pagination: categoryData?.data?.pagination || {},
     isFetching,

@@ -14,8 +14,7 @@ const SingleMenuItem = ({ item, collapsed, hovered, trans }) => {
     const locationName = getDynamicPath(pathname);
     return (
         <Link href={lang + "/" + href}>
-            <>
-            lol
+            <> 
                 {!collapsed || hovered ? (
                     <div
                         className={cn(

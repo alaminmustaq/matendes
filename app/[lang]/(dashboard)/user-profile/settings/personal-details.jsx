@@ -8,11 +8,12 @@ import { Button } from "@/components/ui/button";
 import { Icon } from "@iconify/react";
 import { Card, CardContent } from "@/components/ui/card";
 import { useProfile } from "@/domains/profile/hook/useProfile"; // adjust path if needed
+import { useFormContext  } from "../profile-layout";
 
 const PersonalDetails = () => {
-    const { form, actions, isFetching } = useProfile();
-    const { register, handleSubmit, reset } = form;
 
+    const {form,actions,isFetching} = useFormContext();  
+    const { register, handleSubmit, reset } = form;
     // Reset form whenever profile is loaded/updated
     useEffect(() => {
         actions.getProfile();
@@ -26,31 +27,13 @@ const PersonalDetails = () => {
             }
         }
     }, [actions, actions.form, actions.profile]); // reset form when profile changes
-
-    const onSubmit = async (data) => {
-        try {
-            // Map your react-hook-form fields to the backend keys
-            const payload = {
-                first_name: data.first_name,
-                last_name: data.last_name,
-                work_email: data.email,      // map email field to work_email
-                primary_phone: data.phone,   // map phone field to primary_phone
-                bio: data.bio,
-            };
-
-            await actions.updateProfile(payload);
-            alert("Profile updated successfully!");
-        } catch {
-            alert("Failed to update profile.");
-        }
-    };
-
+ 
 
     return (
         <Card className="rounded-t-none pt-6">
             <CardContent>
                 <form
-                    onSubmit={handleSubmit(onSubmit)}
+                 onSubmit={handleSubmit(actions.onSubmit)}
                     className="grid grid-cols-12 md:gap-x-12 gap-y-5"
                 >
                     {/* First Name */}
@@ -88,7 +71,13 @@ const PersonalDetails = () => {
                         <Button type="button" color="secondary" onClick={() => reset()}>
                             Cancel
                         </Button>
-                        <Button type="submit" disabled={isFetching}>
+                        <Button
+                        
+                        onClick={()=>{
+                           actions.onSubmit();
+                        }}
+                        
+                        type="submit" disabled={isFetching}>
                             <Icon
                                 icon="heroicons:document"
                                 className="w-5 h-5 text-primary-foreground me-1"

@@ -269,10 +269,16 @@ export const menusConfig = {
             icon: Settings,
             child: [
                 {
+                    title: "General Settings",
+                    href: "/general-settings",
+                    icon: Users,
+                    permission: "view-general-setting",
+                },
+                {
                     title: "Role & Permissions",
                     href: "/role",
                     icon: Users,
-                    permission: "manage-settings",
+                    permission: "view-role-permission",
                 },
                 {
                     title: "Language",
@@ -507,11 +513,17 @@ export const menusConfig = {
                 title: "Settings",
                 icon: Settings,
                 child: [
+                      {
+                    title: "General Settings",
+                    href: "/general-settings",
+                    icon: Users,
+                    permission: "view-general-setting",
+                },
                     {
                         title: "Role & Permissions",
                         href: "/role",
                         icon: Users,
-                        permission: "manage-settings",
+                        permission: "view-role-permission",
                     },
                     {
                         title: "Activity log",
@@ -756,11 +768,17 @@ export const menusConfig = {
                 icon: Settings,
                 href: "#",
                 child: [
+                      {
+                    title: "General Settings",
+                    href: "/general-settings",
+                    icon: Users,
+                    permission: "view-general-setting",
+                },
                     {
                         title: "Role & Permissions",
                         href: "/role",
                         icon: Users,
-                        permission: "manage-settings",
+                        permission: "view-role-permission",
                     },
                     {
                         title: "Language",

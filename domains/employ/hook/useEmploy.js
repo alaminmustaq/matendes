@@ -4,7 +4,7 @@ import {
     useEmployUpdateMutation,
     useEmployDeleteMutation,
     useEmployFetchQuery,
-    useLazyEmployFetchQuery 
+    useLazyEmployFetchQuery,
 } from "../services/employApi";
 import toast from "react-hot-toast";
 import { useForm } from "react-hook-form";
@@ -19,16 +19,17 @@ import {
     companySearchTemplate,
     departmentSearchTemplate,
     jobPositionsTemplate,
-    roleTemplate, 
+    roleTemplate,
 } from "@/utility/templateHelper";
 import { getFilterParams } from "@/utility/helpers";
 import { useMemo } from "react";
 import { useAppDispatch } from "@/hooks/use-redux";
 import { setEmployData } from "../model/employSlice";
 import { useParams } from "next/navigation";
+import useAuth from "@/domains/auth/hooks/useAuth";
 
 export const useEmploy = () => {
-    const dispatch = useAppDispatch(); 
+    const dispatch = useAppDispatch();
     const { id } = useParams();
     const [EmployCreate] = useEmployCreateMutation();
     const [EmployUpdate] = useEmployUpdateMutation();
@@ -37,46 +38,59 @@ export const useEmploy = () => {
         data: employ,
         refetch,
         isFetching,
-      } = useEmployFetchQuery(id ? { id } : "", {
+    } = useEmployFetchQuery(id ? { id } : "", {
         refetchOnMountOrArgChange: true,
         selectFromResult: (result) => {
-          if (result?.data) {
-            dispatch(setEmployData(result?.data?.data));
-          }
-          return result;
+            if (result?.data) {
+                dispatch(setEmployData(result?.data?.data));
+            }
+            return result;
         },
-      });
+    });
 
-
+    const { user } = useAuth();
 
     //Lazy query
     const [triggerGetEmploy] = useLazyEmployFetchQuery();
-    
+
     const form = useForm({
         mode: "onBlur",
         reValidateMode: "onSubmit",
         shouldFocusError: true,
     });
 
+    const defaultValue = {
+        branch_id:
+            branchSearchTemplate(
+                user?.employee?.branch ? [user?.employee?.branch] : []
+            )?.at(0) ?? null,
+
+        salary_type: "monthly",
+        employment_status: "probation",
+        employment_type: "permanent",
+        work_mode: "office",
+    };
+
     const employState = {
         data: employ?.data?.employees || [],
-        form,
+        form: {
+            ...form,
+            defaultValue: defaultValue,
+        },
         refetch,
         pagination: employ?.data?.pagination || {},
         isFetching,
-      }; 
-      
+    };
 
     const actions = {
         // ✅ New: fetch single employee by ID
         getEmploy: async (id = null) => {
             // ✅ trigger API
-            const result = await triggerGetEmploy({ id:id }).unwrap();
+            const result = await triggerGetEmploy({ id: id }).unwrap();
             // ✅ if data exists, push to redux + form
             if (result?.data) {
                 dispatch(setEmployData(result.data));
-                
-            } 
+            }
         },
         onCreate: async (data) => {
             try {
@@ -86,13 +100,16 @@ export const useEmploy = () => {
                     "department_id",
                     "job_position_id",
                     "manager_id",
-                    'role_id',
-                    'marital_status',
-                    'blood_group'
+                    "role_id",
+                    "marital_status",
+                    "blood_group",
                 ]);
-
+                const preparedDataWithInactive = {
+                    ...preparedData,
+                    include_inactive_employees: true,
+                };
                 const response = await EmployCreate(
-                    buildFormData(preparedData)
+                    buildFormData(preparedDataWithInactive)
                 ).unwrap();
                 if (response.message == "Employee created successfully") {
                     toast.success("Employ Create Successfully");
@@ -107,8 +124,8 @@ export const useEmploy = () => {
         onEdit: (mainData) => {
             const data = mainData.employee;
 
-            if(!data) return; 
-            
+            if (!data) return;
+
             form.reset({
                 // =============== Identity & Org ===============
                 id: data.id || "",
@@ -128,7 +145,10 @@ export const useEmploy = () => {
                 manager_id: data?.manager?.id ?? null,
                 employee_code: data?.employee_code || "",
                 badge_number: data?.badge_number || "",
-                role_id: (data?.user?.roles && roleTemplate(data?.user?.roles)?.at(0)) ?? null,
+                role_id:
+                    (data?.user?.roles &&
+                        roleTemplate(data?.user?.roles)?.at(0)) ??
+                    null,
 
                 // =============== Personal Info ===============
                 first_name: data?.personal_info?.first_name || "",
@@ -152,7 +172,8 @@ export const useEmploy = () => {
                 secondary_phone: data?.contact_info?.secondary_phone || "",
 
                 // =============== Emergency Contact ===============
-                contact_preferences: data?.emergency_contact?.contact_preferences || "",
+                contact_preferences:
+                    data?.emergency_contact?.contact_preferences || "",
                 emergency_contact_name: data?.emergency_contact?.name || "",
                 emergency_contact_relation:
                     data?.emergency_contact?.relation || "",
@@ -197,11 +218,10 @@ export const useEmploy = () => {
                     data?.employment_info?.employment_type || "permanent",
                 work_mode: data?.employment_info?.work_mode || "office",
                 basic_salary: data?.employment_info?.basic_salary || "",
-                salary_type: data?.employment_info?.salary_type|| "monthly",
+                salary_type: data?.employment_info?.salary_type || "monthly",
 
                 // =============== Professional Info ===============
-                work_history:
-                    data?.professional_info?.work_history || "",
+                work_history: data?.professional_info?.work_history || "",
                 years_of_experience:
                     data?.professional_info?.years_of_experience || "",
                 skills: data?.professional_info?.skills || "",
@@ -247,7 +267,7 @@ export const useEmploy = () => {
                 // is_enabled: Boolean(data?.system_info?.is_enabled),
                 is_system_user: Boolean(data?.system_info?.is_system_user),
             });
-            
+
             // updateUser({ id, ...data });
             // form.reset();
         },
@@ -257,20 +277,23 @@ export const useEmploy = () => {
                 let { openModel, id, ...other } = data;
                 //prepare data
                 let preparedData = normalizeSelectValues(other, [
-
                     "branch_id",
                     "department_id",
                     "job_position_id",
                     "manager_id",
                     "role_id",
-                    'marital_status',
-                    'blood_group'
+                    "marital_status",
+                    "blood_group",
                 ]);
-             
+                const preparedDataWithInactive = {
+                    ...preparedData,
+                    include_inactive_employees: true,
+                };
+
                 //set to api
                 const response = await EmployUpdate({
                     id,
-                    credentials: preparedData,
+                    credentials: preparedDataWithInactive,
                 }).unwrap();
 
                 if (response.message == "Employee updated successfully") {
@@ -286,18 +309,22 @@ export const useEmploy = () => {
         onDelete: async (id) => {
             try {
                 if (confirm("Are you sure you want to delete this Employ?")) {
-                    const response = await EmployDelete({ id });
+                    await EmployDelete({ id }).unwrap();
 
-                    if (response?.data) {
-                        // check if response contains data
-                        toast.success("Employ deleted successfully");
-                        refetch();
-                    } else {
-                        toast.error("Failed to delete Employ");
-                    }
+                    toast.success("Employ deleted successfully");
+                    refetch();
                 }
-            } catch (error) {}
+            } catch (error) {
+                // RTK Query error structure
+                const message =
+                    error?.data?.errors?.message ||
+                    error?.data?.message ||
+                    "Failed to delete employee";
+
+                toast.error(message);
+            }
         },
+
     };
 
     return {

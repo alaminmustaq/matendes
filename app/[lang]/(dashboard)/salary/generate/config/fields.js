@@ -1,4 +1,9 @@
+import { useAppSelector } from "@/hooks/use-redux";
+
 const fields = (actions) => {
+    const { user } = useAppSelector((state) => state.auth); 
+
+    
     return [
         // =============== Relations ===============
     
@@ -12,7 +17,8 @@ const fields = (actions) => {
                 "branchSearchTemplate",
 
             ],
-            placeholder: "Optional",
+            placeholder: "Select",
+            firstChildren: user?.employee ? [] : [{label: "All Branch",value:"all-branch"}],
             colSpan: "col-span-12 md:col-span-6",
             rules: { required: "Branch is required" },
         },  
@@ -24,6 +30,7 @@ const fields = (actions) => {
                 "organization/departments",
                 "departments",
                 "departmentSearchTemplate",
+                 "branch_id",
             ],
             placeholder: "Optional",
             colSpan: "col-span-12 md:col-span-6",
@@ -41,19 +48,19 @@ const fields = (actions) => {
         },
      
         // =============== Status ===============
-        {
-            name: "status",
-            type: "select",
-            label: "Status *",
-            placeholder: "Select status",
-            colSpan: "col-span-12 md:col-span-6",
-            options: [
-                { label: "Pending", value: "pending" },
-                { label: "Approved", value: "approved" },
-                { label: "Paid", value: "paid" },
-            ],
-            rules: { required: "Status is required" },
-        },
+        // {
+        //     name: "status",
+        //     type: "select",
+        //     label: "Status *",
+        //     placeholder: "Select status",
+        //     colSpan: "col-span-12 md:col-span-6",
+        //     options: [
+        //         { label: "Pending", value: "pending" },
+        //         { label: "Approved", value: "approved" },
+        //         { label: "Paid", value: "paid" },
+        //     ],
+        //     rules: { required: "Status is required" },
+        // },
 
         // =============== Additional Details ===============
         {

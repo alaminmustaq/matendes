@@ -20,7 +20,7 @@ const RolePage = () => {
         <PageLayout>
             {/* Role Table */}
             <BasicTableLayout
-                addPermission={"manage-settings"}
+                addPermission={"create-role-permission"}
                 addButtonLabel="Add Role"
                 columns={columns(actions)}
                 state={rolesState}

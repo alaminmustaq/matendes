@@ -1,4 +1,6 @@
-export default function ApprovedFields() {
+import { useAppSelector } from "@/hooks/use-redux";
+export default function ApprovedFields(actions) {
+    const { user } = useAppSelector((state) => state.auth);
     return [
         // =============== Branch ===============
         {
@@ -6,11 +8,14 @@ export default function ApprovedFields() {
             type: "async-select",
             label: "Branch *",
             loadOptions: [
-                "organization/branches",   // API endpoint
-                "branches",                // data key
-                "branchSearchTemplate",    // mapping/template function
+                "organization/branches", // API endpoint
+                "branches", // data key
+                "branchSearchTemplate", // mapping/template function
             ],
             placeholder: "Select branch",
+            firstChildren: user?.employee
+                ? []
+                : [{ label: "All Branch", value: "all-branch" }],
             colSpan: "col-span-12 md:col-span-6",
             rules: { required: "Branch is required" },
         },
@@ -24,6 +29,7 @@ export default function ApprovedFields() {
                 "organization/departments",
                 "departments",
                 "departmentSearchTemplate",
+                "branch_id",
             ],
             placeholder: "Select department",
             colSpan: "col-span-12 md:col-span-6",
@@ -37,7 +43,7 @@ export default function ApprovedFields() {
             colSpan: "col-span-12 md:col-span-6",
             inputProps: { type: "month" },
             rules: { required: "Salary month is required" },
-        }, 
+        },
 
         // =============== Admin Status ===============
         {

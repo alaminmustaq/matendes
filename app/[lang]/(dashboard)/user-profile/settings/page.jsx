@@ -6,8 +6,10 @@ import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import PersonalDetails from "./personal-details";
 import ChangePassword from "./change-password";
 import CommingSoon from "./comming-soon";
+import { useProfile } from "@/domains/profile/hook/useProfile";
 
 const Settings = () => {
+  const { form,actions, isFetching } = useProfile();
   const tabs = [
     {
       label: "Personal Details",
@@ -24,12 +26,12 @@ const Settings = () => {
   ];
   return (
     <div className="grid grid-cols-12 gap-6 mt-6">
-      {/* <div className="col-span-12 lg:col-span-4 space-y-6">
+      <div className="col-span-12 lg:col-span-4 space-y-6">
         <UserMeta />
-        <Socials />
-        <Skills />
-      </div> */}
-      <div className="col-span-12 lg:col-span-12">
+        {/* <Socials />
+        <Skills /> */}
+      </div>
+      <div className="col-span-12 lg:col-span-8">
         <Tabs defaultValue="personal" className="p-0 px-1">
           <TabsList className="bg-card  flex-1 overflow-x-auto md:overflow-hidden  w-full px-5 pt-6 pb-2.5 h-fit border-b border-border  rounded-none justify-start gap-12 rounded-t-md">
             {tabs.map((tab, index) => (

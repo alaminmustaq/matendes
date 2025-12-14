@@ -73,9 +73,9 @@ let columns = (actions) => [
       <TableActions 
         data={row.original}
         items={[
-          { label: "Manage Permissions", onClick: actions?.onManagePermissions, permission: "manage-settings" },
-          { label: "Edit", onClick: actions?.onEdit, permission: "manage-settings" },
-          { label: "Delete", onClick: actions?.onDelete, danger: true, passId: true, permission: "manage-settings" }, // needs only ID
+          { label: "Manage Permissions", onClick: actions?.onManagePermissions, permission: "set-permission" },
+          { label: "Edit", onClick: actions?.onEdit, permission: "edit-role-permission" },
+          { label: "Delete", onClick: actions?.onDelete, danger: true, passId: true, permission: "delete-role-permission" }, // needs only ID
         ]}
       />
     )},

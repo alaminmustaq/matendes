@@ -23,8 +23,7 @@ import {
 } from "../services/documentApi";
 import { setDocumentData } from "../model/documentSlice";
 import { useParams } from "next/navigation";
-
-
+import useAuth from "@/domains/auth/hooks/useAuth";
 
 export const useDocument = () => {
     const dispatch = useAppDispatch();
@@ -47,11 +46,13 @@ export const useDocument = () => {
         selectFromResult: (result) => {
             if (result?.data) {
                 dispatch(setDocumentData(result?.data?.data));
-              }
+            }
 
             return result;
         },
     });
+
+    const { user } = useAuth();
 
     // Form
     const form = useForm({
@@ -76,9 +77,16 @@ export const useDocument = () => {
         name: "document",
     });
 
+    const defaultValue = {
+        branch_id:
+            branchSearchTemplate(
+                user?.employee?.branch ? [user?.employee?.branch] : []
+            )?.at(0) ?? null,
+    };
+
     const documentsState = {
         data: documentResponse?.data?.documents || [],
-        form: { ...form, fields: fieldArray },
+        form: { ...form, fields: fieldArray, defaultValue: defaultValue },
         refetch,
         pagination: documentResponse?.data?.pagination || {},
         isFetching,

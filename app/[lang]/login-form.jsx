@@ -164,12 +164,12 @@ const LogInForm = () => {
                             Remember me
                         </Label>
                     </div>
-                    <Link
+                    {/* <Link
                         href="/auth/forgot2"
                         className="flex-none text-sm text-primary"
                     >
                         Forget Password?
-                    </Link>
+                    </Link> */}
                 </div>
                 <Button
                     className="w-full"

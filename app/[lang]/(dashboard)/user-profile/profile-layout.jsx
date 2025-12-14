@@ -1,27 +1,35 @@
-"use client"
-import React from "react"
+"use client";
+import React, { createContext, useContext } from "react";
 import { usePathname } from "next/navigation";
 import Header from "./components/header";
-import SettingsHeader from "./components/settings-header"
+import SettingsHeader from "./components/settings-header";
+import { useProfile } from "@/domains/profile/hook/useProfile";
+
+// Create context
+export const FormContext = createContext(null);
+export const useFormContext = () => useContext(FormContext);
+
 const ProfileLayout = ({ children }) => {
+  const { form, actions, isFetching } = useProfile();
   const location = usePathname();
 
+  const providerValue = { form, actions, isFetching }; // ✅ object
+
   if (location === "/user-profile/settings") {
-    return <React.Fragment>
-      <SettingsHeader />
-      <div className="mt-6">
-        {children}
-      </div>
-    </React.Fragment>
+    return (
+      <FormContext.Provider value={providerValue}>
+        <SettingsHeader />
+        <div className="mt-6">{children}</div>
+      </FormContext.Provider>
+    );
   }
 
   return (
-    <React.Fragment>
+    <FormContext.Provider value={providerValue}>
       <Header />
       {children}
-    </React.Fragment>
+    </FormContext.Provider>
   );
-
 };
 
 export default ProfileLayout;

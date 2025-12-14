@@ -23,7 +23,7 @@ const ManualAttendancePage = () => {
                         ApprovedSalary: {
                             label: "Adjust Hours",
                             action: actions.onAdjustHours,
-                            permission: "manual-attendance",
+                            permission: "adjust-hour",
                         },
                     }} 
                     columns={columns(actions)}

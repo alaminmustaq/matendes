@@ -14,16 +14,22 @@ import {
     useProjectUpdateAssignedEmployeesMutation,
 } from "../services/projectApi";
 import { setProjectData } from "../model/projectSlice";
-import { jobPositionsTemplate, employTemplate, clientTemplate, branchSearchTemplate } from "@/utility/templateHelper";
+import {
+    jobPositionsTemplate,
+    employTemplate,
+    clientTemplate,
+    branchSearchTemplate,
+} from "@/utility/templateHelper";
 import toast from "react-hot-toast";
 import { useForm } from "react-hook-form";
 import { useFieldArray } from "react-hook-form";
 import { useRef } from "react";
 import { useAppDispatch } from "@/hooks/use-redux";
 import { useParams } from "next/navigation";
+import useAuth from "@/domains/auth/hooks/useAuth";
 
 export const useProject = () => {
-    const dispatch = useAppDispatch(); 
+    const dispatch = useAppDispatch();
     const { id } = useParams();
     const [projectCreate] = useProjectCreateMutation();
     const [projectUpdate] = useProjectUpdateMutation();
@@ -38,16 +44,18 @@ export const useProject = () => {
     } = useProjectFetchQuery(id ? { id } : "", {
         selectFromResult: (result) => {
             if (result?.data) {
-                dispatch(setProjectData(result?.data?.data)); 
-            } 
-            return result; 
+                dispatch(setProjectData(result?.data?.data));
+            }
+            return result;
         },
-    }); 
+    });
 
     //Lazy query
     const [triggerGetProject] = useLazyProjectFetchQuery();
     // Ref to prevent multiple simultaneous calls to setAssignEmployModel
     const isLoadingAssignEmployees = useRef(false);
+
+    const { user } = useAuth();
 
     const form = useForm({
         mode: "onBlur",
@@ -67,11 +75,23 @@ export const useProject = () => {
         name: "assignEmployees", // This matches the field name in form
     });
 
+    const defaultValue = {
+        branch_id:
+            branchSearchTemplate(
+                user?.employee?.branch ? [user?.employee?.branch] : []
+            )?.at(0) ?? null,
+
+        status: "in_progress",
+    };
+
+    // console.log(defaultValue);
+
     const projectState = {
         data: project?.data?.projects || [],
         form: {
             ...form,
             fields: fieldArray, // Merge fieldArray into form
+            defaultValue: defaultValue,
         },
         refetch,
         pagination: project?.data?.pagination || {},
@@ -109,10 +129,8 @@ export const useProject = () => {
                         employee_id: employeeList,
                         assigned_employees: assignedEmployees,
                     },
-                    ["job_position_id", "client_id","branch_id"]
+                    ["job_position_id", "client_id", "branch_id"]
                 );
-
-            
 
                 const response = await projectCreate(preparedData).unwrap();
 
@@ -129,18 +147,19 @@ export const useProject = () => {
 
         onEdit: (data) => {
             console.log(data);
-            
+
             // Prepare employee data for editing using template
             const employeeData = data.employees?.length
                 ? employTemplate(data.employees)
-                : []; 
+                : [];
 
             // Prepare job position data using template
             const jobPositionData = data.job_position
                 ? jobPositionsTemplate([data.job_position])?.at(0) ?? null
                 : null;
-            const client= data.client ?
-            clientTemplate([data.client])?.at(0) ?? null : null;
+            const client = data.client
+                ? clientTemplate([data.client])?.at(0) ?? null
+                : null;
 
             const resetData = {
                 id: data.id || "",
@@ -151,7 +170,7 @@ export const useProject = () => {
                 end_date: data.end_date || "",
                 status: data.status || "planned",
                 job_position_id: jobPositionData,
-                employee_id: employeeData, 
+                employee_id: employeeData,
                 branch_id:
                     branchSearchTemplate(data?.branch ? [data.branch] : [])?.at(
                         0
@@ -160,25 +179,20 @@ export const useProject = () => {
                 expiry_warning_days: data.expiry_warning_days || 0,
                 observation: data.observation || "",
             };
-            
+
             form.reset(resetData);
             form.setValue("openModel", true);
         },
 
-          getProject: async (id = null) => {
-          
-              
-                    // ✅ trigger API
-              const result = await triggerGetProject({ id:id }).unwrap();
+        getProject: async (id = null) => {
+            // ✅ trigger API
+            const result = await triggerGetProject({ id: id }).unwrap();
 
-                  
-                    // ✅ if data exists, push to redux + form
-                    if (result?.data) {
-                        
-                        dispatch(setProjectData(result.data));
-                        
-                    }
-                },
+            // ✅ if data exists, push to redux + form
+            if (result?.data) {
+                dispatch(setProjectData(result.data));
+            }
+        },
 
         onUpdate: async (data) => {
             try {
@@ -220,7 +234,7 @@ export const useProject = () => {
                         employee_id: employeeList,
                         assigned_employees: assignedEmployees,
                     },
-                    ["job_position_id", "client_id","branch_id"]
+                    ["job_position_id", "client_id", "branch_id"]
                 );
 
                 console.log(
@@ -285,6 +299,7 @@ export const useProject = () => {
                         ) || data;
 
                     console.log("Found project data:", projectData);
+                    form.setValue("branch_id", projectData?.branch?.id || null);
 
                     // Prepare assigned employees data for field array
                     const assignedEmployeesData =
@@ -303,7 +318,7 @@ export const useProject = () => {
                         "Prepared assigned employees data:",
                         assignedEmployeesData
                     );
-
+                    
                     // Replace all fields at once (safer than individual remove/append)
                     fieldArray.replace(assignedEmployeesData);
                 } else {

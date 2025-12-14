@@ -27,30 +27,33 @@ const ProfileInfo = () => {
     const router = useRouter();
     const { user } = useAppSelector((state) => state.auth); 
     
+    console.log(user?.user?.file_url);
+    
+
     const session = [];
     return (
         <DropdownMenu>
             <DropdownMenuTrigger asChild className=" cursor-pointer">
                 <div className=" flex items-center  ">
                     <img
-                        src="https://static.vecteezy.com/system/resources/previews/045/944/199/non_2x/male-default-placeholder-avatar-profile-gray-picture-isolated-on-background-man-silhouette-picture-for-user-profile-in-social-media-forum-chat-greyscale-illustration-vector.jpg"
+                        src={user?.user?.file_url ?? "https://static.vecteezy.com/system/resources/previews/045/944/199/non_2x/male-default-placeholder-avatar-profile-gray-picture-isolated-on-background-man-silhouette-picture-for-user-profile-in-social-media-forum-chat-greyscale-illustration-vector.jpg"}
                         alt="Profile"
                         width={36}
                         height={36}
-                        className="rounded-full"
+                        className="rounded-full object-cover w-10 h-10"
                     />
                 </div>
             </DropdownMenuTrigger>
             <DropdownMenuContent className="w-56 p-0" align="end">
                 <DropdownMenuLabel className="flex gap-2 items-center mb-1 p-3">
                     <img
-                        src="https://static.vecteezy.com/system/resources/previews/045/944/199/non_2x/male-default-placeholder-avatar-profile-gray-picture-isolated-on-background-man-silhouette-picture-for-user-profile-in-social-media-forum-chat-greyscale-illustration-vector.jpg"
+                        src={user?.user?.file_url ?? "https://static.vecteezy.com/system/resources/previews/045/944/199/non_2x/male-default-placeholder-avatar-profile-gray-picture-isolated-on-background-man-silhouette-picture-for-user-profile-in-social-media-forum-chat-greyscale-illustration-vector.jpg"}
                         alt="Profile"
                         width={36}
                         height={36}
-                        className="rounded-full"
+                        className="rounded-full object-cover w-10 h-10"
                     />
-                    {console.log(user)}
+                   
                     <div>
                         <div className="text-sm font-medium text-default-800 capitalize ">
                             {

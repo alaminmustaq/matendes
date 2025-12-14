@@ -30,9 +30,16 @@ export const useDocumentType = () => {
         shouldFocusError: true,
     });
 
+      const defaultValue={
+        status: 'active',
+    }
+
     const documentTypesState = {
         data: documentTypeResponse?.data?.document_types || [],
-        form,
+         form: {
+            ...form,
+            defaultValue: defaultValue
+          },
         refetch,
         pagination: documentTypeResponse?.data?.pagination || {},
         isFetching,

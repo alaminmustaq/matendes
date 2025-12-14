@@ -19,13 +19,15 @@ import {
     departmentSearchTemplate,
     projectTemplate,
 } from "@/utility/templateHelper";
-
+import useAuth from "@/domains/auth/hooks/useAuth";
 export const useManualAttendance = () => {
     // RTK Query mutations
     const [updateManualAttendance] = useUpdateManualAttendanceMutation();
     const [deleteManualAttendance] = useDeleteManualAttendanceMutation();
     const [createManualAttendance] = useCreateManualAttendanceMutation();
-
+    
+    const {user} = useAuth(); 
+    
     // Lazy query for employee filter
     const [
         filterEmployees,
@@ -38,13 +40,14 @@ export const useManualAttendance = () => {
         refetch,
         isFetching,
     } = useFetchManualAttendancesQuery();
+ 
 
     // Form
     const form = useForm({
         mode: "onBlur",
         reValidateMode: "onSubmit",
         shouldFocusError: true,
-    });
+    }); 
 
     const fieldArray = useFieldArray({
         control: form.control,
@@ -68,14 +71,21 @@ export const useManualAttendance = () => {
             console.error("Employee filter error:", error);
             toast.error("Failed to filter employees");
         }
+    } 
+    
+    const defaultValue={
+        branch_id: branchSearchTemplate(user?.employee?.branch ? [user?.employee?.branch] : [])?.at(0) ?? null,
+        attendance_scope: "all_attendance",
+        adjustment_type: "increment",
     }
-
     // State object
     const manualAttendanceState = {
         data: manualAttendanceData?.data?.master_attendances || [],
         form: {
             ...form,
+            defaultValue: defaultValue,
             fields: fieldArray,
+            
         },
         refetch,
         pagination: manualAttendanceData?.pagination || {},
@@ -471,10 +481,10 @@ export const useManualAttendance = () => {
             }
         },
         onAddAttendance: async () => {
-            form.reset({openModel: true}) 
+            form.reset({openModel: true,...defaultValue}) 
         },
         onAdjustHours: async () => {
-            form.reset({openModel: true, model_for: "adjust_hours"})
+            form.reset({openModel: true, model_for: "adjust_hours",...defaultValue})
         },
     };
 

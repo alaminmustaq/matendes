@@ -6,20 +6,39 @@ import { Home } from "lucide-react";
 import coverImage from "@/public/images/all-img/user-cover.png";
 import Image from "next/image";
 import Link from "next/link";
+import { Input } from "@/components/ui/input";
+import { Label } from "@/components/ui/label";
 import { Icon } from "@iconify/react";
 import { cn } from "@/lib/utils";
 import { usePathname } from "next/navigation";
-import { Fragment } from "react";
+import { Fragment, useContext } from "react";
 import { useAppSelector } from "@/hooks/use-redux";
+import { Button } from "@/components/ui/button";
+import { useEffect, useState } from "react";
+import { useFormContext  } from "../profile-layout";
 
 const Header = () => {
   const location = usePathname();
+  const {form} = useFormContext();  
+  
   const { profile } = useAppSelector((state) => state.profileData);
 
   const user = profile?.user;
   const company = user?.company;
   const employee = user?.employee;
   const roles = user?.roles || [];
+
+
+  const fileUrlBg = profile?.user?.file_bg_url;
+  
+    const [preview, setPreview] = useState(null);
+  
+    // when profile loads, set the preview
+    useEffect(() => {
+      if (fileUrlBg) {
+        setPreview(fileUrlBg);
+      }
+    }, [fileUrlBg]);
 
   // Role name
   const roleName = roles[0]?.display_name || roles[0]?.name || "User";
@@ -37,8 +56,7 @@ const Header = () => {
 
   // Profile Image
   const profileImage =
-    employee?.profile_photo_url ||
-    company?.logo_url ||
+    profile?.user?.file_url ??
     "/images/avatar/placeholder.jpg";
 
   // Navigation Links
@@ -64,17 +82,18 @@ const Header = () => {
         <CardContent className="p-0">
           <div
             className="relative h-[200px] lg:h-[296px] rounded-t-2xl w-full bg-cover bg-center bg-no-repeat"
-            style={{ backgroundImage: `url(${coverImage.src})` }}
+            style={{ backgroundImage: `url(${preview ?? coverImage.src})` }}
           >
             {/* User Info */}
-            <div className="flex items-center gap-4 absolute ltr:left-10 rtl:right-10 -bottom-2 lg:-bottom-8">
+            <div className="flex items-center justify-between gap-4 absolute ltr:left-10 rtl:right-10 -bottom-2 lg:-bottom-8">
               <div>
                 <Image
-                  src={profileImage}
+                  src={profile?.user?.file_url ?? "/images/avatar/placeholder.jpg"}
                   alt="user"
                   className="h-20 w-20 lg:w-32 lg:h-32 rounded-full object-cover border-2 border-white shadow-md"
                   width={128}
                   height={128}
+                  unoptimized
                 />
               </div>
               <div>
@@ -86,8 +105,28 @@ const Header = () => {
                 <div className="text-xs lg:text-sm font-medium text-default-100 dark:text-default-900 pb-1.5">
                   {displayTitle}
                 </div>
-              </div>
+              </div> 
             </div>
+            <Button asChild className="absolute bottom-5 ltr:right-6 rtl:left-6 rounded px-5 hidden lg:flex" size="sm">
+                <Label htmlFor="avatar-bg">
+                  <Icon className="w-4 h-4 ltr:mr-1 rtl:ml-1" icon="heroicons:pencil-square" />
+                  Edit
+                </Label>
+            </Button>
+            <Input
+              type="file"
+              className="hidden"
+              id="avatar-bg"
+              accept="image/*"
+              onChange={(e) => {
+                const file = e.target.files?.[0];
+                if (file) {
+                  form.setValue("avatar_bg",file);   // 👈 save file in form
+                  // form.trigger("avatar");
+                  setPreview(URL.createObjectURL(file)); // 👈 image preview
+                }
+              }}
+            />
           </div>
 
           {/* Navigation Tabs */}

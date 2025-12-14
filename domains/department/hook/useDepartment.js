@@ -17,6 +17,8 @@ import {
 } from "@/utility/templateHelper";
 import { getFilterParams } from "@/utility/helpers";
 import { useMemo } from "react";
+import { useAppSelector } from "@/hooks/use-redux";
+import useAuth from "@/domains/auth/hooks/useAuth";
 
 export const useDepartment = () => {
     const [departmentCreate] = useDepartmentCreateMutation();
@@ -24,11 +26,23 @@ export const useDepartment = () => {
     const [departmentDelete] = useDepartmentDeleteMutation();
     const { data: department, refetch, isFetching } = useDepartmentFetchQuery();
 
+    const { user } = useAuth();
+
     const form = useForm({
         mode: "onBlur",
         reValidateMode: "onSubmit",
         shouldFocusError: true,
-    });
+    }); 
+
+    const defaultValue = {
+        branch_id:
+            branchSearchTemplate(
+                user?.employee?.branch ? [user?.employee?.branch] : []
+            )?.at(0) ?? null,
+
+        type: "department",
+        status: "active",
+    };
 
     const { data: departmentSearchResult } = useDepartmentSearchQuery(
         { search: form.watch("search") },
@@ -37,7 +51,10 @@ export const useDepartment = () => {
 
     const departmentState = {
         data: department?.data?.departments || [],
-        form,
+        form: {
+            ...form,
+            defaultValue: defaultValue,
+        },
         refetch,
         pagination: department?.data?.pagination || {},
         isFetching,
@@ -186,7 +203,9 @@ export const useDepartment = () => {
                 if (error?.response?.data?.message) {
                     toast.error(error.response.data.message);
                 } else {
-                    toast.error("Something went wrong while deleting department.");
+                    toast.error(
+                        "Something went wrong while deleting department."
+                    );
                 }
             }
         },

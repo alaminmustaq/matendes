@@ -21,6 +21,10 @@ export const useRecPaymentType = () => {
         shouldFocusError: true,
     });
 
+     const defaultValue={
+        status: 'active',
+    }
+
     // Search (debounced auto-fetch)
     const { data: searchResult } = useRecPaymentTypeSearchQuery(
         { search: form.watch("search") },
@@ -33,7 +37,10 @@ export const useRecPaymentType = () => {
     const state = {
         data: listData?.data?.items || [],
         pagination: listData?.data?.pagination || {},
-        form,
+           form: {
+            ...form,
+            defaultValue: defaultValue
+          },
         refetch,
         isFetching,
     };
