@@ -7,11 +7,18 @@ const safe = (v, fallback = "—") => (v ?? v === 0 ? v : fallback);
 let columns = (actions) => {
     const { actions: projectActions } = useProject();
     const params = useParams();
-    const lang = params?.lang || 'en';
+    const lang = params?.lang || "en";
     const router = useRouter();
     return [
         // Core fields
         { accessorKey: "name", header: "Project Name" },
+        {
+            id: "branch",
+            header: "Branch",
+            thClass: "!text-center",
+            tdClass: "!text-center",
+            cell: ({ row }) => row.original?.branch?.name || "—",
+        },
         {
             id: "status",
             header: "Status",
@@ -81,20 +88,28 @@ let columns = (actions) => {
                             onClick: (rowData) => {
                                 // Define the custom handler here
                                 // projectActions.getProject(rowData?.id);
-                                router.push(`/${lang}/project-details/${rowData?.id}`);
-                            }, permission: "details-project"
+                                router.push(
+                                    `/${lang}/project-details/${rowData?.id}`
+                                );
+                            },
+                            permission: "details-project",
                         },
                         {
                             label: "Assign Employees",
-                            onClick: actions?.setAssignEmployModel, permission: "delete-project"
+                            onClick: actions?.setAssignEmployModel,
+                            permission: "delete-project",
                         },
-                        { label: "Edit", onClick: actions?.onEdit, permission: "edit-project"},
+                        {
+                            label: "Edit",
+                            onClick: actions?.onEdit,
+                            permission: "edit-project",
+                        },
                         {
                             label: "Delete",
                             onClick: actions?.onDelete,
                             danger: true,
                             passId: true,
-                            permission: "delete-project"
+                            permission: "delete-project",
                         }, // needs only ID
                     ]}
                 />

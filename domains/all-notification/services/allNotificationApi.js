@@ -16,7 +16,7 @@ export const allNotificationApi = createApi({
     }),
     fetchNotification: builder.query({
       query: () => ({
-        url: "inventory/all-notification",
+        url: "notifications/all-notification",
         params: { ...getFilterParams() },
       }),
       providesTags: ["ToolCategory"],

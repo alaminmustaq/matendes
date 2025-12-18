@@ -287,6 +287,12 @@ export const menusConfig = {
                     permission: "view-language",
                 },
                 {
+                    title: "Rules",
+                    href: "/rule",
+                    icon: Users,
+                    permission: "view-general-setting",
+                },
+                {
                     title: "Activity log",
                     href: "/activity",
                     icon: Users,
@@ -513,17 +519,23 @@ export const menusConfig = {
                 title: "Settings",
                 icon: Settings,
                 child: [
-                      {
-                    title: "General Settings",
-                    href: "/general-settings",
-                    icon: Users,
-                    permission: "view-general-setting",
-                },
+                    {
+                        title: "General Settings",
+                        href: "/general-settings",
+                        icon: Users,
+                        permission: "view-general-setting",
+                    },
                     {
                         title: "Role & Permissions",
                         href: "/role",
                         icon: Users,
                         permission: "view-role-permission",
+                    },
+                    {
+                        title: "Rules",
+                        href: "/rule",
+                        icon: Users,
+                        permission: "view-general-setting",
                     },
                     {
                         title: "Activity log",
@@ -768,12 +780,12 @@ export const menusConfig = {
                 icon: Settings,
                 href: "#",
                 child: [
-                      {
-                    title: "General Settings",
-                    href: "/general-settings",
-                    icon: Users,
-                    permission: "view-general-setting",
-                },
+                    {
+                        title: "General Settings",
+                        href: "/general-settings",
+                        icon: Users,
+                        permission: "view-general-setting",
+                    },
                     {
                         title: "Role & Permissions",
                         href: "/role",
@@ -785,6 +797,12 @@ export const menusConfig = {
                         href: "/language",
                         icon: Users,
                         permission: "view-language",
+                    },
+                    {
+                        title: "Rules",
+                        href: "/rule",
+                        icon: Users,
+                        permission: "view-general-setting",
                     },
                     {
                         title: "Activity log",

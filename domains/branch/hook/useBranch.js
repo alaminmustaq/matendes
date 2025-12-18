@@ -32,6 +32,10 @@ export const useBranch = () => {
     });
     const defaultValue={
         status: 'active',
+        type: "branch",
+        branch_type: "branch_office",
+        hierarchy_level: 1,
+        sort_order: 0,
     }
 
     const { data: branchSearchResult} = useBranchSearchQuery(

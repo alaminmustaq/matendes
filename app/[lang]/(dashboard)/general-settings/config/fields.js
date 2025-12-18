@@ -9,11 +9,16 @@ const fields = () => [
     },
     {
         name: "allowed_file_types",
-        type: "input",
+        type: "multi-select",
         label: "Allowed File Types",
-        placeholder: "e.g., jpg,png,pdf",
+        placeholder: "Select File Types",
         colSpan: "col-span-12 md:col-span-6",
-        note: "Comma-separated values. Example: jpg,png,pdf",
+        options: [
+                { label: "jpg", value: "jpg" },
+                { label: "png", value: "png" },
+                { label: "pdf", value: "pdf" },
+                { label: "webp", value: "webp" },
+            ],
     },
 
     // --- FILE UPLOADS ---
