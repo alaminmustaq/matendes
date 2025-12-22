@@ -17,6 +17,7 @@ const EmployeePage = () => {
                 to="employees/create"
                 state={employState}
                 searchKey="employee"
+                includeInactive={true}
             />
         </PageLayout>
     );

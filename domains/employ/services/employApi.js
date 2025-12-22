@@ -47,7 +47,7 @@ export const employApi = createApi({
         }),
 
         // Fetch employees with filters/pagination
-        employFetch: builder.query({
+            employFetch: builder.query({
             query: ({ id } = {}) => ({
                 url: "hrm/employees",
                 method: "GET",
@@ -56,7 +56,9 @@ export const employApi = createApi({
                     : { ...getFilterParams() , employeePageKey:true, include_inactive_employees: true},
             }),
             providesTags: ["Employ"],
+            
         }),
+
 
         // Search employees
         employSearch: builder.query({
