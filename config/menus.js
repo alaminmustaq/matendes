@@ -250,6 +250,18 @@ export const menusConfig = {
                 },
             ],
         },
+        {
+            title: "Report",
+            icon: FileText,
+            child: [
+                {
+                    title: "Employee Report",
+                    href: "/report/employee-report",
+                    icon: FileCode,
+                    permission: "view-document",
+                }, 
+            ],
+        },
         // {
         //     title: "Client",
         //     icon: UserCog,
@@ -514,6 +526,18 @@ export const menusConfig = {
                     },
                 ],
             },
+            {
+                title: "Report",
+                icon: FileText,
+                child: [
+                    {
+                        title: "Employee Report",
+                        href: "/report/employee-report",
+                        icon: FileCode,
+                        permission: "view-document",
+                    }, 
+                ],
+            },
 
             {
                 title: "Settings",
@@ -772,6 +796,20 @@ export const menusConfig = {
                         icon: FileText,
                         permission: "view-document",
                     },
+                ],
+            },
+            {
+                title: "Report",
+                icon: FileText,
+                isOpen: false,
+                isHide: false,
+                child: [
+                    {
+                        title: "Employee Report",
+                        href: "/report/employee-report",
+                        icon: FileCode,
+                        permission: "view-document",
+                    }, 
                 ],
             },
 
