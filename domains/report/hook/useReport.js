@@ -1,6 +1,8 @@
 import { useForm } from "react-hook-form";
 import { useLazyFetchReportQuery } from "../services/reportApi";
 import { normalizeSelectValues } from "@/utility/helpers";
+import Cookies from "js-cookie";
+
 
 export const useReport = (route = "reports") => {
     const form = useForm({
@@ -49,10 +51,13 @@ export const useReport = (route = "reports") => {
                 "role_id",
             ]);
 
-            window.open(
-                `/reports/${route}/pdf?${new URLSearchParams(normalizedPayload)}`,
-                "_blank"
-            );
+            // Read auth token from cookie
+            const token = Cookies.get("auth-token"); // replace "auth-token" with your cookie name
+            console.log(token);
+            
+            const backendUrl = `https://matendes-hrm.test/report/${route}/pdf?${new URLSearchParams(normalizedPayload)}&token=${token}`;
+
+            window.open(backendUrl, "_blank");
         },
 
         exportExcel: () => {

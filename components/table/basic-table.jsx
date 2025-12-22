@@ -55,7 +55,6 @@ export function BasicDataTable({
     searchKey = false,
     search = true,
     addPermission,
-    includeInactive = true, 
 }) {
     const translation_state = useSelector((state) => state.auth.translation);
 
@@ -64,13 +63,8 @@ export function BasicDataTable({
     const [columnVisibility, setColumnVisibility] = React.useState({});
     const [rowSelection, setRowSelection] = React.useState({});
     const [searchValue, setSearchValue] = React.useState(
-    getFilterParams(
-        searchKey ? `${searchKey}_search` : "employee_search"
-    ) || ""
-);
-
-
-
+        getFilterParams("search") || ""
+    );
     const { user } = useAppSelector((state) => state.auth);
 
     const permissionNames = user?.permissions?.map((p) => p.name) || [];
@@ -78,31 +72,19 @@ export function BasicDataTable({
 
    
 
-
-   
-
     addButtonLabel = translate(addButtonLabel, translation_state);
     // Create debounced search function
-   const debouncedSearch = React.useCallback(
-    debounce((searchTerm) => {
-        const searchParamKey = searchKey
-            ? `${searchKey}_search`
-            : "employee_search";
-
-        setFilterParams(searchParamKey, searchTerm);
-        setFilterParams("page", 1);
-
-        setFilterParams(
-            "include_inactive_employees",
-            searchTerm?.trim() ? "false" : "true"
-        );
-
-        refetch?.();
-    }, 500),
-    [refetch, searchKey]
-);
-
-
+    const debouncedSearch = React.useCallback(
+        debounce((searchTerm) => {
+            setFilterParams(
+                `${searchKey ? searchKey + "_" : ""}search`,
+                searchTerm
+            );
+            setFilterParams("page", 1); // Reset to first page when searching
+            if (refetch) refetch();
+        }, 500), // 500ms delay
+        [refetch]
+    );
 
     const table = useReactTable({
         data,
@@ -412,12 +394,6 @@ export function BasicDataTable({
                                         const newPage =
                                             pagination.current_page - 1;
                                         setFilterParams("page", newPage);
-                                        setFilterParams(
-    "include_inactive_employees",
-    searchValue?.trim() ? "false" : "true"
-);
-
-
                                         if (refetch) refetch();
                                     }}
                                     disabled={pagination.current_page <= 1}
