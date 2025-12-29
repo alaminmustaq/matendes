@@ -67,7 +67,15 @@ export const useDocument = () => {
             employee_id: "",
             branch_id: "",
             status: "active",
-            document: [],
+            document: [
+                {
+                    title: null,
+                    type: null,
+                    expiry_date: "",
+                    expiry_warning: 0,
+                    file: "",
+                },
+            ],
             openModel: false,
         },
     });
@@ -76,6 +84,17 @@ export const useDocument = () => {
         control: form.control,
         name: "document",
     });
+
+    // Ensure at least one transaction detail exists
+    if (fieldArray.fields.length === 0) {
+        fieldArray.append({
+            title: null,
+            type: null,
+            expiry_date: "",
+            expiry_warning: 0,
+            file: "",
+        });
+    }
 
     const defaultValue = {
         branch_id:

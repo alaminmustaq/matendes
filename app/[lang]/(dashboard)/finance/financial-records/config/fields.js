@@ -34,7 +34,7 @@ export default function fields(defaultForm) {
                 });
             },
         },
-        
+
         {
             name: "project_id",
             type: "async-select",
@@ -43,6 +43,7 @@ export default function fields(defaultForm) {
             placeholder: "Select project",
             colSpan: "col-span-12 md:col-span-4",
         },
+
         {
             name: "transaction_type",
             label: "Transaction Type *",
@@ -57,7 +58,8 @@ export default function fields(defaultForm) {
             rules: {
                 required: "Transaction type is required",
             },
-        }, 
+        },
+
         {
             name: "transaction_date",
             label: "Transaction Date *",
@@ -67,6 +69,7 @@ export default function fields(defaultForm) {
             },
             colSpan: "col-span-12 md:col-span-4",
         },
+
         {
             name: "expected_rec_pay_date",
             label: "Expected Receive Payment Date",
@@ -80,9 +83,7 @@ export default function fields(defaultForm) {
             type: "async-select",
             colSpan: "col-span-12 md:col-span-4",
             loadOptions: ["bank/banks", "banks", "bankTemplate"],
-            handleChange: (e, form, field, allData) => {
-                console.log("allData", e);
-
+            handleChange: (e, form, field, allData) => { 
                 allData.find((item) => {
                     if (item.value === e.value) {
                         form?.setValue("bank_id", item.bank_id);
@@ -91,6 +92,7 @@ export default function fields(defaultForm) {
                 form?.setValue("bank_branch_id", e);
             },
         },
+
         {
             name: "bank_transaction_number",
             label: "Bank Transaction Number",
@@ -105,7 +107,6 @@ export default function fields(defaultForm) {
         },
 
         // Details (match finance_record_details migration)
-
         {
             name: "transaction_details",
             type: "group-form",
@@ -128,6 +129,7 @@ export default function fields(defaultForm) {
                         required: "Employ  is required",
                     },
                 },
+
                 {
                     name: "rec_payment_type_id",
                     type: "async-select",
@@ -145,6 +147,7 @@ export default function fields(defaultForm) {
                         required: "Rec_pay_type  is required",
                     },
                 },
+
                 {
                     name: "amount",
                     type: "number",
@@ -156,6 +159,7 @@ export default function fields(defaultForm) {
                         min: { value: 1, message: "Amount must be at least 1" },
                     },
                 },
+
                 {
                     name: "description",
                     type: "textarea", 

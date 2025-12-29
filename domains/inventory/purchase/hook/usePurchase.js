@@ -47,6 +47,7 @@ export const usePurchase = () => {
 
     const purchaseState = {
         data: purchasesData?.data?.purchases || [],
+        pagination: purchasesData?.data?.pagination || {},
         form: { ...form, fields: fieldArray, defaultValue: defaultValue },
         refetch,
         isFetching,

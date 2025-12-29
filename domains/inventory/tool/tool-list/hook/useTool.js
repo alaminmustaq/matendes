@@ -33,6 +33,7 @@ export const useTool = () => {
 
     const toolState = {
         data: toolsData?.data?.tools || [],
+        pagination: toolsData?.data?.pagination || {},
         form: {
             ...form,
             defaultValue: defaultValue,

@@ -72,7 +72,7 @@ export const useDepartment = () => {
 
                 const response = await departmentCreate(preparedData).unwrap();
                 if (response) {
-                    toast.success("Department Create Successfully");
+                    toast.success("Department Created Successfully");
                     refetch();
                     formReset(form);
 
@@ -170,7 +170,7 @@ export const useDepartment = () => {
                 }).unwrap();
 
                 if (response) {
-                    toast.success("Department Update Successfully");
+                    toast.success("Department Updated Successfully");
                     refetch();
                     formReset(form);
 
@@ -183,11 +183,11 @@ export const useDepartment = () => {
         },
         onDelete: async (id) => {
             try {
-                if (confirm("Are you sure you want to delete this branch?")) {
+                if (confirm("Are you sure you want to delete this Department?")) {
                     const response = await departmentDelete({ id });
 
                     if (response?.data?.success) {
-                        toast.success("Department deleted successfully");
+                        toast.success("Department Deleted Successfully");
                         refetch();
                     } else if (response?.error?.data?.errors?.message) {
                         toast.error(response?.error?.data?.errors?.message);

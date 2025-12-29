@@ -9,7 +9,7 @@ export const reportApi = createApi({
     endpoints: (builder) => ({
         fetchReport: builder.query({
             query: ({ route = "reports", params = {} }) => ({
-                url: `hrm/${route}`,
+                url: `${route}`,
                 params: {
                     ...getFilterParams(),
                     ...params,
@@ -17,7 +17,14 @@ export const reportApi = createApi({
             }),
             providesTags: ["Report"],
         }),
+        generateReport: builder.mutation({
+            query: ({ route, filters, format, token }) => ({
+                url: `report/${route}/${format}`,
+                method: "GET",
+                params: { ...filters, token },
+            }),
+        }),
     }),
 });
 
-export const { useLazyFetchReportQuery } = reportApi;
+export const { useFetchReportQuery,useGenerateReportMutation } = reportApi;

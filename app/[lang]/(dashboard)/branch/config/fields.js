@@ -54,13 +54,12 @@ const fields = [
     {
         name: "password",
         type: "input",
-        label: "Login Password *",
+        label: "Login Password",
         placeholder: "******",
         colSpan: "col-span-12 md:col-span-6",
         inputProps: { type: "password", autoComplete: "new-password" },
         rules: {
             minLength: { value: 6, message: "Minimum length is 6" },
-            required: { value: true, message: "Password is required" },
         },
     },
     {

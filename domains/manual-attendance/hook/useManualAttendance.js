@@ -40,7 +40,8 @@ export const useManualAttendance = () => {
         refetch,
         isFetching,
     } = useFetchManualAttendancesQuery();
- 
+
+    console.log("Manual Attendance Data:", manualAttendanceData);
 
     // Form
     const form = useForm({
@@ -88,7 +89,7 @@ export const useManualAttendance = () => {
             
         },
         refetch,
-        pagination: manualAttendanceData?.pagination || {},
+        pagination: manualAttendanceData?.data?.pagination || {},
         isFetching,
         employeeFilterResults: employeeFilterResults?.data || [],
         isFiltering,

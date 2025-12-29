@@ -14,7 +14,7 @@ const fields = (form) => [
     {
         name: "branch_id",
         type: "async-select",
-        label: "Branch *",
+        label: "Branch",
         loadOptions: [
             "organization/branches",
             "branches",
@@ -50,7 +50,7 @@ const fields = (form) => [
     {
         name: "role_id",
         type: "async-select",
-        label: "Role *",
+        label: "Role",
         colSpan: "col-span-12 md:col-span-3",
         loadOptions: [
             "admin/roles-permissions/roles",
@@ -76,7 +76,7 @@ const fields = (form) => [
     {
         name: "salary_type",
         type: "select",
-        label: "Salary Type *",
+        label: "Salary Type",
         colSpan: "col-span-12 md:col-span-3",
         options: [
             { label: "Hourly", value: "hourly" },
@@ -90,7 +90,7 @@ const fields = (form) => [
     {
         name: "employment_type",
         type: "select",
-        label: "Employment Type *",
+        label: "Employment Type",
         colSpan: "col-span-12 md:col-span-3",
         options: [
             { label: "Permanent", value: "permanent" },
@@ -103,7 +103,7 @@ const fields = (form) => [
     {
         name: "work_mode",
         type: "select",
-        label: "Work Mode *",
+        label: "Work Mode",
         colSpan: "col-span-12 md:col-span-3",
         options: [
             { label: "Office", value: "office" },
@@ -115,7 +115,7 @@ const fields = (form) => [
     {
         name: "employment_status",
         type: "select",
-        label: "Status *",
+        label: "Status",
         colSpan: "col-span-12 md:col-span-3",
         options: [
             { label: "Active", value: "active" },
@@ -130,6 +130,18 @@ const fields = (form) => [
             { label: "On Leave", value: "on_leave" },
         ], 
     }, 
+    {
+        name: "employee_ids",
+        type: "multi-async-select",
+        label: "Employee",
+
+        loadOptions: [
+            "hrm/employees",
+            "employees",
+            "employTemplate", 
+        ], 
+        colSpan: "col-span-12 md:col-span-3", 
+    },
 ];
 
 export default fields;

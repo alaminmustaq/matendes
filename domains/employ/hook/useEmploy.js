@@ -112,7 +112,7 @@ export const useEmploy = () => {
                     buildFormData(preparedDataWithInactive)
                 ).unwrap();
                 if (response.message == "Employee created successfully") {
-                    toast.success("Employ Create Successfully");
+                    toast.success("Employee Created Successfully");
                     formReset(form);
                 }
                 return response;
@@ -297,7 +297,7 @@ export const useEmploy = () => {
                 }).unwrap();
 
                 if (response.message == "Employee updated successfully") {
-                    toast.success("Employ Update Successfully");
+                    toast.success("Employee Updated Successfully");
                 }
 
                 return response;
@@ -308,10 +308,10 @@ export const useEmploy = () => {
         },
         onDelete: async (id) => {
             try {
-                if (confirm("Are you sure you want to delete this Employ?")) {
+                if (confirm("Are you sure you want to delete this Employee?")) {
                     await EmployDelete({ id }).unwrap();
 
-                    toast.success("Employ deleted successfully");
+                    toast.success("Employee Deleted successfully");
                     refetch();
                 }
             } catch (error) {

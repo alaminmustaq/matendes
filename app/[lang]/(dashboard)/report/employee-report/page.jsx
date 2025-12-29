@@ -10,36 +10,30 @@ import { Button } from "@/components/ui/button";
 import ReportActions from "@/components/report/ReportActions";
 
 const EmployeeReportPage = () => {
-    const { actions, reportState } = useReport("employees"); // generic route
+    const { actions, reportState } = useReport("hrm/employees","employees");
 
     return (
         <PageLayout>
-            {/* Filter Form */}
             <div className="bg-white p-6 rounded-md shadow mb-6">
-                {/* Dynamic Filter Form */}
                 <DynamicForm
                     form={reportState.form}
                     fields={formFields(reportState.form)}
-                    onSubmit={actions.onFilter}
+                    onSubmit={() => actions.handleAction("filter")}
                 />
 
-                {/* Action Buttons */}
                 <ReportActions
                     form={reportState.form}
-                    onFilter={actions.onFilter}
-                    onReset={() => reportState.form.reset()}
-                    onPdf={actions.exportPdf}
-                    onExcel={actions.exportExcel}
-                    onPrint={actions.print}
+                    onAction={actions.handleAction}
+                    onReset={actions.onReset}
                 />
             </div>
 
-            {/* Table */}
             <BasicTableLayout
                 columns={columns()}
                 state={reportState}
-                search={false}
+                search
                 addPermission={null}
+                searchKey="employee"
             />
         </PageLayout>
     );

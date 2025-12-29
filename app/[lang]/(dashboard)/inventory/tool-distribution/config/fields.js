@@ -90,7 +90,7 @@ const fields = (form) => {
             ],
             placeholder: "Select tool",
             colSpan: "col-span-12 md:col-span-12",
-            rules: { required: "Tool is required" },
+            // rules: { required: "Tool is required" },
             handleChange: (e, form, field, allData) => {
                 const existingTool = form.getValues("assignTools") || [];
                 const exists = existingTool.some(
@@ -101,6 +101,8 @@ const fields = (form) => {
                 if (exists) {
                     toast.error("Tool already assigned!");
                 } else {
+                    console.log(rawData);
+                    
                     form.fields.append({
                         tool_name: e.label,
                         tool_id: e.value,

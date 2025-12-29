@@ -66,7 +66,7 @@ export const useBranch = () => {
                 const response = await branchCreate(preparedData).unwrap();
 
                 if (response.success) {
-                    toast.success("Branch Create Successfully");
+                    toast.success("Branch Created Successfully");
                     refetch();
                     formReset(form);
                     form.setValue("openModel", false);
@@ -156,7 +156,7 @@ export const useBranch = () => {
                 }).unwrap();
 
                 if (response) {
-                    toast.success("Branch Update Successfully");
+                    toast.success("Branch Updated Successfully");
                     refetch();
                     formReset(form);
 

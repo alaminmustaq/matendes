@@ -36,14 +36,14 @@ const fields = (form) => [
         loadOptions: ["inventory/tools", "tools", "toolSearchTemplate","warehouse_id"],
         placeholder: "Select tool",
         colSpan: "col-span-12 md:col-span-12",
-        rules: { required: "Tool is required" },
+        // rules: { required: "Tool is required" },
         handleChange: (e, form, field, allData) => {
             const existingTool = form.getValues("damageTools") || [];
             const exists = existingTool.some(
                 (tool) => tool.tool_id === e.value
             );
             const rawData = allData.find((item) => item.value === e.value);
-
+ 
             if (exists) {
                 toast.error("Tool already added!");
             } else {

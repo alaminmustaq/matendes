@@ -12,7 +12,8 @@ const Employee = () => {
     const project = projectData.project;
     const { data, ...other } = projectState;
  
-
+    // console.log(projectData);
+    
   return (
       <Card className="w-full">
           <CardHeader className="border-none mb-0">

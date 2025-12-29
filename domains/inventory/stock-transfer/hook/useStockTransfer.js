@@ -35,6 +35,7 @@ export const useStockTransfer = () => {
 
     const stockTransferState = {
         data: stockTransferData?.data?.transfers || [],
+        pagination: stockTransferData?.data?.pagination || {},
         form: { ...form, fields: fieldArray },
         refetch,
         isFetching,

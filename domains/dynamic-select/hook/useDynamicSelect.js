@@ -27,7 +27,7 @@ export const useDynamicSelect = (
   );
 
   // get current value of parent (dependency)
-  const dependencyValue = dependencyKey ? form.watch(dependencyKey) : null;
+  const dependencyValue = dependencyKey ? form.watch(dependencyKey) : dependencyKey;
 
   
   

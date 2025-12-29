@@ -6,7 +6,7 @@ const columns = (actions) => [
         header: "Employee",
         cell: ({ row }) => {
             const employee = row.original.employee;
-
+            console.log(row.original);
             return employee
                 ? [
                       employee?.personal_info?.first_name,
@@ -20,6 +20,15 @@ const columns = (actions) => [
                 : "—";
         },
     },
+    {
+        accessorKey: "project.name",
+        header: "Project",
+        cell: ({ row }) => {
+            const project = row.original.project;
+            return project?.name || "—";
+        },
+    },
+
     {
         accessorKey: "distribution_date",
         header: "Distribution Date",

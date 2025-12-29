@@ -21,6 +21,10 @@ export const useWarehouse = () => {
         reValidateMode: "onSubmit",
         shouldFocusError: true,
     });
+       const defaultValue={
+        status: 'active',
+    }
+
 
     //  Handle search query (debounced)
     const { data: warehouseSearchResult } = useWarehouseSearchQuery(
@@ -34,7 +38,10 @@ export const useWarehouse = () => {
     const warehouseState = {
         data: warehouseData?.data?.warehouses || [],
         pagination: warehouseData?.data?.pagination || {},
-        form,
+        form: {
+            ...form,
+            defaultValue: defaultValue
+          },
         refetch,
         isFetching,
     };

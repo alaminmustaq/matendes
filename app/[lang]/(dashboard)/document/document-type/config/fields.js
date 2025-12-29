@@ -16,7 +16,7 @@ const fields = () => {
         {
             name: "icon",
             type: "input",
-            label: "Icon Name *",
+            label: "Icon Name",
             placeholder: "e.g. FileText, User, FolderOpen",
             colSpan: "col-span-12 md:col-span-6",
             note: "Enter a Lucide icon name. Browse at ",

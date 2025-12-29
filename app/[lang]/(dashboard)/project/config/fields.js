@@ -113,7 +113,7 @@ const fields = () => {
             ],
             placeholder: "Optional",
             colSpan: "col-span-12 md:col-span-6",
-            rules: { required: "Employ  is required" },
+            // rules: { required: "Employ  is required" },
         },
         // =============== Details ===============
         {

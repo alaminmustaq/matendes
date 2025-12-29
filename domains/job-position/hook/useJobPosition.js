@@ -81,7 +81,7 @@ export const useJobPosition = () => {
 
                 const response = await JobPositionCreate(preparedData).unwrap();
                 if (response) {
-                    toast.success("JobPosition Create Successfully");
+                    toast.success("Job Position Created Successfully");
                     refetch();
                     formReset(form);
 
@@ -189,7 +189,7 @@ export const useJobPosition = () => {
                 }).unwrap();
 
                 if (response) {
-                    toast.success("JobPosition Update Successfully");
+                    toast.success("Job Position Updated Successfully");
                     refetch();
                     formReset(form);
 
@@ -203,13 +203,13 @@ export const useJobPosition = () => {
         onDelete: async (id) => {
             try {
                 if (
-                    confirm("Are you sure you want to delete this JobPosition?")
+                    confirm("Are you sure you want to delete this Job Position?")
                 ) {
                     const response = await JobPositionDelete({ id });
 
                     if (response?.data) {
                         // check if response contains data
-                        toast.success("JobPosition deleted successfully");
+                        toast.success("Job Position Deleted Successfully");
                         refetch();
                     } else {
                         toast.error("Failed to delete JobPosition");

@@ -52,7 +52,7 @@ export const useCompany = () => {
 
                 const response = await userCreate(other).unwrap();
                 if (response) {
-                    toast.success("Company Create Successfully");
+                    toast.success("Company Created Successfully");
                     refetch();
                     formReset(form);
 
@@ -139,7 +139,7 @@ export const useCompany = () => {
         },
         onDelete: (id) => {
             if (confirm("are you sure to delete it")) {
-                toast.success("Company Delete Successfully");
+                toast.success("Company Deleted Successfully");
                 userDelete({ id });
             }
         },

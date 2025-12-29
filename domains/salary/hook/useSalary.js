@@ -45,7 +45,8 @@ export const useSalary = () => {
             salary_month: new Date().toISOString().slice(0, 7), // YYYY-MM
         }
 
-    const salaryState = { data: salary?.data || [], 
+    const salaryState = { 
+        data: salary?.data?.items || [], 
         form:{
             ...form,
             defaultValue: defaultValue,

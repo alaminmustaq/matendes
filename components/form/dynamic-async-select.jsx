@@ -25,13 +25,12 @@ export default function DynamicAsyncSelect({
             isDisabled={isDisabled}
             value={field.value}
             defaultOptions={[...firstChildren, ...transformed]}
-            loadOptions={(inputValue, callback) =>
-                onSearch(inputValue, callback).then((options) => {
+            loadOptions={(inputValue, callback) => {
+                onSearch(inputValue, (options) => {
                     const merged = [...firstChildren, ...options];
                     callback(merged);
-                    return merged;
-                })
-            }
+                });
+            }}
             onMenuOpen={onLoadData}
             placeholder={
                 placeholder
