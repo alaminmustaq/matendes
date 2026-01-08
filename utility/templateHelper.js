@@ -125,3 +125,18 @@ export const bankTemplate = (res) => {
         }))
     );
 };
+export const leaveReasonSearchTemplate = (data = []) =>
+    data.map((item) => ({
+        value: item.id,
+        label: item.name,
+    }));
+export const leaveTypeSearchTemplate = (data = []) =>{
+        console.log(data);
+        
+        return data.map((item) => ({
+            value: item.id,
+            label: item.name,
+        }));
+    }
+
+

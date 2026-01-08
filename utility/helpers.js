@@ -56,11 +56,18 @@ export const handleServerValidationErrorsToast = (error, toast) => {
 };
 //  from reset
 export const formReset = (form) => {
-    form.reset(
-        Object.fromEntries(
-            Object.keys(form.getValues()).map((key) => [key, ""])
-        )
+    const values = form.getValues();
+
+    const resetValues = Object.fromEntries(
+        Object.entries(values).map(([key, value]) => {
+            if (Array.isArray(value)) {
+                return [key, []];          // ✅ field arrays
+            }
+            return [key, null];            // ✅ primitives
+        })
     );
+
+    form.reset(resetValues);
 };
 
 // debounce

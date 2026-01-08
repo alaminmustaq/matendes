@@ -42,7 +42,7 @@ export const useRole = () => {
         pagination: roleAndPermission?.data?.pagination || {},
         isFetching,
     };
-    console.log(rolesState.permissions);
+
     
     const actions = {
         onCreate: async (data) => {

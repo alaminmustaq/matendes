@@ -15,9 +15,13 @@ import {
     purchaseSearchTemplate,
     toolSearchTemplate,
     warehouseSearchTemplate,
+    branchSearchTemplate
 } from "@/utility/templateHelper";
+import useAuth from "@/domains/auth/hooks/useAuth";
 
 export const usePurchase = () => {
+    const { user } = useAuth();
+
     // ===== RTK Query hooks =====
     const [createPurchase] = useCreatePurchaseMutation();
     const [updatePurchase] = useUpdatePurchaseMutation();
@@ -38,6 +42,9 @@ export const usePurchase = () => {
 
     const defaultValue = {
         quantity: 1,
+        branch_id: branchSearchTemplate(
+                        user?.employee?.branch ? [user?.employee?.branch] : []
+                    )?.at(0) ?? null,
     };
 
     const fieldArray = useFieldArray({
@@ -64,6 +71,7 @@ export const usePurchase = () => {
                 let payload = normalizeSelectValues(other, [
                     "supplier_id",
                     "warehouse_id",
+                    "branch_id",
                 ]);
 
                 if (
@@ -126,6 +134,7 @@ export const usePurchase = () => {
                 let payload = normalizeSelectValues(other, [
                     "supplier_id",
                     "warehouse_id",
+                     "branch_id",
                 ]);
 
                 if (
@@ -216,6 +225,7 @@ export const usePurchase = () => {
                 invoice_no: item.invoice_no,
                 supplier_id: null, // you can map this later if supplier select is used
                 company_id: item.company_id ?? null,
+                branch_id: item.branch_id ? { label: item.branch.name, value: item.branch.id } : null,
                 warehouse_id: item.warehouse
                     ? { label: item.warehouse.name, value: item.warehouse.id }
                     : null,

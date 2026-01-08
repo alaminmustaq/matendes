@@ -17,6 +17,7 @@ const DynamicTabForm = ({
 }) => { 
     useEffect(()=>{
         form.reset(form.defaultValue);
+        setActiveStep(0);
     },[])
     const translation_state = useSelector((state) => state.auth.translation);
     const [activeStep, setActiveStep] = React.useState(0);
@@ -173,15 +174,14 @@ const DynamicTabForm = ({
                                 variant="outline"
                                 color="success"
                                 className="cursor-pointer"
-                                onClick={() => {
-                                    // if (onSubmit) onSubmit();
-                                    if (activeStep != steps.length) {
-                                        handleNext();
-                                         if(!form.watch("id")){
-                                             handleReset();
-                                         }
-                                     
+                                onClick={async () => {
+                                    const response = form.watch("id")
+                                        ? await actions.onUpdate(form.getValues())
+                                        : await actions.onCreate(form.getValues());
 
+                                    if (response?.success && !form.watch("id")) {
+                                        form.reset(form.defaultValue);
+                                        setActiveStep(0);
                                     }
                                 }}
                             >

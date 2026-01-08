@@ -25,14 +25,6 @@ const fields = (form) => [
         // rules: { required: "Warehouse is required" },
     },
 
-    // {
-    //     name: "tool_id",
-    //     type: "async-select",
-    //     label: "Add Tool",
-    //     loadOptions: ["inventory/tools", "tools", "toolSearchTemplate"],
-    //     placeholder: "Select tool",
-    //     colSpan: "col-span-12 md:col-span-3",
-    // },
 ];
 
 export default fields;

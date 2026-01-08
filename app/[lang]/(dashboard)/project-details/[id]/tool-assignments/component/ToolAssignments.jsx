@@ -31,6 +31,8 @@ const ToolAssignments = () => {
                   state={{
                     ...other,
                     data: project?.tool_distribution_items || [],
+                    pagination: true,
+                    isFetching: false,
                 }}
                 filterCustom={{
                     status: {

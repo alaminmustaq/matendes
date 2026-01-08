@@ -10,9 +10,17 @@ import {
     useFetchStockTransfersQuery,
 } from "../services/stockTransferApi";
 import toast from "react-hot-toast";
+import {
+    purchaseSearchTemplate,
+    toolSearchTemplate,
+    warehouseSearchTemplate,
+    branchSearchTemplate
+} from "@/utility/templateHelper";
 import { useForm, useFieldArray } from "react-hook-form";
+import useAuth from "@/domains/auth/hooks/useAuth";
 
 export const useStockTransfer = () => {
+     const { user } = useAuth();
     // ===== RTK Query hooks =====
     const [createStockTransfer] = useCreateStockTransferMutation();
     const [updateStockTransfer] = useUpdateStockTransferMutation();
@@ -28,6 +36,13 @@ export const useStockTransfer = () => {
         defaultValues: { details: [] },
     });
 
+       const defaultValue = {
+            branch_id: branchSearchTemplate(
+                            user?.employee?.branch ? [user?.employee?.branch] : []
+                        )?.at(0) ?? null,
+        };
+    
+
     const fieldArray = useFieldArray({
         control: form.control,
         name: "details",
@@ -36,7 +51,7 @@ export const useStockTransfer = () => {
     const stockTransferState = {
         data: stockTransferData?.data?.transfers || [],
         pagination: stockTransferData?.data?.pagination || {},
-        form: { ...form, fields: fieldArray },
+        form: { ...form, fields: fieldArray, defaultValue: defaultValue },
         refetch,
         isFetching,
     };
@@ -50,6 +65,7 @@ export const useStockTransfer = () => {
                 let payload = normalizeSelectValues(other, [
                     "sender_warehouse_id",
                     "destination_warehouse_id",
+                    "branch_id",
                 ]);
 
                 if (
@@ -102,6 +118,7 @@ export const useStockTransfer = () => {
                 let payload = normalizeSelectValues(other, [
                     "sender_warehouse_id",
                     "destination_warehouse_id",
+                     "branch_id",
                 ]);
 
                 if (
@@ -180,6 +197,11 @@ export const useStockTransfer = () => {
                           label: item.destination_warehouse.name,
                           value: item.destination_warehouse.id,
                       }
+                    : null,
+                branch_id: item.branch
+                    ? { label: item.branch.name, value: item.branch.id }
+                    : item.branch_id
+                    ? { label: "Unknown", value: item.branch_id }
                     : null,
                 total_send_item: totalQty,
                 remarks: item.remarks || "",

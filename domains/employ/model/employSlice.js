@@ -9,6 +9,8 @@ export const employSlice = createSlice({
     initialState,
     reducers: {
         setEmployData: (state, action) => {
+            console.log(action.payload);
+            
             state.employData = action.payload;
         },
         setCurrentEmployee: (state, action) => {

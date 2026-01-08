@@ -23,9 +23,10 @@ const ToolAssignments = () => {
       <CardContent className="px-6 pb-6">
       <BasicTableLayout
                     columns={columns(actions)}
-                    state={{
-                        ...other,
+                    state={{ 
                         data: employee?.tool_distributions || [],
+                        pagination: true,
+                        isFetching: false,
                     }}
                     filterCustom={{
                         status: {

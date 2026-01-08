@@ -30,6 +30,8 @@ const ProjectActivity = () => {
                     state={{
                         ...other,
                         data: employee?.projectEmployees || [],
+                        pagination: true,
+                        isFetching: false,
                     }}
                     filterCustom={{
                         status: {

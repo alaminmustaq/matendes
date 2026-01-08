@@ -132,7 +132,7 @@ const fields = (actions,form) => {
         {
             name: "single_attendance",
             type: "async-select",
-            label: "Single Attendance *",
+            label: "Single Attendance",
             visibility: form.watch("attendance_scope") === "single_attendance",
             loadOptions: [
                 "hrm/filter-employees",
@@ -164,8 +164,7 @@ const fields = (actions,form) => {
 
             },
             placeholder: "Select employee",
-            colSpan: "col-span-12 md:col-span-6", 
-            rules: { required: "Single Attendance is required" },
+            colSpan: "col-span-12 md:col-span-6",  
         },
 
 

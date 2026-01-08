@@ -57,7 +57,8 @@ export const useDynamicSelect = (
       const response = await triggerSearch({
         data: {
           search: customSearch,
-          url: urlValue,
+          url: urlValue, 
+          isActive: true,
           ...dependencyData,
         },
       }).unwrap();

@@ -26,6 +26,8 @@ const IncomeExpense = () => {
          state={{
             ...other,
             data: project?.financial_records || [],
+            pagination: true,
+            isFetching: false,
         }}
         filterCustom={{
           transaction_type: {

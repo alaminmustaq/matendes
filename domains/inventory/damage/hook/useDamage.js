@@ -10,10 +10,18 @@ import {
     useFetchDamagesQuery,
 } from "../services/damageApi";
 import toast from "react-hot-toast";
+import {
+    purchaseSearchTemplate,
+    toolSearchTemplate,
+    warehouseSearchTemplate,
+    branchSearchTemplate,
+} from "@/utility/templateHelper";
 import { useForm } from "react-hook-form";
 import { useFieldArray } from "react-hook-form";
+import useAuth from "@/domains/auth/hooks/useAuth";
 
 export const useDamage = () => {
+    const { user } = useAuth();
     const [createDamage] = useCreateDamageMutation();
     const [updateDamage] = useUpdateDamageMutation();
     const [deleteDamage] = useDeleteDamageMutation();
@@ -33,6 +41,13 @@ export const useDamage = () => {
         },
     });
 
+    const defaultValue = {
+        branch_id:
+            branchSearchTemplate(
+                user?.employee?.branch ? [user?.employee?.branch] : []
+            )?.at(0) ?? null,
+    };
+
     const fieldArray = useFieldArray({
         control: form.control,
         name: "damageTools", // This matches the field name in form
@@ -42,7 +57,8 @@ export const useDamage = () => {
         data: damagesData?.data?.damages || [],
         form: {
             ...form,
-            fields: fieldArray, // Merge fieldArray into form
+            fields: fieldArray,
+            defaultValue: defaultValue, // Merge fieldArray into form
         },
         refetch,
         pagination: damagesData?.data?.pagination || {},
@@ -57,6 +73,7 @@ export const useDamage = () => {
                 const currentPayload = normalizeSelectValues(payload, [
                     "company_id",
                     "warehouse_id",
+                     "branch_id",
                 ]);
 
                 const response = await createDamage(currentPayload).unwrap();
@@ -81,6 +98,7 @@ export const useDamage = () => {
                 const currentPayload = normalizeSelectValues(payload, [
                     "company_id",
                     "warehouse_id",
+                    "branch_id",
                 ]);
 
                 const response = await updateDamage({
@@ -130,6 +148,11 @@ export const useDamage = () => {
                     ? { label: item.warehouse.name, value: item.warehouse.id }
                     : item.warehouse_id
                     ? { label: "Unknown", value: item.warehouse_id }
+                    : null,
+                branch_id: item.branch
+                    ? { label: item.branch.name, value: item.branch.id }
+                    : item.branch_id
+                    ? { label: "Unknown", value: item.branch_id }
                     : null,
 
                 note: item.note || "",

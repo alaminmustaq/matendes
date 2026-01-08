@@ -26,9 +26,11 @@ import { useMemo } from "react";
 import { useAppDispatch } from "@/hooks/use-redux";
 import { setEmployData } from "../model/employSlice";
 import { useParams } from "next/navigation";
+import { useRouter } from "next/navigation";
 import useAuth from "@/domains/auth/hooks/useAuth";
 
 export const useEmploy = () => {
+    const router = useRouter();
     const dispatch = useAppDispatch();
     const { id } = useParams();
     const [EmployCreate] = useEmployCreateMutation();
@@ -298,6 +300,7 @@ export const useEmploy = () => {
 
                 if (response.message == "Employee updated successfully") {
                     toast.success("Employee Updated Successfully");
+                    router.push("/employees");
                 }
 
                 return response;

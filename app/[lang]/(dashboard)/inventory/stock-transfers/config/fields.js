@@ -1,7 +1,12 @@
 import { toast } from "react-hot-toast";
+import { useAppSelector } from "@/hooks/use-redux";
 
-const fields = (form) => [
+const fields = (form) => {
+      const { user } = useAppSelector((state) => state.auth); 
+      console.log(user.employee);
+      const is_employee = user.employee
     // ===== Stock Transfer Master Fields =====
+     return [
     {
         name: "transfer_date",
         type: "input",
@@ -41,6 +46,19 @@ const fields = (form) => [
         colSpan: "col-span-12 md:col-span-6",
         rules: { required: "Destination warehouse is required" },
     },
+
+     {
+      name: "branch_id",
+      type: "async-select",
+      label: `Branch ${is_employee ? '*':''}`,
+      loadOptions: [
+          "organization/branches",
+          "branches",
+          "branchSearchTemplate",
+      ],
+      placeholder: "Branch",
+      colSpan: "col-span-12 md:col-span-6",
+  },
 
     {
         name: "remarks",
@@ -194,5 +212,6 @@ const fields = (form) => [
         ),
     },
 ];
+}
 
 export default fields;

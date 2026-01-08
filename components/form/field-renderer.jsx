@@ -19,6 +19,7 @@ import { RadioGroup, RadioGroupItem } from "@/components/ui/radio-group";
 import { Plus, Trash2 } from "lucide-react";
 
 import DynamicAsyncSelect from "./dynamic-async-select";
+import GroupFormPaginatedField from "./group-form-paginated";
 import { translate } from "@/lib/utils";
 import Select from "react-select";
 import { useSelector } from "react-redux";
@@ -65,7 +66,8 @@ const FieldRenderer = ({ fieldConfig, form }) => {
         getValue, 
         defaultValue,
         rows,
-        firstChildren
+        firstChildren,
+        lastChildren
     } = fieldConfig; 
     
     const translation_state = useSelector((state) => state.auth.translation);
@@ -314,6 +316,7 @@ const FieldRenderer = ({ fieldConfig, form }) => {
                                     field={field}
                                     form={form}
                                     firstChildren={firstChildren}
+                                    lastChildren={lastChildren}
                                     handleChange={handleChange}
                                     isDisabled={!!disabled}
                                 />
@@ -333,10 +336,29 @@ const FieldRenderer = ({ fieldConfig, form }) => {
                                     form={form}
                                     addButtonLabel={addButtonLabel}
                                 />
+                            ) : type === "group-form-paginated" ? (
+                                <GroupFormPaginatedField
+                                    fieldConfig={fieldConfig}
+                                    form={form}
+                                    addButtonLabel={addButtonLabel}
+                                />
                             ) : type === "text-display" ? (
                                 <div>
                                     {getValue ? getValue(form) : field.value}
                                 </div>
+                            ) : type === "button" ? (
+                                <Button
+                                type="button"
+                                disabled={disabled}
+                                onClick={(e) => {
+                                 
+                                        handleChange(e, form);
+                                    
+                                }}
+                                
+                            >
+                                {placeholder || label || "Button"}
+                            </Button>
                             ) : (
                                 <>
                                     <Input

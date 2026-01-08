@@ -14,11 +14,14 @@ import {
     employTemplate,
     projectTemplate,
     receivePaymentTemplate,
+    branchSearchTemplate
 } from "@/utility/templateHelper";
 import { useForm, useFieldArray } from "react-hook-form";
 import toast from "react-hot-toast";
+import useAuth from "@/domains/auth/hooks/useAuth";
 
 export const useFinancialRecords = () => {
+     const { user } = useAuth();
     const [createFinancialRecord] = useCreateFinancialRecordMutation();
     const [updateFinancialRecord] = useUpdateFinancialRecordMutation();
     const [deleteFinancialRecord] = useDeleteFinancialRecordMutation();
@@ -61,6 +64,10 @@ export const useFinancialRecords = () => {
 
      const defaultValue = {
         transaction_type: "regular",
+          branch_id: branchSearchTemplate(
+                                user?.employee?.branch ? [user?.employee?.branch] : []
+                            )?.at(0) ?? null,
+            
     };
 
 
@@ -95,6 +102,7 @@ export const useFinancialRecords = () => {
                     "bank_id",
                     "bank_branch_id",
                     "project_id",
+                    "branch_id",
                     "transaction_status", 
                 ]);
 
@@ -146,6 +154,11 @@ export const useFinancialRecords = () => {
                     projectTemplate(
                         record?.project_id ? [record.project_id] : []
                     )?.at(0) ?? null,
+                branch_id: record.branch
+                    ? { label: record.branch.name, value: record.branch.id }
+                    : record.branch_id
+                    ? { label: "Unknown", value: record.branch_id }
+                    : null,
                 transaction_type: record.transaction_type || "regular",
                 transaction_type_ref: record.transaction_type || "regular",
                 transaction_date: record.transaction_date || "",
@@ -173,6 +186,7 @@ export const useFinancialRecords = () => {
                     "bank_id",
                     "bank_branch_id",
                     "project_id",
+                    "branch_id",
                     "transaction_status", 
                 ]);
 

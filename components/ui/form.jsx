@@ -104,9 +104,9 @@ FormDescription.displayName = "FormDescription";
 const FormMessage = React.forwardRef(
   ({ className, children, tooltip = false, ...props }, ref) => {
     const { error, formMessageId } = useFormField();
-    const body = error ? String(error?.message) : children;
-
-    if (!body) {
+    const body = error ? String(error?.message) : children; 
+    
+    if (!error?.message) {
       return null;
     }
 

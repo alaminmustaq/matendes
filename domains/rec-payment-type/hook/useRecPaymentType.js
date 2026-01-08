@@ -1,4 +1,4 @@
-import { handleServerValidationErrors, formReset, debounce } from "@/utility/helpers";
+import { handleServerValidationErrors, formReset, debounce, normalizeSelectValues } from "@/utility/helpers";
 import {
     useRecPaymentTypeCreateMutation,
     useRecPaymentTypeUpdateMutation,
@@ -7,10 +7,18 @@ import {
     useRecPaymentTypeSearchQuery,
 } from "../services/recPaymentTypeApi";
 import toast from "react-hot-toast";
+import {
+    purchaseSearchTemplate,
+    toolSearchTemplate,
+    warehouseSearchTemplate,
+    branchSearchTemplate
+} from "@/utility/templateHelper";
 import { useForm } from "react-hook-form";
 import { useMemo } from "react";
+import useAuth from "@/domains/auth/hooks/useAuth";
 
 export const useRecPaymentType = () => {
+     const { user } = useAuth();
     const [createItem] = useRecPaymentTypeCreateMutation();
     const [updateItem] = useRecPaymentTypeUpdateMutation();
     const [deleteItem] = useRecPaymentTypeDeleteMutation();
@@ -21,9 +29,12 @@ export const useRecPaymentType = () => {
         shouldFocusError: true,
     });
 
-     const defaultValue={
-        status: 'active',
-    }
+    const defaultValue = useMemo(() => ({
+        status: "active",
+        branch_id: branchSearchTemplate(
+            user?.employee?.branch ? [user.employee.branch] : []
+        )?.at(0) ?? null,
+    }), [user]);
 
     // Search (debounced auto-fetch)
     const { data: searchResult } = useRecPaymentTypeSearchQuery(
@@ -49,7 +60,12 @@ export const useRecPaymentType = () => {
         // CREATE
         onCreate: async (data) => {
             try {
-                const { openModel, ...payload } = data;
+                const { openModel, ...other } = data;
+
+                  // Normalize select values
+                let payload = normalizeSelectValues(other, [
+                    "branch_id",
+                ]);
                 const response = await createItem(payload).unwrap();
 
                 toast.success("Payment type created successfully");
@@ -66,6 +82,7 @@ export const useRecPaymentType = () => {
             form.reset({
                 id: data.id,
                 name: data.name,
+                branch_id: data.branch_id ? { label: data.branch.name, value: data.branch.id } : null,
                 transaction_for: data.transaction_for,
                 status: data.status || "active",
             });
@@ -75,7 +92,13 @@ export const useRecPaymentType = () => {
         // UPDATE
         onUpdate: async (data) => {
             try {
-                const { openModel, id, ...payload } = data;
+                const { openModel, id,  ...other } = data;
+
+                  // Normalize select values
+                let payload = normalizeSelectValues(other, [
+                    "branch_id",
+                ]);
+
                 await updateItem({ id, credentials: payload }).unwrap();
 
                 toast.success("Payment type updated successfully");

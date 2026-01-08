@@ -28,6 +28,8 @@ const Employee = () => {
                   state={{
                     ...other,
                     data: project?.assigned_employees || [],
+                    pagination: true,
+                    isFetching: false,
                 }}
                   filterCustom={{
                     status: {

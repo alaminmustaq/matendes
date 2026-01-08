@@ -58,13 +58,13 @@ const useAttendance = () => {
     const { data, refetch, isFetching } = useViewAttendanceQuery();
 
     const attendanceState = {
-        data: data?.data?.attendance || [],
+        data: data?.data?.items || [],
 
         refetch,
         pagination: data?.data?.pagination || {},
         isFetching,
-    };
-
+    }; 
+    
 
     
     // State for location configuration

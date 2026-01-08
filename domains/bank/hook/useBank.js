@@ -27,6 +27,11 @@ export const useBank = () => {
         defaultValues: { branches: [] },
     });
 
+    const defaultValue={
+        status: 'active',
+    }
+
+
     const fieldArray = useFieldArray({
         control: form.control,
         name: "branches",
@@ -34,7 +39,7 @@ export const useBank = () => {
 
     const bankState = {
         data: bankData?.data?.banks || [],
-        form: { ...form, fields: fieldArray },
+        form: { ...form, fields: fieldArray , defaultValue: defaultValue },
         refetch,
         pagination: bankData?.data?.pagination || {},
         isFetching,
@@ -123,6 +128,7 @@ export const useBank = () => {
             form.reset({
                 id: item.id,
                 bank_name: item.bank_name,
+                status: item.status || 'active',
                 branches,
                 openModel: true,
             });

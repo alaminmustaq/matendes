@@ -206,8 +206,6 @@ const fields = () => {
             options: [
                 { label: "Active", value: "active" },
                 { label: "Inactive", value: "inactive" },
-                { label: "Restructuring", value: "restructuring" },
-                { label: "Dissolved", value: "dissolved" },
             ],
             rules: { required: "Status is required" },
         },

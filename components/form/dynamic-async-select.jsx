@@ -10,6 +10,7 @@ export default function DynamicAsyncSelect({
     placeholder,
     isDisabled = false,
     firstChildren = [],
+    lastChildren = [],
 }) {
     const {
         actions: { onSearch, onLoadData },
@@ -24,10 +25,10 @@ export default function DynamicAsyncSelect({
             isMulti={isMulti}
             isDisabled={isDisabled}
             value={field.value}
-            defaultOptions={[...firstChildren, ...transformed]}
+            defaultOptions={[...firstChildren, ...transformed,...lastChildren]}
             loadOptions={(inputValue, callback) => {
                 onSearch(inputValue, (options) => {
-                    const merged = [...firstChildren, ...options];
+                    const merged = [...firstChildren, ...options,...lastChildren];
                     callback(merged);
                 });
             }}

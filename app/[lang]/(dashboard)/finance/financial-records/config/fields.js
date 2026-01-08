@@ -1,10 +1,14 @@
-export default function fields(defaultForm) { 
+import { useAppSelector } from "@/hooks/use-redux";
+export default function fields(defaultForm) {
     const transactionType = defaultForm.watch("transaction_type_ref");
     const recordId = defaultForm.watch("id"); // or get from props / context
 
     // Logic to disable transaction_type select based on both conditions
     const disableTransactionType = transactionType === "repeat" && !!recordId;
     console.log("Disable Transaction Type:", disableTransactionType);
+    const { user } = useAppSelector((state) => state.auth);
+    // console.log(user.employee);
+    const is_employee = !!user?.employee;
     return [
         // Master record fields (match finance_records migration)
         {
@@ -39,9 +43,22 @@ export default function fields(defaultForm) {
             name: "project_id",
             type: "async-select",
             label: "Project",
-            loadOptions: ["/projects", "projects", "projectTemplate"], 
+            loadOptions: ["/projects", "projects", "projectTemplate"],
             placeholder: "Select project",
             colSpan: "col-span-12 md:col-span-4",
+        },
+
+        {
+            name: "branch_id",
+            type: "async-select",
+            label: `Branch ${is_employee ? "*" : ""}`,
+            loadOptions: [
+                "organization/branches",
+                "branches",
+                "branchSearchTemplate",
+            ],
+            placeholder: "Branch",
+            colSpan: "col-span-12 md:col-span-6",
         },
 
         {
@@ -83,7 +100,7 @@ export default function fields(defaultForm) {
             type: "async-select",
             colSpan: "col-span-12 md:col-span-4",
             loadOptions: ["bank/banks", "banks", "bankTemplate"],
-            handleChange: (e, form, field, allData) => { 
+            handleChange: (e, form, field, allData) => {
                 allData.find((item) => {
                     if (item.value === e.value) {
                         form?.setValue("bank_id", item.bank_id);
@@ -135,7 +152,11 @@ export default function fields(defaultForm) {
                     type: "async-select",
                     label: "Expense/Income *",
                     type: "async-select",
-                    colSpan: `col-span-6 ${defaultForm.watch("financial_type") === "expense"? 'md:col-span-2': 'md:col-span-4'} `,
+                    colSpan: `col-span-6 ${
+                        defaultForm.watch("financial_type") === "expense"
+                            ? "md:col-span-2"
+                            : "md:col-span-4"
+                    } `,
                     loadOptions: [
                         "finance/rec-payment-types",
                         "items",
@@ -153,7 +174,11 @@ export default function fields(defaultForm) {
                     type: "number",
                     label: "Add amount *",
                     placeholder: "Enter amount",
-                    colSpan: `col-span-6 ${defaultForm.watch("financial_type") === "expense"? 'md:col-span-2': 'md:col-span-3'} `,
+                    colSpan: `col-span-6 ${
+                        defaultForm.watch("financial_type") === "expense"
+                            ? "md:col-span-2"
+                            : "md:col-span-3"
+                    } `,
                     rules: {
                         required: "Amount is required",
                         min: { value: 1, message: "Amount must be at least 1" },
@@ -162,11 +187,11 @@ export default function fields(defaultForm) {
 
                 {
                     name: "description",
-                    type: "textarea", 
+                    type: "textarea",
                     label: "Description",
                     placeholder: "Enter description",
                     colSpan: "col-span-10 sm:col-span-6 md:col-span-4",
-                    rows: 1, 
+                    rows: 1,
                 },
             ],
             placeholder: "Optional",

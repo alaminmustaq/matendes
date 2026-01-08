@@ -11,7 +11,8 @@ import ReportActions from "@/components/report/ReportActions";
 
 const AttendanceReportPage = () => {
     const { actions, reportState } = useReport("hrm/attendance","attendance");
-
+    console.log(reportState);
+    
     return (
         <PageLayout>
             <div className="bg-white p-6 rounded-md shadow mb-6">

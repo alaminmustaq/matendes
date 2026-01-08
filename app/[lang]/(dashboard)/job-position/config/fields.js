@@ -446,8 +446,6 @@ const fields = () => {
             options: [
                 { label: "Active", value: "active" },
                 { label: "Inactive", value: "inactive" },
-                { label: "On Hold", value: "on_hold" },
-                { label: "Discontinued", value: "discontinued" },
             ],
             rules: { required: "Status is required" },
         },

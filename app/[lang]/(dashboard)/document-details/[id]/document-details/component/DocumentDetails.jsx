@@ -28,6 +28,8 @@ const DocumentDetails = () => {
                     state={{
                      data:  documentData?.documentData?.documents?.document_details ,
                         isFetching: documentsState.isFetching,
+                        pagination: true,
+                        isFetching: false,
                     }}
                     searchKey="document_detail"
                 />

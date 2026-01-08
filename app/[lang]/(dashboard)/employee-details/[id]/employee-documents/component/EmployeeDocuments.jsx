@@ -29,6 +29,8 @@ const EmployeeDocuments = () => {
           columns={columns(actions)}
           state={{
             data: employee?.document_details || [],
+            pagination: true,
+                        isFetching: false,
           }}
         />
       </CardContent>

@@ -156,8 +156,7 @@ const adjustFields = (actions,form) => {
 
             },
             placeholder: "Select employee",
-            colSpan: "col-span-12 md:col-span-6", 
-            rules: { required: "Single Attendance is required" },
+            colSpan: "col-span-12 md:col-span-6",  
         },
 
 
