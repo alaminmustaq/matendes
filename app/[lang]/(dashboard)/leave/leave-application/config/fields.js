@@ -46,7 +46,14 @@ const fields = (form, actions) => {
                   },
               ]
             : [{ label: "Single leave", value: "single_leave" }];
+    } else {
+        preparedData = [
+            { label: "Department wise leave", value: "department_leave" },
+            { label: "Project wise leave", value: "project_leave" },
+        ];
     }
+
+
     if (form.watch("model_for") == "delete_group_leave") {
         preparedData = [
             { label: "Department wise leave", value: "department_leave" },
@@ -54,14 +61,13 @@ const fields = (form, actions) => {
         ];
     }
     if (form.watch("model_for") == "approve_single_leave" ) {
-        preparedData = isResponsibleForProject
-            ? [
+        preparedData = [
+                { label: "Single leave", value: "single_leave" },
                   {
                       label: "Single project wise leave",
                       value: "single_project_leave",
                   },
-              ]
-            : [{ label: "Single leave", value: "single_leave" }];
+              ] 
     }
 
     // Prepare employee details load option
@@ -95,6 +101,33 @@ const fields = (form, actions) => {
             },
             // filterFields - fields to use as filters from form
             ["project_id", "start_date", "end_date", "leave_type_id", "type"],
+        ];
+    } else if((form.watch("model_for") == "delete_group_leave")){
+        preparedLoadOptions = [
+            "leave/leave_application", // URL
+            "leave_details", // dataKey in response
+            // dataMapper function
+            (leave) => {
+                const employee = leave.employee || {}; 
+
+                return {
+                    id: leave.id,
+                    start_date:
+                        actions.formatDateForForm(leave.start_date) || "",
+                    end_date: actions.formatDateForForm(leave.end_date) || "",
+                    employee_name:
+                        [employee.first_name || "", employee.last_name || ""]
+                            .join(" ")
+                            .trim() || "Unknown",
+                    employee_code: employee.employee_code || "N/A",
+                    employee_phone:
+                        employee.primary_phone ||
+                        employee.contact_info?.primary_phone ||
+                        "", 
+                };
+            },
+            // filterFields - fields to use as filters from form
+            ["project_id", "start_date","department_id", "end_date", "leave_type_id", "type","model_for"],
         ];
     } else {
         preparedLoadOptions = [
@@ -194,13 +227,26 @@ const fields = (form, actions) => {
             rules: { required: "Type is required" },
         },
         {
+            name: "leave_status",
+            type: "select",
+            label: "Leave Status *",
+            colSpan: "col-span-12 md:col-span-4", 
+            options: [
+                { label: "Approve", value: "approved" },
+                { label: "Reject", value: "rejected" }, 
+              ], 
+            visibility: form.watch("model_for") == "approve_single_leave",
+            rules: { required: "Leave Status is required" },
+        },
+        {
             name: "branch_id",
             type: "async-select",
             label: "Branch *",
             visibility:
                 form.watch("type") === "department_leave" ||
                 form.watch("type") === "project_leave" ||
-                form.watch("type") === "single_project_leave",
+                form.watch("type") === "single_project_leave" ||
+                (form.watch("model_for") == "approve_single_leave" && form.watch("type") === "single_leave"),
             loadOptions: [
                 "organization/branches",
                 "branches",
@@ -214,7 +260,9 @@ const fields = (form, actions) => {
             name: "department_id",
             type: "async-select",
             label: "Department",
-            visibility: form.watch("type") === "department_leave",
+            visibility: 
+                form.watch("type") === "department_leave" ||
+                (form.watch("model_for") == "approve_single_leave" && form.watch("type") === "single_leave" ),
             loadOptions: [
                 "organization/departments",
                 "departments",
@@ -381,9 +429,9 @@ const fields = (form, actions) => {
                     visibility: false,
                 },
                 {
-                    name: "employee_email",
+                    name: "employee_code",
                     type: "text",
-                    label: "Employee Email",
+                    label: "Employee Code",
                     colSpan: "col-span-12 md:col-span-4",
                     disabled: true,
                     visibility:

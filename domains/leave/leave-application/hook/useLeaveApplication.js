@@ -122,7 +122,7 @@ export const useLeaveApplication = () => {
                 }
             }
             // Approve
-            if(form.watch("model_for") == "approve_single_leave"){
+            else if(form.watch("model_for") == "approve_single_leave"){
                 try {
                     const { openModel, ...payload } = data;
 

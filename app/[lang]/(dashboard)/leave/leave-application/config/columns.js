@@ -35,7 +35,7 @@ const leaveApplicationColumns = (actions) => [
   },
   {
     accessorKey: "leave_day",
-    header: "Remaining Days",
+    header: "Days",
     thClass: "!text-center",
     tdClass: "!text-center",
   },
