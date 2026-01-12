@@ -4,14 +4,14 @@ import { branchSearchTemplate } from "@/utility/templateHelper";
 const fields = (form, actions) => {
     const { user } = useAuth();
     const roleLevel = user?.user?.roles?.[0]?.level ?? null;
-    
+    const level = Number(roleLevel);
     
     const isAssignedToProject =
         user?.isAssignedToProject === true;
     const isResponsibleForProject =
         user?.isResponsibleForProject === true; 
 
-    const isEmployee = user?.employee && roleLevel === 3;
+    const isEmployee = user?.employee && level === 3;
 
     // console.log(user?.employee?.id);
 
@@ -23,7 +23,9 @@ const fields = (form, actions) => {
     let preparedData = [];
  
     // Company / HR / Admin logic
-    if (user?.employee && roleLevel === 1 || user?.employee && roleLevel === 2) {
+    if (user?.employee && (level === 1 || level === 2)) {
+        console.log("admin or manager");
+        
         preparedData = isAssignedToProject
             ? [
                   {
@@ -38,6 +40,8 @@ const fields = (form, actions) => {
                 { label: "Project wise leave", value: "project_leave" },
             ]; 
     } else if(isEmployee){
+        console.log("Employee");
+
         preparedData = isAssignedToProject
             ? [
                   {
@@ -47,6 +51,7 @@ const fields = (form, actions) => {
               ]
             : [{ label: "Single leave", value: "single_leave" }];
     } else {
+        console.log("Company");
         preparedData = [
             { label: "Department wise leave", value: "department_leave" },
             { label: "Project wise leave", value: "project_leave" },
