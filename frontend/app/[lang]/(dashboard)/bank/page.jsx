@@ -10,10 +10,6 @@ import { useBank } from "@/domains/bank/hook/useBank";
 const BankPage = () => {
   const { actions, bankState } = useBank();
 
-
-
-
-
   
   return (
     <PageLayout>
