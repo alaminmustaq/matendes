@@ -35,7 +35,7 @@ const LeaveSummaryReportPage = () => {
             <BasicTableLayout
                 columns={columns()}
                 state={reportState}
-                search={false}
+                search={true}
                 addPermission={null}
             />
         </PageLayout>

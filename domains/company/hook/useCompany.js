@@ -42,7 +42,6 @@ export const useCompany = () => {
         refetch,
         pagination: company?.data?.pagination || {},
         isFetching,
-        
     };
 
     const actions = {
@@ -50,6 +49,17 @@ export const useCompany = () => {
             try {
                 let { openModel, ...other } = data;
 
+                // Ensure weekly_holiday is sent as comma-separated string
+                if (other.weekly_holiday) {
+                    other.weekly_holiday = Array.isArray(other.weekly_holiday)
+                        ? other.weekly_holiday.join(",")
+                        : other.weekly_holiday;
+                } else if (other.business_info?.weekly_holiday) {
+                    const wh = other.business_info.weekly_holiday;
+                    other.business_info.weekly_holiday = Array.isArray(wh)
+                        ? wh.join(",")
+                        : wh;
+                }
                 const response = await userCreate(other).unwrap();
                 if (response) {
                     toast.success("Company Created Successfully");
@@ -101,6 +111,10 @@ export const useCompany = () => {
                 currency: data.business_info?.currency || "",
 
                 timezone: data.business_info?.timezone || "",
+                // Convert weekly_holiday string to array for multi-select
+                weekly_holiday: data.business_info?.weekly_holiday
+                    ? data.business_info.weekly_holiday.split(",")
+                    : [],
 
                 // registration_info
                 registration_number:
@@ -120,12 +134,24 @@ export const useCompany = () => {
         onUpdate: async (data) => {
             try {
                 let { openModel, id, ...other } = data;
-        
+
+                // Convert weekly_holiday array to comma-separated string
+
+                if (other.weekly_holiday) {
+                    other.weekly_holiday = Array.isArray(other.weekly_holiday)
+                        ? other.weekly_holiday.join(",")
+                        : other.weekly_holiday;
+                } else if (other.business_info?.weekly_holiday) {
+                    const wh = other.business_info.weekly_holiday;
+                    other.business_info.weekly_holiday = Array.isArray(wh)
+                        ? wh.join(",")
+                        : wh;
+                }
                 const response = await userUpdate({
                     id,
                     credentials: other,
                 }).unwrap();
-        
+
                 if (response) {
                     toast.success("Company Updated Successfully");
                     refetch();

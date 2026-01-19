@@ -129,14 +129,25 @@ export const leaveReasonSearchTemplate = (data = []) =>
     data.map((item) => ({
         value: item.id,
         label: item.name,
-    }));
-export const leaveTypeSearchTemplate = (data = []) =>{
-        console.log(data);
+    })); 
+export const leaveTypeSearchTemplate = (data = []) =>{ 
         
         return data.map((item) => ({
             value: item.id,
             label: item.name,
         }));
     }
+export const holidayTypeSearchTemplate = (data = []) =>{ 
+        
+        return data.map((item) => ({
+            value: item.id,
+            label: item.name,
+        }));
+    }
+    export const holidayReasonSearchTemplate = (data = []) =>
+    data.map((item) => ({
+        value: item.id,
+        label: item.name,
+    }));
 
 

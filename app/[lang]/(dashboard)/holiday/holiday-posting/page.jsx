@@ -5,17 +5,14 @@ import BasicTableLayout from "@/components/table/basic-table-layout";
 import BasicModel from "@/components/model/basic-model";
 import columns from "./config/columns";
 import fields from "./config/fields";
-import { useLeaveApplication } from "@/domains/leave/leave-application/hook/useLeaveApplication";
 import { useForm } from "react-hook-form";
 import { useEffect } from "react";
+import { useHolidayPosting } from "@/domains/holiday/holiday-posting/hook/useHolidayPosting";
 
-const LeaveApplicationPage = () => {
-    const { actions, leaveState, skippedEmployeesModal } = useLeaveApplication();
-
-    console.log("Leave skipped data:", skippedEmployeesModal.data);
-
-
- 
+const HolidayPostingPage = () => {
+    const { actions, holidayState, skippedEmployeesModal } = useHolidayPosting(); 
+    console.log(skippedEmployeesModal);
+    
     const skippedForm = useForm({
         defaultValues: {
             openModel: false,
@@ -23,81 +20,70 @@ const LeaveApplicationPage = () => {
     });
 
     useEffect(() => {
-        skippedForm.setValue("openModel", !!skippedEmployeesModal.open);
-    }, [skippedEmployeesModal.open, skippedForm]);
-
+            skippedForm.setValue("openModel", !!skippedEmployeesModal.open);
+        }, [skippedEmployeesModal.open, skippedForm]);
+ 
+    
     return (
         <PageLayout>
             <BasicTableLayout
                 addPermission={"manual-attendance"} 
                 addButtonLabel={{
-                        LeaveApplication: {
-                            label: "Add Leave Application",
-                            action: actions.onLeaveApplication,
-                            permission: "create-leave",
+                        HolidayPosting: {
+                            label: "Add Holiday",
+                            action: actions.onHolidayPosting,
+                            permission: "create-holiday",
                         },
                         DeleteGroupApplication: {
-                            label: "Delete Group Application",
+                            label: "Delete Group Holiday",
                             action: actions.onDeleteGroupApplication,
-                            permission: "delete-group-leave",
-                        },
-                        ApprovedSingleApplication: {
-                            label: "Approved Single Application",
-                            action: actions.onApproveSingleApplication,
-                            permission: "approve-single-leave",
-                        },
+                            permission: "delete-group-holiday",
+                        }, 
                     }} 
                 columns={columns(actions)}
-                state={leaveState}
+                state={holidayState}
                  filterCustom={{
-                    leave_status: {
+                    status: {
                         multiple: true,
                         values: [
-                            { key: "pending", value: "Pending" },
                             { key: "approved", value: "Approved" },
                             { key: "rejected", value: "Rejected" },
                         ],
                     }
                 }}
-
             />
 
             <BasicModel 
                 title={
-                    leaveState.form.watch("mode") === "view"
-                    ? "Leave Application Details" 
-                    : leaveState.form.watch("model_for") === "delete_group_leave" ? "Delete Group Leave"
-                    : leaveState.form.watch("model_for") === "approve_single_leave" ? "Approve Leave" 
-                    : leaveState.form.watch("id")
-                    ? "Edit Leave Application" 
-                    : "Create Leave Application"
+                    holidayState.form.watch("mode") === "view"
+                    ? "Holiday Details" 
+                    : holidayState.form.watch("model_for") === "delete_group_holiday" ? "Delete Group Holiday" 
+                    : holidayState.form.watch("id")
+                    ? "Edit Holiday Posting" 
+                    : "Create Holiday Posting"
                     }
                 submitLabel={
-                    leaveState.form.watch("mode") === "view"
+                    holidayState.form.watch("mode") === "view"
                     ? null 
-                    : leaveState?.form?.watch("model_for") === "delete_group_leave"
-                            ? "Delete"
-                    : leaveState?.form?.watch("model_for") === "approve_single_leave"
-                            ? "Approve"
-                    : leaveState.form.watch("id")
+                    : holidayState?.form?.watch("model_for") === "delete_group_holiday"
+                            ? "Delete" 
+                    : holidayState.form.watch("id")
                     ? "Update"
                     : "Create"
                 } 
                 cancelLabel="Close"
                 size="2xl"
-                form={leaveState.form}
-                fields={leaveState?.form?.watch("model_for") == "delete_group_leave" ? fields(leaveState.form, actions) : fields(leaveState.form, actions)} 
+                form={holidayState.form}
+                fields={holidayState?.form?.watch("model_for") == "delete_group_leave" ? fields(holidayState.form, actions) : fields(holidayState.form, actions)} 
                 actions={actions}
             />
-
-            {/* Skipped Employees using existing BasicModel */}
             <BasicModel
                 title={`Skipped Employees (${skippedEmployeesModal.data?.length || 0})`}
                 submitLabel="Close"
                 cancelLabel={null}
                 size="2xl"
                 form={skippedForm}
-                fields={[]} // no dynamic form fields, render children only
+                fields={[]}
                 actions={{
                     onCreate: () => {
                         skippedForm.setValue("openModel", false);
@@ -105,7 +91,6 @@ const LeaveApplicationPage = () => {
                     },
                 }}
             >
-
                 <div className="overflow-x-auto">
                     <table className="min-w-full divide-y divide-gray-200">
                         <thead className="bg-gray-50">
@@ -116,29 +101,50 @@ const LeaveApplicationPage = () => {
                                 <th className="px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase">
                                     Full Name
                                 </th>
-                                <th className="px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
-                                    Leave Days
+                                <th className="px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase">
+                                    Work Email
                                 </th>
-                                <th className="px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
-                                    Remarks
+                                <th className="px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase">
+                                    Status
                                 </th>
-                               
+                                <th className="px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase">
+                                    Note
+                                </th>
                             </tr>
                         </thead>
+
                         <tbody className="bg-white divide-y divide-gray-200">
                             {(skippedEmployeesModal.data || []).map((employee, index) => (
-                                <tr key={employee.leave_id || index} className="hover:bg-gray-50">
-                                    <td className="px-4 py-3 whitespace-nowrap text-sm text-gray-900">
+                                <tr
+                                    key={employee.holiday_id || index}
+                                    className="hover:bg-gray-50"
+                                >
+                                    <td className="px-4 py-3 text-sm text-gray-900">
                                         {employee.employee_code || "-"}
                                     </td>
+
                                     <td className="px-4 py-3 text-sm text-gray-900">
                                         {employee.full_name || "-"}
                                     </td>
-                                    <td className="px-4 py-3 whitespace-nowrap text-sm text-gray-900">
-                                        {employee.leave_day}
+
+                                    <td className="px-4 py-3 text-sm text-gray-900">
+                                        {employee.work_email || "-"}
                                     </td>
+
+                                    <td className="px-4 py-3 text-sm">
+                                        <span
+                                            className={`px-2 py-1 rounded text-xs font-medium ${
+                                                employee.status === "rejected"
+                                                    ? "bg-red-100 text-red-700"
+                                                    : "bg-gray-100 text-gray-700"
+                                            }`}
+                                        >
+                                            {employee.status}
+                                        </span>
+                                    </td>
+
                                     <td className="px-4 py-3 text-sm text-gray-600">
-                                        {employee.remarks || "Leave balance exceeded"}
+                                        {employee.note || "Holiday skipped"}
                                     </td>
                                 </tr>
                             ))}
@@ -150,4 +156,4 @@ const LeaveApplicationPage = () => {
     );
 };
 
-export default LeaveApplicationPage;
+export default HolidayPostingPage;

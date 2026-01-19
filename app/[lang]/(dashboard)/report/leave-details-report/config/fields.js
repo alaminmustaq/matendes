@@ -14,6 +14,17 @@ const leaveDetailsReportFilters = (form) => {
       type: "date",
       label: "End Date",
       colSpan: "col-span-12 md:col-span-3",
+       rules: {
+    validate: (value, form) => {
+      if (form.start_date && value) {
+        return (
+          new Date(form.start_date) <= new Date(value) ||
+          "Start date cannot be Before end date"
+        );
+      }
+      return true;
+    },
+     },
     },
     {
       name: "employee_ids",

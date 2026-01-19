@@ -12,7 +12,7 @@ const leaveSummaryReportColumns = () => [
   {
     accessorKey: "leave_type.name",
     header: "Leave Type",
-  }, 
+  },
   {
     accessorKey: "total_leave_days",
     header: "Total Days",

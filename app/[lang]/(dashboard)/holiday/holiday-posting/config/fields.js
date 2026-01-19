@@ -1,122 +1,49 @@
 import useAuth from "@/domains/auth/hooks/useAuth";
-import { branchSearchTemplate } from "@/utility/templateHelper";
+import { branchSearchTemplate,departmentSearchTemplate } from "@/utility/templateHelper";
 
 const fields = (form, actions) => {
     const { user } = useAuth();
     const roleLevel = user?.user?.roles?.[0]?.level ?? null;
-    const level = Number(roleLevel);
+    const level = Number(roleLevel); 
 
-    const isAssignedToProject = user?.isAssignedToProject === true;
-    const isResponsibleForProject = user?.isResponsibleForProject === true;
+    // console.log(user?.employee?.id);
+    
+    const currentUserType = form.watch("user_type");
 
-    const isEmployee = user?.employee && level === 3;
+    if (currentUserType !== "responsible") {
+        form.setValue("user_type", "responsible", { shouldDirty: false }); 
+    }
 
-    // console.log(user);
+    const employee_user_type = form.watch("employee_user_type");
+
+    if (employee_user_type !== "assigned") {
+        form.setValue("employee_user_type", "assigned", { shouldDirty: false });
+    }
+
+    // const NotPaginate = form.watch("not_paginate");
+
+    // if (!NotPaginate) {
+    //     form.setValue("not_paginate", true, { shouldDirty: false });
+    // }
 
     const isView = form.watch("mode") === "view"; // 🔑 detect view mode
     const isEdit = form.watch("mode") === "edit"; // 🔑 detect view mode
 
-    // Prepare type options
-    let preparedData = [];
-
-    // Company / HR / Admin logic
-    if (user?.employee && (level === 1 || level === 2)) {
-        console.log("admin or manager");
-
-        preparedData = isAssignedToProject
-            ? [
-                  {
-                      label: "Single project wise leave",
-                      value: "single_project_leave",
-                  },
-                  { label: "Department wise leave", value: "department_leave" },
-                  { label: "Project wise leave", value: "project_leave" },
-              ]
-            : [
-                  { label: "Single leave", value: "single_leave" },
-                  { label: "Department wise leave", value: "department_leave" },
-                  { label: "Project wise leave", value: "project_leave" },
-              ];
-    } else if (isEmployee) {
-        console.log("Employee");
-
-        preparedData = isAssignedToProject
-            ? [
-                  {
-                      label: "Single project wise leave",
-                      value: "single_project_leave",
-                  },
-              ]
-            : [{ label: "Single leave", value: "single_leave" }];
-    } else {
-        console.log("Company");
-        preparedData = [
-            { label: "Department wise leave", value: "department_leave" },
-            { label: "Project wise leave", value: "project_leave" },
-        ];
-    }
-
-    if (form.watch("model_for") == "delete_group_leave") {
-        preparedData = [
-            { label: "Department wise leave", value: "department_leave" },
-            { label: "Project wise leave", value: "project_leave" },
-        ];
-    }
-    if (form.watch("model_for") == "approve_single_leave") {
-        preparedData = [
-            { label: "Single leave", value: "single_leave" },
-            {
-                label: "Single project wise leave",
-                value: "single_project_leave",
-            },
-        ];
-    }
-
     // Prepare employee details load option
     let preparedLoadOptions = [];
-
-    if (form.watch("model_for") == "approve_single_leave") {
+    if (form.watch("model_for") == "delete_group_holiday") {
         preparedLoadOptions = [
-            "leave/leave_application", // URL
-            "leave_details", // dataKey in response
+            "holiday/holiday_posting", // URL
+            "holidays", // dataKey in response
             // dataMapper function
-            (leave) => {
-                const employee = leave.employee || {};
+            (holiday) => {
+                const employee = holiday.employee || {};
 
                 return {
-                    id: leave.id,
+                    id: holiday.id,
                     start_date:
-                        actions.formatDateForForm(leave.start_date) || "",
-                    end_date: actions.formatDateForForm(leave.end_date) || "",
-                    employee_name:
-                        [employee.first_name || "", employee.last_name || ""]
-                            .join(" ")
-                            .trim() || "Unknown",
-                    employee_code: employee.employee_code || "N/A",
-                    employee_phone:
-                        employee.primary_phone ||
-                        employee.contact_info?.primary_phone ||
-                        "",
-                    leave_reason:
-                        leave.reason?.name || leave.other_reason || "No reason",
-                };
-            },
-            // filterFields - fields to use as filters from form
-            ["project_id", "start_date", "end_date", "leave_type_id", "type"],
-        ];
-    } else if (form.watch("model_for") == "delete_group_leave") {
-        preparedLoadOptions = [
-            "leave/leave_application", // URL
-            "leave_details", // dataKey in response
-            // dataMapper function
-            (leave) => {
-                const employee = leave.employee || {};
-
-                return {
-                    id: leave.id,
-                    start_date:
-                        actions.formatDateForForm(leave.start_date) || "",
-                    end_date: actions.formatDateForForm(leave.end_date) || "",
+                        actions.formatDateForForm(holiday.start_date) || "",
+                    end_date: actions.formatDateForForm(holiday.end_date) || "",
                     employee_name:
                         [employee.first_name || "", employee.last_name || ""]
                             .join(" ")
@@ -131,12 +58,15 @@ const fields = (form, actions) => {
             // filterFields - fields to use as filters from form
             [
                 "project_id",
+                "branch_id",
                 "start_date",
                 "department_id",
                 "end_date",
-                "leave_type_id",
+                "holiday_type_id",
                 "type",
                 "model_for",
+                "status",
+                // "not_paginate"
             ],
         ];
     } else {
@@ -167,10 +97,12 @@ const fields = (form, actions) => {
             [
                 "branch_id",
                 `${
-                    form.watch("type") == "department_leave"
+                    form.watch("type") == "company_holiday"
                         ? "department_id"
                         : "project_id"
                 }`,
+                "employee_type", 
+                
             ],
         ];
     }
@@ -192,18 +124,32 @@ const fields = (form, actions) => {
             disabled: isView,
             rules: {
                 required: "End date is required",
-                validate: (value) =>
-                    new Date(value) >= new Date(form?.watch("start_date")) ||
-                    "End date cannot be before start date",
+                 validate: (value) => {
+            const startDate = form.watch("start_date");
+            if (!startDate || !value) return true;
+
+            const startYear = new Date(startDate).getFullYear();
+            const endYear   = new Date(value).getFullYear();
+
+            if (startYear !== endYear) {
+                return "Start date and end date must be in the same year";
+            }
+
+            if (new Date(value) < new Date(startDate)) {
+                return "End date cannot be before start date";
+            }
+
+            return true;
+        },
             },
         },
         {
-            name: "leave_type_id",
+            name: "holiday_type_id",
             type: "async-select",
-            label: "Leave Type *",
+            label: "Holiday Type *",
             loadOptions: [
-                "leave/leave_type",
-                "leave_types",
+                "holiday/holiday_type",
+                "holiday_types",
                 "leaveTypeSearchTemplate",
             ],
             placeholder: "Select",
@@ -212,108 +158,12 @@ const fields = (form, actions) => {
             rules: { required: "Leave type is required" },
         },
         {
-            name: "type",
-            type: "select",
-            label: "Type *",
-            colSpan: "col-span-12 md:col-span-4",
-            disabled: isView || isEdit,
-            options: preparedData,
-            handleChange: (e) => {
-                if (isView) return; // prevent changes in view mode
-                const value = e?.value ?? null;
-                form.setValue("type", value);
-                form.setValue(
-                    "branch_id",
-                    branchSearchTemplate(
-                        user?.employee?.branch ? [user?.employee?.branch] : []
-                    )?.at(0) ?? null
-                );
-                form.setValue("department_id", null);
-                form.setValue("employee_ids", null);
-                form.setValue("project_id", null);
-                if (
-                    value === "project_leave" ||
-                    value === "single_project_leave"
-                ) {
-                    form.setValue("employee_id", user?.employee?.id);
-                }
-            },
-            rules: { required: "Type is required" },
-        },
-        {
-            name: "leave_status",
-            type: "select",
-            label: "Leave Status *",
-            colSpan: "col-span-12 md:col-span-4",
-            options: [
-                { label: "Approve", value: "approved" },
-                { label: "Reject", value: "rejected" },
-            ],
-            visibility: form.watch("model_for") == "approve_single_leave",
-            rules: { required: "Leave Status is required" },
-        },
-        {
-            name: "branch_id",
-            type: "async-select",
-            label: "Branch *",
-            visibility:
-                form.watch("type") === "department_leave" ||
-                form.watch("type") === "project_leave" ||
-                form.watch("type") === "single_project_leave" ||
-                (form.watch("model_for") == "approve_single_leave" &&
-                    form.watch("type") === "single_leave"),
-            loadOptions: [
-                "organization/branches",
-                "branches",
-                "branchSearchTemplate",
-            ],
-            placeholder: "Select",
-            colSpan: "col-span-12 md:col-span-4",
-            disabled: isView,
-        },
-
-        {
-            name: "department_id",
-            type: "async-select",
-            label: "Department",
-            visibility:
-                form.watch("type") === "department_leave" ||
-                (form.watch("model_for") == "approve_single_leave" &&
-                    form.watch("type") === "single_leave"),
-            loadOptions: [
-                "organization/departments",
-                "departments",
-                "departmentSearchTemplate",
-                ["branch_id", "type"],
-            ],
-            placeholder: "Optional",
-            colSpan: "col-span-12 md:col-span-4",
-            disabled: isView,
-        },
-        {
-            name: "project_id",
-            type: "async-select",
-            label: "Project",
-            visibility:
-                form.watch("type") === "project_leave" ||
-                form.watch("type") === "single_project_leave",
-            loadOptions: [
-                "projects",
-                "projects",
-                "projectTemplate",
-                ["branch_id", "employee_id", "type", "user_type"],
-            ],
-            placeholder: "Optional",
-            colSpan: "col-span-12 md:col-span-4",
-            disabled: isView,
-        },
-        {
             name: "reason_id",
             type: "async-select",
-            label: "Leave Reason *",
+            label: "Holiday Reason *",
             loadOptions: [
-                "leave/leave_reason",
-                "leave_reasons",
+                "holiday/holiday_reason",
+                "holiday_reasons",
                 "leaveReasonSearchTemplate",
             ],
             lastChildren: [{ label: "Other", value: "other" }],
@@ -325,9 +175,7 @@ const fields = (form, actions) => {
                 form.setValue("other_reason", "");
             },
             disabled: isView,
-            visibility:
-                form.watch("model_for") != "delete_group_leave" &&
-                form.watch("model_for") != "approve_single_leave",
+            visibility: form.watch("model_for") != "delete_group_holiday",
             rules: { required: "Leave reason is required" },
         },
         {
@@ -341,15 +189,128 @@ const fields = (form, actions) => {
             disabled: isView,
         },
         {
+            name: "type",
+            type: "select",
+            label: "Type *",
+            colSpan: "col-span-12 md:col-span-4",
+            disabled: isView || isEdit,
+            options: [
+                { label: "Company wise holiday", value: "company_holiday" },
+                { label: "Project wise holiday", value: "project_holiday" },
+            ],
+            handleChange: (e) => {
+                if (isView) return; // prevent changes in view mode
+                form.setValue("type", e.value);
+                form.setValue(
+                    "branch_id",
+                    branchSearchTemplate(
+                        user?.employee?.branch ? [user?.employee?.branch] : []
+                    )?.at(0) ?? null
+                );
+                form.setValue(
+                    "department_id",
+                    departmentSearchTemplate(
+                        user?.employee?.department ? [user?.employee?.department] : []
+                    )?.at(0) ?? null
+                ); 
+                console.log(user?.employee);
+                
+                form.setValue("employee_ids", null);
+                form.setValue("project_id", null); 
+                if (e.value === "project_holiday") {
+                    form.setValue("employee_id", user?.employee?.id);
+                }
+                if(form.watch('type') == 'company_holiday'){
+                    form.setValue("employee_type", 'company');
+                }else if(form.watch('type') == 'project_holiday'){
+                    form.setValue("employee_type", 'project');
+                }
+            },
+            rules: { required: "Type is required" },
+        },
+        {
+            name: "branch_id",
+            type: "async-select",
+            label: "Branch *",
+            visibility:
+                form.watch("type") === "company_holiday" ||
+                form.watch("type") === "project_holiday",
+            loadOptions: [
+                "organization/branches",
+                "branches",
+                "branchSearchTemplate",
+            ],
+            placeholder: "Select",
+            colSpan: "col-span-12 md:col-span-4",
+            disabled: isView || isEdit,
+            rules: {
+                validate: (value) => {
+                    if (user?.employee?.branch && !value) {
+                        return "Branch is required";
+                    }
+                    return true;
+                },
+            },
+        },
+        {
+            name: "department_id",
+            type: "async-select",
+            label: `Department${user?.employee?.department ? " *":""}`,
+            visibility: form.watch("type") === "company_holiday",
+            loadOptions: [
+                "organization/departments",
+                "departments",
+                "departmentSearchTemplate",
+                ["branch_id", "type"],
+            ],
+            placeholder: "Optional",
+            colSpan: "col-span-12 md:col-span-4",
+            disabled: isView || isEdit,
+            rules: {
+                validate: (value) => {
+                    if (user?.employee?.branch && !value) {
+                        return "Branch is required";
+                    }
+                    return true;
+                },
+            },
+        },
+        {
+            name: "project_id",
+            type: "async-select",
+            label: "Project",
+            visibility: form.watch("type") === "project_holiday",
+            loadOptions: [
+                "projects",
+                "projects",
+                "projectTemplate",
+                ["branch_id", "employee_id", "type", "user_type"],
+            ],
+            placeholder: "Optional",
+            colSpan: "col-span-12 md:col-span-4",
+            disabled: isView || isEdit,
+        }, 
+        {
+            name: "status",
+            type: "select",
+            label: "Status *",
+            colSpan: "col-span-12 md:col-span-4",
+            options: [
+                { label: "Approve", value: "approved" },
+                { label: "Reject", value: "rejected" },
+            ],
+            visibility: form.watch("model_for") == "delete_group_holiday",
+            rules: { required: "Status is required" },
+        },
+        {
             name: "process_button",
             type: "button",
-            placeholder: "Process Leave",
+            placeholder: "Process Holiday",
             colSpan: "col-span-12 md:col-span-4",
             disabled: isView,
             visibility:
-                form.watch("model_for") == "approve_single_leave" ||
-                form.watch("type") === "department_leave" ||
-                form.watch("type") === "project_leave",
+                (form.watch("type") === "company_holiday" ||
+                form.watch("type") === "project_holiday") && !isEdit,
             handleChange: (e, form) => {
                 // Trigger the paginated component to load data
                 // Use setTimeout to ensure component is mounted
@@ -368,26 +329,24 @@ const fields = (form, actions) => {
             },
         },
         {
-            name: "remarks",
+            name: "note",
             type: "textarea",
-            label: "Remarks",
-            placeholder: "Optional remarks",
+            label: "Notes",
+            placeholder: "Optional notes",
             colSpan: "col-span-12",
             rules: { maxLength: { value: 500, message: "Max 500 characters" } },
             disabled: isView,
-            visibility:
-                form.watch("model_for") != "delete_group_leave" &&
-                form.watch("model_for") != "approve_single_leave",
+            visibility: form.watch("model_for") != "delete_group_holiday",
         },
 
         // ===== Dynamic Employee Details with Pagination =====
         {
             name: "employee_details",
             type: "group-form-paginated",
-            label: "Employee Details(Check to exclude employee from leave)",
+            label: "Employee Details",
             colSpan: "col-span-12",
             addButtonLabel: false,
-            isDelete: false,
+            isDelete: false, 
             maxHeight: "400px",
             loadMoreLabel: "Load More Employees",
             perPage: 10,
@@ -395,10 +354,9 @@ const fields = (form, actions) => {
             enableSearch: true,
             searchPlaceholder: "Search employees by name, email, or phone...",
 
-            visibility:
-                form.watch("model_for") == "approve_single_leave" ||
-                form.watch("type") === "department_leave" ||
-                form.watch("type") === "project_leave",
+            visibility: 
+                (form.watch("type") === "company_holiday" ||
+                form.watch("type") === "project_holiday") && !isEdit,
             loadOptions: preparedLoadOptions,
             fields: [
                 {
@@ -464,15 +422,6 @@ const fields = (form, actions) => {
                             : "md:col-span-3"
                     }`,
                     disabled: true,
-                },
-                {
-                    name: "leave_reason",
-                    type: "text",
-                    label: "Reason",
-                    colSpan: "col-span-12 md:col-span-3",
-                    disabled: true,
-                    visibility:
-                        form.watch("model_for") == "approve_single_leave",
                 },
             ],
         },

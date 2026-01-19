@@ -156,6 +156,25 @@ const fields = [
         ],
     },
     {
+        name: "weekly_holiday",
+        type: "multi-select",
+        label: "Weekly Holiday *",
+        placeholder: "Select weekly holidays",
+        colSpan: "col-span-12 md:col-span-6",
+        options: [
+            { label: "Sunday", value: "sunday" },
+            { label: "Monday", value: "monday" },
+            { label: "Tuesday", value: "tuesday" },
+            { label: "Wednesday", value: "wednesday" },
+            { label: "Thursday", value: "thursday" },
+            { label: "Friday", value: "friday" },
+            { label: "Saturday", value: "saturday" },
+        ],
+        rules: { required: "Select at least one weekly holiday" }
+
+    },
+
+    {
         name: "description",
         type: "textarea",
         label: "Description",
@@ -190,7 +209,7 @@ const fields = [
         type: "number",
         label: "Balance",
         placeholder: "0.00",
-        colSpan: "col-span-12 md:col-span-6", 
+        colSpan: "col-span-12 md:col-span-6",
     },
     {
         name: "fiscal_year_start",

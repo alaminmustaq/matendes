@@ -8,7 +8,7 @@ import { useAppSelector } from "@/hooks/use-redux";
 const columns = (actions) => {
     const { actions: employeeActions } = useEmploy();
     const { user } = useAppSelector((state) => state.auth); 
-    // console.log(user?.user?.id);
+    // console.log(user);
     const router = useRouter();
     const params = useParams();
     const lang = params?.lang || "en";

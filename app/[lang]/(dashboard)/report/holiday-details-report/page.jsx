@@ -10,8 +10,8 @@ import ReportActions from "@/components/report/ReportActions";
 
 const LeaveDetailsReportPage = () => {
     const { actions, reportState } = useReport(
-        "leave/leave_application",
-        "leave_application"
+       "holiday/holiday_posting",
+        "holiday_posting"
     );
 
     return (

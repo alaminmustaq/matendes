@@ -147,6 +147,36 @@ export const menusConfig = {
             ],
         },
         {
+            title: "Holiday",
+            icon: CalendarClock,
+            child: [
+                {
+                    title: "Holiday Type",
+                    href: "/holiday/holiday-types",
+                    icon: UserCircle,
+                    permission: "view-holiday-type",
+                },
+                {
+                    title: "Holiday Reason",
+                    href: "/holiday/holiday-reasons",
+                    icon: UserCircle,
+                    permission: "view-holiday-reason",
+                },
+                // {
+                //     title: "Holiday Setup",
+                //     href: "/holiday/holiday-setups",
+                //     icon: UserCircle,
+                //     permission: "view-leave",
+                // },
+                {
+                    title: "Holiday Posting",
+                    href: "/holiday/holiday-posting",
+                    icon: UserCircle,
+                    permission: "view-holiday",
+                },
+            ],
+        },
+        {
             title: "Contact Persons",
             icon: UserSquare,
             child: [
@@ -359,11 +389,17 @@ export const menusConfig = {
                     permission: "view-damage-reports",
                 },
                 {
-                        title: "Leave Summary Report",
-                        href: "/report/leave-summary-report",
-                        icon: FileCode,
-                        permission: "view-damage-reports",
-                    },
+                    title: "Leave Summary Report",
+                    href: "/report/leave-summary-report",
+                    icon: FileCode,
+                    permission: "view-damage-reports",
+                },
+                {
+                    title: "Holiday Details Report",
+                    href: "/report/holiday-details-report",
+                    icon: FileCode,
+                    permission: "view-damage-reports",
+                },
             ],
         },
         // {
@@ -524,6 +560,36 @@ export const menusConfig = {
                         href: "/leave/leave-application",
                         icon: UserCircle,
                         permission: "view-leave",
+                    },
+                ],
+            },
+            {
+                title: "Holiday",
+                icon: CalendarClock,
+                child: [
+                    {
+                        title: "Holiday Type",
+                        href: "/holiday/holiday-types",
+                        icon: UserCircle,
+                        permission: "view-holiday-type",
+                    },
+                    {
+                        title: "Holiday Reason",
+                        href: "/holiday/holiday-reasons",
+                        icon: UserCircle,
+                        permission: "view-holiday-reason",
+                    },
+                    // {
+                    //     title: "Holiday Setup",
+                    //     href: "/holiday/holiday-setups",
+                    //     icon: UserCircle,
+                    //     permission: "view-leave",
+                    // },
+                    {
+                        title: "holiday Posting",
+                        href: "/holiday/holiday-posting",
+                        icon: UserCircle,
+                        permission: "view-holiday",
                     },
                 ],
             },
@@ -742,6 +808,13 @@ export const menusConfig = {
                         icon: FileCode,
                         permission: "view-damage-reports",
                     },
+
+                    {
+                        title: "Holiday Details Report",
+                        href: "/report/holiday-details-report",
+                        icon: FileCode,
+                        permission: "view-damage-reports",
+                    },
                 ],
             },
 
@@ -880,7 +953,7 @@ export const menusConfig = {
                 isHide: false,
                 child: [
                     {
-                        title: "leave Type",
+                        title: "Leave Type",
                         href: "/leave/leave-types",
                         icon: UserCircle,
                         permission: "view-leave-type",
@@ -896,6 +969,38 @@ export const menusConfig = {
                         href: "/leave/leave-application",
                         icon: UserCircle,
                         permission: "view-leave",
+                    },
+                ],
+            },
+            {
+                title: "Holiday",
+                icon: CalendarClock,
+                isOpen: false,
+                isHide: false,
+                child: [
+                    {
+                        title: "Holiday Type",
+                        href: "/holiday/holiday-types",
+                        icon: UserCircle,
+                        permission: "view-holiday-type",
+                    },
+                    {
+                        title: "Holiday Reason",
+                        href: "/holiday/holiday-reasons",
+                        icon: UserCircle,
+                        permission: "view-holiday-reason",
+                    },
+                    // {
+                    //     title: "Holiday Setup",
+                    //     href: "/holiday/holiday-setups",
+                    //     icon: UserCircle,
+                    //     permission: "view-leave",
+                    // },
+                    {
+                        title: "Holiday Posting",
+                        href: "/holiday/holiday-posting",
+                        icon: UserCircle,
+                        permission: "view-holiday",
                     },
                 ],
             },
@@ -1118,6 +1223,12 @@ export const menusConfig = {
                     {
                         title: "Leave Summary Report",
                         href: "/report/leave-summary-report",
+                        icon: FileCode,
+                        permission: "view-damage-reports",
+                    },
+                    {
+                        title: "Holiday Details Report",
+                        href: "/report/holiday-details-report",
                         icon: FileCode,
                         permission: "view-damage-reports",
                     },
