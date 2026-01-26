@@ -39,9 +39,7 @@ export const useManualAttendance = () => {
         data: manualAttendanceData,
         refetch,
         isFetching,
-    } = useFetchManualAttendancesQuery();
-
-    console.log("Manual Attendance Data:", manualAttendanceData);
+    } = useFetchManualAttendancesQuery(); 
 
     // Form
     const form = useForm({
@@ -123,6 +121,8 @@ export const useManualAttendance = () => {
 
         // Validate form data before submission
         validateFormData: (data) => {
+            console.log(data);
+            
             const errors = [];
 
             if (!data.attendance_type) {
@@ -165,11 +165,11 @@ export const useManualAttendance = () => {
                         `Employee ${index + 1}: Check-in time is required`
                     );
                 }
-                if (!emp.check_out_time) {
-                    errors.push(
-                        `Employee ${index + 1}: Check-out time is required`
-                    );
-                }
+                // if (!emp.check_out_time) {
+                //     errors.push(
+                //         `Employee ${index + 1}: Check-out time is required`
+                //     );
+                // }
             });
 
             return errors;
@@ -200,8 +200,7 @@ export const useManualAttendance = () => {
                     refetch();
                     form.setValue("openModel", false);
                 }
-            } catch (apiErrors) {
-                console.log("API Errors:", apiErrors);
+            } catch (apiErrors) { 
                 if (apiErrors?.data?.errors?.employees) {
                     const employeeErrors = apiErrors.data.errors.employees;
                     if (Array.isArray(employeeErrors)) {
@@ -218,6 +217,7 @@ export const useManualAttendance = () => {
         },
 
         onEdit: (masterAttendanceData) => { 
+            console.log(masterAttendanceData);
             
             try {
                 // Validate input data
@@ -248,8 +248,9 @@ export const useManualAttendance = () => {
                         id: masterAttendanceData.id,
                         attendance_scope: masterAttendanceData.attendance_scope,
                         attendance_type: masterAttendanceData.attendance_type, 
-                        model_for: masterAttendanceData?.attendances[0]?.adjustment_type ? "adjust_hours" : false,
+                        // model_for: masterAttendanceData?.attendances[0]?.adjustment_type ? "adjust_hours" : false,
                         adjustment_type: masterAttendanceData?.attendances[0]?.adjustment_type || null, 
+                        salary_type: masterAttendanceData?.salary_type,
                         global_date: actions.formatDateForForm(
                             masterAttendanceData.global_date
                         ),
@@ -347,7 +348,6 @@ export const useManualAttendance = () => {
         },
         onUpdate: async (data) => {
             try { 
-                
                 // Validate form data
                 const validationErrors = actions.validateFormData(data);
                 if (validationErrors.length > 0) {
@@ -362,21 +362,30 @@ export const useManualAttendance = () => {
                     "department_id",
                     "project_id",
                 ]);
+
+                // 🟢 Fix for monthly salary: convert empty strings to null
+                if (preparedData.salary_type === "monthly" && Array.isArray(preparedData.employees)) {
+                    preparedData.employees = preparedData.employees.map(emp => ({
+                        ...emp,
+                        check_out_time: emp.check_out_time?.trim() || null
+                    }));
+                }
+
                 const response = await updateManualAttendance({
                     id,
                     ...preparedData,
                 }).unwrap();
+
                 if (response.success) {
                     toast.success("Master attendance updated successfully");
                     refetch();
                     formReset(form);
                     form.setValue("openModel", false);
                 }
+
             } catch (apiErrors) {
-                // Handle server validation errors
                 handleServerValidationErrors(apiErrors, form.setError);
 
-                // Show specific error messages for duplicate attendance
                 if (apiErrors?.data?.errors?.employees) {
                     const employeeErrors = apiErrors.data.errors.employees;
                     if (Array.isArray(employeeErrors)) {
@@ -387,6 +396,7 @@ export const useManualAttendance = () => {
                 throw apiErrors;
             }
         },
+
 
         onDelete: async (id) => {
             try {
@@ -444,11 +454,7 @@ export const useManualAttendance = () => {
         // Debug helper function
         debugFormData: () => {
             const formValues = form.getValues();
-            const fieldArrayValues = fieldArray.fields;
-            console.log("=== DEBUG FORM DATA ===");
-            console.log("Form values:", formValues);
-            console.log("Field array values:", fieldArrayValues);
-            console.log("=== END DEBUG ===");
+            const fieldArrayValues = fieldArray.fields; 
             return { formValues, fieldArrayValues };
         },
 

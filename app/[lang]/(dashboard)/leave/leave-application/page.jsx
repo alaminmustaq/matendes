@@ -5,12 +5,18 @@ import BasicTableLayout from "@/components/table/basic-table-layout";
 import BasicModel from "@/components/model/basic-model";
 import columns from "./config/columns";
 import fields from "./config/fields";
+import { DynamicForm } from "@/components/form/dynamic-form";
+import filterFields from "./config/filterFields";
+import ReportActions from "@/components/report/ReportActions";
 import { useLeaveApplication } from "@/domains/leave/leave-application/hook/useLeaveApplication";
 import { useForm } from "react-hook-form";
 import { useEffect } from "react";
+import { useState } from "react";
+import CollapsibleToggleButton from "@/components/ui/CollapsibleToggleButton";
 
 const LeaveApplicationPage = () => {
     const { actions, leaveState, skippedEmployeesModal } = useLeaveApplication();
+     const [filtersOpen, setFiltersOpen] = useState(false);
 
     console.log("Leave skipped data:", skippedEmployeesModal.data);
 
@@ -28,6 +34,31 @@ const LeaveApplicationPage = () => {
 
     return (
         <PageLayout>
+            {/* Filter Header */}
+                        <div className="mb-4 flex justify-between items-center">
+                            <CollapsibleToggleButton
+                                isOpen={filtersOpen}
+                                onToggle={() => setFiltersOpen((prev) => !prev)}
+                            />
+                        </div>
+            
+                        {/* Collapsible Filter Panel */}
+                        {filtersOpen && (
+                            <div className="bg-white p-6 rounded-md shadow mb-6 transition-all duration-300">
+                                <DynamicForm
+                                    form={leaveState.form}
+                                    fields={filterFields(leaveState.form)}
+                                    onSubmit={() => actions.onFilter}
+                                />
+                                <ReportActions
+                                    form={leaveState.form}
+                                    onAction={actions.onFilter}
+                                    onReset={actions.onReset}
+                                    showPdf={false}
+                                    showExcel={false}
+                                />
+                            </div>
+                        )}
             <BasicTableLayout
                 addPermission={"manual-attendance"} 
                 addButtonLabel={{

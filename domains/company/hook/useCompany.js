@@ -84,6 +84,7 @@ export const useCompany = () => {
                 email: data.contact_info?.email || "",
                 phone: data.contact_info?.phone || "",
                 fax: data.contact_info?.fax || "",
+                next_day_time: data.next_day_time || "",
 
                 website: data.contact_info?.website || "",
                 locale: data.locale,

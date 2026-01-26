@@ -47,16 +47,23 @@ export const employApi = createApi({
         }),
 
         // Fetch employees with filters/pagination
-            employFetch: builder.query({
-            query: ({ id } = {}) => ({
-                url: "hrm/employees",
-                method: "GET",
-                params: id
-                    ? { ...getFilterParams(), id , employeePageKey:true, include_inactive_employees: true}
-                    : { ...getFilterParams() , employeePageKey:true, include_inactive_employees: true},
-            }),
+        employFetch: builder.query({
+            query: ({ id, params } = {}) => {
+                const filterParams = {
+                    ...getFilterParams(),
+                    ...params,
+                    ...(id ? { id } : {}),
+                    employeePageKey: true,
+                    include_inactive_employees: true,
+                };
+
+                return {
+                    url: "hrm/employees",
+                    method: "GET",
+                    params: filterParams, // ✅ FIX
+                };
+            },
             providesTags: ["Employ"],
-            
         }),
 
 

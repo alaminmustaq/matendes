@@ -10,7 +10,7 @@ import { Button } from "@/components/ui/button";
 import ReportActions from "@/components/report/ReportActions";
 
 const AttendanceReportPage = () => {
-    const { actions, reportState } = useReport("hrm/attendance","attendance");
+    const { actions, reportState } = useReport("attendance-report/attendance-report","attendance-report");
     console.log(reportState);
     
     return (

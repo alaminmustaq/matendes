@@ -6,11 +6,16 @@ import BasicModel from "@/components/model/basic-model";
 import columns from "./config/columns";
 import fields from "./config/fields";
 import { useForm } from "react-hook-form";
-import { useEffect } from "react";
+import { DynamicForm } from "@/components/form/dynamic-form";
+import filterFields from "./config/filterFields";
+import ReportActions from "@/components/report/ReportActions";
+import {useEffect,useState } from "react";
+import CollapsibleToggleButton from "@/components/ui/CollapsibleToggleButton";
 import { useHolidayPosting } from "@/domains/holiday/holiday-posting/hook/useHolidayPosting";
 
 const HolidayPostingPage = () => {
     const { actions, holidayState, skippedEmployeesModal } = useHolidayPosting(); 
+     const [filtersOpen, setFiltersOpen] = useState(false);
     console.log(skippedEmployeesModal);
     
     const skippedForm = useForm({
@@ -26,6 +31,31 @@ const HolidayPostingPage = () => {
     
     return (
         <PageLayout>
+              {/* Filter Header */}
+                        <div className="mb-4 flex justify-between items-center">
+                            <CollapsibleToggleButton
+                                isOpen={filtersOpen}
+                                onToggle={() => setFiltersOpen((prev) => !prev)}
+                            />
+                        </div>
+            
+                        {/* Collapsible Filter Panel */}
+                        {filtersOpen && (
+                            <div className="bg-white p-6 rounded-md shadow mb-6 transition-all duration-300">
+                                <DynamicForm
+                                    form={holidayState.form}
+                                    fields={filterFields(holidayState.form)}
+                                    onSubmit={() => actions.onFilter}
+                                />
+                                <ReportActions
+                                    form={holidayState.form}
+                                    onAction={actions.onFilter}
+                                    onReset={actions.onReset}
+                                    showPdf={false}
+                                    showExcel={false}
+                                />
+                            </div>
+                        )}
             <BasicTableLayout
                 addPermission={"manual-attendance"} 
                 addButtonLabel={{

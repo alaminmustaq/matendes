@@ -8,8 +8,15 @@ import {
 } from "../services/departmentApi";
 import toast from "react-hot-toast";
 import { useForm } from "react-hook-form";
-import { formReset, normalizeSelectValues } from "@/utility/helpers";
+import { formReset, normalizeSelectValues, prepareFilterPayload, } from "@/utility/helpers";
 import { debounce } from "@/utility/helpers";
+import { useState } from "react";
+import {
+    useRouter,
+    usePathname,
+    useParams,
+    useSearchParams,
+} from "next/navigation";
 import {
     branchSearchTemplate,
     commonSearchTemplate,
@@ -21,10 +28,20 @@ import { useAppSelector } from "@/hooks/use-redux";
 import useAuth from "@/domains/auth/hooks/useAuth";
 
 export const useDepartment = () => {
+    const router = useRouter();
     const [departmentCreate] = useDepartmentCreateMutation();
     const [departmentUpdate] = useDepartmentUpdateMutation();
     const [departmentDelete] = useDepartmentDeleteMutation();
-    const { data: department, refetch, isFetching } = useDepartmentFetchQuery();
+     // For Filters
+    const [filters, setFilters] = useState({});
+    const pathname = usePathname();
+    const searchParams = useSearchParams();
+    const pageFromUrl = searchParams.get("page") || "1";
+    const queryParams = {
+        ...filters,
+        ...(pageFromUrl ? { page: pageFromUrl } : {}),
+    };
+    const { data: department, refetch, isFetching } = useDepartmentFetchQuery({ params: queryParams });
 
     const { user } = useAuth();
 
@@ -61,6 +78,41 @@ export const useDepartment = () => {
     };
 
     const actions = {
+          //  FILTER
+        onFilter: async () => {
+            const values = form.getValues();
+            const payload = prepareFilterPayload(values, searchParams);
+
+            setFilters(payload);
+
+            const params = new URLSearchParams({ page: "1" });
+
+            Object.entries(payload).forEach(([key, value]) => {
+                if (Array.isArray(value)) {
+                    value.forEach((v) => params.append(`${key}[]`, v));
+                } else {
+                    params.set(key, value);
+                }
+            });
+
+            router.push(`${pathname}`);
+            refetch();
+        },
+
+        //  RESET
+        onReset: async () => {
+            const resetValues = Object.fromEntries(
+                Object.entries(form.getValues()).map(([key, value]) => [
+                    key,
+                    Array.isArray(value) ? [] : "",
+                ]),
+            );
+
+            form.reset(resetValues);
+            setFilters({});
+            await form.trigger();
+            refetch();
+        },
         onCreate: async (data) => {
             try {
                 let { openModel, ...other } = data;
