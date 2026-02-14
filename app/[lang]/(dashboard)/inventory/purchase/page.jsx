@@ -15,56 +15,62 @@ import { useState } from "react";
 import CollapsibleToggleButton from "@/components/ui/CollapsibleToggleButton";
 
 const PurchasePage = () => {
-  const { actions, purchaseState } = usePurchase();
-   const [filtersOpen, setFiltersOpen] = useState(false);
+    const { actions, purchaseState } = usePurchase();
+    const [filtersOpen, setFiltersOpen] = useState(false);
 
-  return (
-    <PageLayout>
-       {/* Filter Header */}
-                              <div className="mb-4 flex justify-between items-center">
-                                  <CollapsibleToggleButton
-                                      isOpen={filtersOpen}
-                                      onToggle={() => setFiltersOpen((prev) => !prev)}
-                                  />
-                              </div>
-                  
-                              {/* Collapsible Filter Panel */}
-                              {filtersOpen && (
-                                  <div className="bg-white p-6 rounded-md shadow mb-6 transition-all duration-300">
-                                      <DynamicForm
-                                          form={purchaseState.form}
-                                          fields={filterFields(purchaseState.form)}
-                                          onSubmit={() => actions.onFilter}
-                                      />
-                                      <ReportActions
-                                          form={purchaseState.form}
-                                          onAction={actions.onFilter}
-                                          onReset={actions.onReset}
-                                          showPdf={false}
-                                          showExcel={false}
-                                      />
-                                  </div>
-                              )}
-      {/* Table */}
-      <BasicTableLayout
-        addPermission={"create-purchase"}
-        addButtonLabel="Add Purchase"
-        columns={columns(actions)}
-        state={purchaseState}
-      />
+    return (
+        <PageLayout>
+            {/* Filter Header */}
+            <div className="mb-4 flex justify-between items-center">
+                <CollapsibleToggleButton
+                    isOpen={filtersOpen}
+                    onToggle={() => setFiltersOpen((prev) => !prev)}
+                />
+            </div>
 
-      {/* Modal Form */}
-      <BasicModel
-        title={purchaseState?.form?.watch("id") ? "Edit Purchase" : "Create Purchase"}
-        submitLabel={purchaseState?.form?.watch("id") ? "Update" : "Create"}
-        cancelLabel="Cancel"
-        size="5xl" // wider modal for purchase details
-        form={purchaseState.form}
-        fields={fields}
-        actions={actions}
-      />
-    </PageLayout>
-  );
+            {/* Collapsible Filter Panel */}
+            {filtersOpen && (
+                <div className="bg-white p-6 rounded-md shadow mb-6 transition-all duration-300">
+                    <DynamicForm
+                        form={purchaseState.form}
+                        fields={filterFields(purchaseState.form)}
+                        onSubmit={() => actions.onFilter}
+                    />
+                    <ReportActions
+                        form={purchaseState.form}
+                        onAction={actions.onFilter}
+                        onReset={actions.onReset}
+                        showPdf={false}
+                        showExcel={false}
+                    />
+                </div>
+            )}
+            {/* Table */}
+            <BasicTableLayout
+                addPermission={"create-purchase"}
+                addButtonLabel="Add Purchase"
+                columns={columns(actions)}
+                state={purchaseState}
+            />
+
+            {/* Modal Form */}
+            <BasicModel
+                title={
+                    purchaseState?.form?.watch("id")
+                        ? "Edit Purchase"
+                        : "Create Purchase"
+                }
+                submitLabel={
+                    purchaseState?.form?.watch("id") ? "Update" : "Create"
+                }
+                cancelLabel="Cancel"
+                size="5xl" // wider modal for purchase details
+                form={purchaseState.form}
+                fields={fields}
+                actions={actions}
+            />
+        </PageLayout>
+    );
 };
 
 export default PurchasePage;

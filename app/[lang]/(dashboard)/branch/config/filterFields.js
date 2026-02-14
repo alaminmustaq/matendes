@@ -10,35 +10,30 @@ const filterFields= (form) => [
             "branches",
             "branchSearchTemplate",
         ],
-        colSpan: "col-span-12 md:col-span-6",
+        colSpan: "col-span-12 md:col-span-4",
     },
 
     // =============== Core Info ===============
-    {
-        name: "branch_id",
-        type: "async-select",
-        label: "Branch",
-        loadOptions: [
-            "organization/branches",
-            "branches",
-            "branchSearchTemplate",
-        ],
-        placeholder: "Select",
-        colSpan: "col-span-12 md:col-span-6",
-    },
-    {
-        name: "code",
-        type: "input",
-        label: "Branch Code *",
-        colSpan: "col-span-12 md:col-span-6",
-    },
+    // {
+    //     name: "branch_id",
+    //     type: "async-select",
+    //     label: "Branch",
+    //     loadOptions: [
+    //         "organization/branches",
+    //         "branches",
+    //         "branchSearchTemplate",
+    //     ],
+    //     placeholder: "Select",
+    //     colSpan: "col-span-12 md:col-span-6",
+    // },
+  
     
    
     {
         name: "status",
         type: "select",
         label: "Status ",
-        colSpan: "col-span-12 md:col-span-6",
+        colSpan: "col-span-12 md:col-span-4",
         options: [
             { label: "Active", value: "active" },
             { label: "Inactive", value: "inactive" },

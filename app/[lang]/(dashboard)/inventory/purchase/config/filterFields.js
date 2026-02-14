@@ -14,7 +14,7 @@ const  filterFields = (form) => [
     {
         name: "warehouse_id",
         type: "async-select",
-        label: "Warehouse *",
+        label: "Warehouse",
         loadOptions: [
             "inventory/warehouses",
             "warehouses",

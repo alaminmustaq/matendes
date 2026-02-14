@@ -20,7 +20,7 @@ export default function BasicModel({
     title,
     submitLabel,
     cancelLabel,
-    size,
+    size="5xl",
     children,
 }) {
     const translation_state = useSelector((state) => state.auth.translation);
@@ -43,7 +43,7 @@ export default function BasicModel({
             }}
         >
             <DialogContent
-                size="5xl"
+                size={size}
                 className="p-0 max-h-[85vh] flex flex-col overflow-hidden"
             >
                 {/* Header (fixed) */}

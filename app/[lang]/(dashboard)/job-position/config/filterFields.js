@@ -15,7 +15,7 @@ const filterFields = () => {
         {
             name: "branch_id",
             type: "async-select",
-            label: "Branch *",
+            label: "Branch",
             loadOptions: [
                 "organization/branches",
                 "branches",
@@ -58,25 +58,14 @@ const filterFields = () => {
         // },
 
         // ============= Core Info =============
-         {
-                    name: "job_position_id",
-                    type: "async-select",
-                    label: "Job Position",
-                    colSpan: "col-span-12 md:col-span-4",
-                    loadOptions: [
-                        "organization/job-positions",
-                        "job_positions",
-                        "jobPositionsTemplate",
-                        "department_id",
-                    ],
-                },
+     
       
         // ============= Classification =============
         {
         name: "employee_type_id",
         type: "async-select",
         label: "Employee Type",
-        colSpan: "col-span-12 md:col-span-3",
+        colSpan: "col-span-12 md:col-span-4",
         loadOptions: [
             "schedule/employee_type",
             "employee_types",

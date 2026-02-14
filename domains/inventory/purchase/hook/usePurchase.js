@@ -49,7 +49,7 @@ export const usePurchase = () => {
         data: purchasesData,
         refetch,
         isFetching,
-    } = useFetchPurchasesQuery();
+    } = useFetchPurchasesQuery({ params: queryParams });
 
     // ===== React Hook Form setup =====
     const form = useForm({

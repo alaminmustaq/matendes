@@ -1,14 +1,7 @@
 const filterFields = () => {
     return [
         // =============== Core ===============
-        {
-            name: "project_id",
-            type: "async-select",
-            label: "Project",
-            loadOptions: ["projects", "projects", "projectTemplate"],
-            placeholder: "Select Project",
-            colSpan: "col-span-12 md:col-span-3",
-        },
+       
         {
             name: "branch_id",
             type: "async-select",
