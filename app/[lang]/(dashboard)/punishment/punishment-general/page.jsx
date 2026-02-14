@@ -11,7 +11,7 @@ import filterFields from "./config/filterFields";
 import ReportActions from "@/components/report/ReportActions";
 import { useEffect, useState } from "react";
 import CollapsibleToggleButton from "@/components/ui/CollapsibleToggleButton";
-import { usePunishmentGeneral } from "@/domains/Punishment/punishment-general/hook/usePunishmentGeneral";
+import { usePunishmentGeneral } from "@/domains/punishment/punishment-general/hook/usePunishmentGeneral";
 
 const PunishmentGeneralPage = () => {
     const { actions, punishmentGeneralState, skippedEmployeesModal } =
