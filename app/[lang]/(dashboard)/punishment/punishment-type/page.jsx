@@ -44,7 +44,7 @@ const PunishmentTypesPage = () => {
                 </div>
             )}
             <BasicTableLayout
-                addPermission={"create-holiday-type"}
+                addPermission={"create-punishment-type"}
                 addButtonLabel="Add Punishment Types"
                 columns={columns(actions)}
                 state={punishmentState}

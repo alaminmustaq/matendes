@@ -63,32 +63,31 @@ const FieldRenderer = ({ fieldConfig, form }) => {
         visibility = true,
         addButtonLabel = "Add More",
         index = false,
-        getValue, 
+        getValue,
         defaultValue,
         rows,
         firstChildren,
-        lastChildren
-    } = fieldConfig; 
-    
+        lastChildren,
+    } = fieldConfig;
+
     const translation_state = useSelector((state) => state.auth.translation);
-    label = translate(label,translation_state);
-    placeholder = translate(placeholder,translation_state); 
-    
-
-
+    label = translate(label, translation_state);
+    placeholder = translate(placeholder, translation_state);
 
     const styles = {
         option: (provided, state) => ({
             ...provided,
             fontSize: "14px",
         }),
+        menuPortal: (base) => ({ ...base, zIndex: 9999 }),
+        menu: (base) => ({ ...base, zIndex: 9999 }),
     };
 
     // If visibility is false, don't render the field
     const isVisible =
-  typeof visibility === "function" ? visibility(index) : visibility;
+        typeof visibility === "function" ? visibility(index) : visibility;
 
-if (!isVisible) return null;
+    if (!isVisible) return null;
 
     // Support disabled as function (form, index, name) for per-row logic
     const resolvedDisabled =
@@ -123,9 +122,11 @@ if (!isVisible) return null;
                               field.onChange(finalValue);
                               if (handleChange) {
                                   handleChange(
-                                      finalValue === "" ? undefined : finalValue,
+                                      finalValue === ""
+                                          ? undefined
+                                          : finalValue,
                                       form,
-                                      index
+                                      index,
                                   );
                               }
                           }
@@ -146,7 +147,7 @@ if (!isVisible) return null;
                                     {...(inputProps || {})}
                                     className={cn(
                                         baseInputClass,
-                                        inputProps?.className
+                                        inputProps?.className,
                                     )}
                                 />
                             ) : type === "select" ? (
@@ -156,12 +157,14 @@ if (!isVisible) return null;
                                     value={options.find(
                                         (opt) =>
                                             opt[optionValue ?? "value"] ===
-                                            field.value
+                                            field.value,
                                     )}
                                     styles={styles}
                                     name="clear"
-                                    menuPlacement={menuPlacement} 
-                                    defaultValue={defaultValue ? defaultValue : []}
+                                    menuPlacement={menuPlacement}
+                                    defaultValue={
+                                        defaultValue ? defaultValue : []
+                                    }
                                     options={options || []}
                                     isDisabled={!!resolvedDisabled}
                                     getOptionLabel={getOptLabel}
@@ -170,7 +173,10 @@ if (!isVisible) return null;
                                     isClearable
                                     onChange={(selectedOption) => {
                                         const value = handleChange
-                                            ? handleChange(selectedOption,index)
+                                            ? handleChange(
+                                                  selectedOption,
+                                                  index,
+                                              )
                                             : selectedOption?.[
                                                   optionValue ?? "value"
                                               ];
@@ -178,7 +184,11 @@ if (!isVisible) return null;
 
                                         // If handleChange exists, also call it with form
                                         if (handleChange) {
-                                            handleChange(selectedOption,form,index);
+                                            handleChange(
+                                                selectedOption,
+                                                form,
+                                                index,
+                                            );
                                         }
                                     }}
                                 />
@@ -193,8 +203,8 @@ if (!isVisible) return null;
                                                   field.value.includes(
                                                       opt[
                                                           optionValue ?? "value"
-                                                      ]
-                                                  )
+                                                      ],
+                                                  ),
                                               )
                                             : []
                                     }
@@ -216,7 +226,7 @@ if (!isVisible) return null;
                                                   (opt) =>
                                                       opt[
                                                           optionValue ?? "value"
-                                                      ]
+                                                      ],
                                               )
                                             : [];
                                         const finalValue = handleChange
@@ -275,7 +285,7 @@ if (!isVisible) return null;
                                                 <a
                                                     href={
                                                         field.value.startsWith(
-                                                            "http"
+                                                            "http",
                                                         )
                                                             ? field.value
                                                             : `${window.location.origin}${field.value}`
@@ -362,17 +372,14 @@ if (!isVisible) return null;
                                 </div>
                             ) : type === "button" ? (
                                 <Button
-                                type="button"
-                                disabled={resolvedDisabled}
-                                onClick={(e) => {
-                                 
+                                    type="button"
+                                    disabled={resolvedDisabled}
+                                    onClick={(e) => {
                                         handleChange(e, form);
-                                    
-                                }}
-                                
-                            >
-                                {placeholder || label || "Button"}
-                            </Button>
+                                    }}
+                                >
+                                    {placeholder || label || "Button"}
+                                </Button>
                             ) : (
                                 <>
                                     <Input
@@ -380,12 +387,12 @@ if (!isVisible) return null;
                                             type === "password"
                                                 ? "password"
                                                 : type === "email"
-                                                ? "email"
-                                                : type === "date"
-                                                ? "date"
-                                                : type === "number"
-                                                ? "text" // text so backspace can clear; we coerce to number
-                                                : "text"
+                                                  ? "email"
+                                                  : type === "date"
+                                                    ? "date"
+                                                    : type === "number"
+                                                      ? "text" // text so backspace can clear; we coerce to number
+                                                      : "text"
                                         }
                                         placeholder={placeholder}
                                         disabled={resolvedDisabled}
@@ -396,24 +403,29 @@ if (!isVisible) return null;
                                         value={
                                             type === "number"
                                                 ? field.value === "" ||
-                                                    field.value == null
+                                                  field.value == null
                                                     ? ""
                                                     : String(field.value)
-                                                : field.value ?? ""
+                                                : (field.value ?? "")
                                         }
                                         onChange={
                                             numberOnChange ||
                                             ((e) => {
-                                                const val = e?.target?.value ?? "";
+                                                const val =
+                                                    e?.target?.value ?? "";
                                                 field.onChange(val);
                                                 if (handleChange) {
-                                                    handleChange(val, form, index);
+                                                    handleChange(
+                                                        val,
+                                                        form,
+                                                        index,
+                                                    );
                                                 }
                                             })
                                         }
                                         className={cn(
                                             baseInputClass,
-                                            inputProps?.className
+                                            inputProps?.className,
                                         )}
                                         inputMode={
                                             type === "number"
@@ -480,7 +492,10 @@ const GroupFormField = ({ fieldConfig, form, addButtonLabel }) => {
                 >
                     {childFields.map((childField) => {
                         const fieldName = `${name}.${index}.${childField.name}`;
-                        if (typeof childField.visibility === "function" && childField.visibility() === false) {
+                        if (
+                            typeof childField.visibility === "function" &&
+                            childField.visibility() === false
+                        ) {
                             return null;
                         }
                         if (childField.visibility === false) {
@@ -488,11 +503,10 @@ const GroupFormField = ({ fieldConfig, form, addButtonLabel }) => {
                         }
 
                         return (
-                            
                             <div
                                 key={childField.name}
                                 className={cn(
-                                    childField.colSpan || "col-span-12"
+                                    childField.colSpan || "col-span-12",
                                 )}
                             >
                                 <FieldRenderer

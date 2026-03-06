@@ -30,8 +30,8 @@ const punishmentTypeColumns = (actions) => [
         data={row.original}
         label="Actions"
         items={[
-          { label: "Edit", onClick: actions?.onEdit, permission: "edit-holiday-type" },
-          { label: "Delete", onClick: actions?.onDelete, danger: true, passId: true, permission: "delete-holiday-type" },
+          { label: "Edit", onClick: actions?.onEdit, permission: "edit-punishment-type" },
+          { label: "Delete", onClick: actions?.onDelete, danger: true, passId: true, permission: "delete-punishment-type" },
         ]}
       />
     ),

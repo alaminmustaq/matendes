@@ -12,7 +12,7 @@ const fields = (form, actions) => {
 
     // console.log(user?.employee?.id);
     // console.log(form.watch("amount_type"));
-    
+
     const currentUserType = form.watch("user_type");
 
     if (currentUserType !== "responsible") {
@@ -40,15 +40,17 @@ const fields = (form, actions) => {
     if (form.watch("model_for") === "delete_group_punishment") {
         preparedLoadOptions = [
             "punishment/punishment_general", // API URL
-            "items",                       // dataKey in response
-            (item) => {                     // data mapper
-                const employee = item.employee || {}; 
-                
+            "items", // dataKey in response
+            (item) => {
+                // data mapper
+                const employee = item.employee || {};
+
                 return {
                     id: item.id,
-                    employee_name: [employee.first_name || "", employee.last_name || ""]
-                        .join(" ")
-                        .trim() || "Unknown",
+                    employee_name:
+                        [employee.first_name || "", employee.last_name || ""]
+                            .join(" ")
+                            .trim() || "Unknown",
                     employee_code: employee.employee_code || "N/A",
                     amount: item.amount ?? 0,
                     status: item.status == 1 ? "active" : "inactive",
@@ -89,7 +91,8 @@ const fields = (form, actions) => {
                     employee.primary_phone ||
                     "",
                 amount: employee.punishment?.amount || "", // <-- match backend
-                status: employee.punishment?.status == 1 ? 'active':'inactive', // <-- match backend
+                status:
+                    employee.punishment?.status == 1 ? "active" : "inactive", // <-- match backend
             }),
 
             // filterFields - fields to use as filters from form
@@ -100,15 +103,15 @@ const fields = (form, actions) => {
                         ? "department_id"
                         : "project_id"
                 }`,
-                
+
                 "employee_type",
                 "job_position_id",
-                "allowance_type_id"
+                "allowance_type_id",
             ],
         ];
     }
 
-    return [ 
+    return [
         {
             name: "punishment_type_id",
             type: "async-select",
@@ -116,13 +119,13 @@ const fields = (form, actions) => {
             loadOptions: [
                 "punishment/punishment_type",
                 "punishment_types",
-                "leaveTypeSearchTemplate", 
+                "leaveTypeSearchTemplate",
             ],
             placeholder: "Select",
             colSpan: "col-span-12 md:col-span-4",
             disabled: isView,
             rules: { required: "Punishment type is required" },
-        }, 
+        },
         {
             name: "scope_type",
             type: "select",
@@ -241,7 +244,7 @@ const fields = (form, actions) => {
             type: "date",
             label: "Effective Date *",
             visibility: isEdit,
-            colSpan: "col-span-12 md:col-span-4", 
+            colSpan: "col-span-12 md:col-span-4",
             rules: { required: "Month is required" },
         },
         {
@@ -273,24 +276,23 @@ const fields = (form, actions) => {
                 { label: "Basic (%)", value: "basic" },
                 { label: "Gross (%)", value: "gross" },
             ],
-            handleChange: (e) => { 
-
+            handleChange: (e) => {
                 form.setValue(`amount_type`, e.value);
 
                 // 🧹 Clear opposite field
                 if (e.value === "fixed") {
-                form.setValue(`no_of_day`, null);
+                    form.setValue(`no_of_day`, null);
                 } else {
-                form.setValue(`amount`, null);
+                    form.setValue(`amount`, null);
                 }
             },
             rules: { required: "Amount type is required" },
-        }, 
+        },
         {
             name: "amount",
             type: "number",
             label: "Amount",
-            colSpan: "col-span-12 md:col-span-4", 
+            colSpan: "col-span-12 md:col-span-4",
             visibility: isEdit && form.watch(`amount_type`) == "fixed",
             disabled: isDelete,
             inputProps: { min: 0, step: "0.01", type: "number" },
@@ -300,11 +302,13 @@ const fields = (form, actions) => {
             name: "no_of_day",
             type: "number",
             label: "Number of days",
-            colSpan: "col-span-12 md:col-span-4",  
-            visibility: isEdit && form.watch(`amount_type`) == "basic" || form.watch(`amount_type`) == "gross",
+            colSpan: "col-span-12 md:col-span-4",
+            visibility:
+                (isEdit && form.watch(`amount_type`) == "basic") ||
+                form.watch(`amount_type`) == "gross",
             disabled: isDelete,
-            inputProps: { min: 0, step: "0.01",type:"number" }, 
-        },   
+            inputProps: { min: 0, step: "0.01", type: "number" },
+        },
         {
             name: "global_amount",
             type: "number",
@@ -312,7 +316,8 @@ const fields = (form, actions) => {
             visibility:
                 (form.watch("scope_type") === "company" ||
                     form.watch("scope_type") === "project") &&
-                !isEdit && !isDelete,
+                !isEdit &&
+                !isDelete,
             colSpan: "col-span-12 md:col-span-4",
             inputProps: { min: 0, step: "0.01", type: "number" },
             handleChange: (value, form) => {
@@ -330,39 +335,48 @@ const fields = (form, actions) => {
                 form.trigger("employee_details");
 
                 toast.success("Global amount applied to all employees");
-            }, 
-        }, 
+            },
+        },
         {
             name: "global_no_of_day",
             type: "number",
             label: "Global Number of days",
-            colSpan: "col-span-12 md:col-span-4",  
+            colSpan: "col-span-12 md:col-span-4",
             inputProps: { min: 0, step: "0.01", type: "number" },
             visibility:
                 (form.watch("scope_type") === "company" ||
                     form.watch("scope_type") === "project") &&
-                !isEdit && !isDelete,
+                !isEdit &&
+                !isDelete,
             handleChange: (value, form) => {
                 console.log("Global number of days applied:", value);
 
                 const employees = form.getValues("employee_details") || [];
 
                 employees.forEach((_, index) => {
-                    const type = form.getValues(`employee_details.${index}.amount_type`);
+                    const type = form.getValues(
+                        `employee_details.${index}.amount_type`,
+                    );
                     // Only update rows with basic or gross
                     if (type === "basic" || type === "gross") {
-                        form.setValue(`employee_details.${index}.no_of_day`, value, {
-                            shouldDirty: true,
-                        });
+                        form.setValue(
+                            `employee_details.${index}.no_of_day`,
+                            value,
+                            {
+                                shouldDirty: true,
+                            },
+                        );
                     }
                 });
 
                 // Re-trigger validation and re-render
                 form.trigger("employee_details");
 
-                toast.success("Global number of days applied to all relevant employees");
+                toast.success(
+                    "Global number of days applied to all relevant employees",
+                );
             },
-        }, 
+        },
         {
             name: "global_punishment_month",
             type: "month",
@@ -372,58 +386,72 @@ const fields = (form, actions) => {
             visibility:
                 (form.watch("scope_type") === "company" ||
                     form.watch("scope_type") === "project") &&
-                !isEdit && !isDelete,
+                !isEdit &&
+                !isDelete,
             handleChange: (value, form) => {
                 console.log("Global month applied:", value);
 
                 // Update the global month itself
-                form.setValue("global_punishment_month", value, { shouldDirty: true });
+                form.setValue("global_punishment_month", value, {
+                    shouldDirty: true,
+                });
 
                 // Get all employee rows
                 const employees = form.getValues("employee_details") || [];
 
                 // Update each employee's month
                 employees.forEach((_, index) => {
-                    form.setValue(`employee_details.${index}.punishment_month`, value, {
-                        shouldDirty: true,
-                    });
+                    form.setValue(
+                        `employee_details.${index}.punishment_month`,
+                        value,
+                        {
+                            shouldDirty: true,
+                        },
+                    );
                 });
 
                 // Trigger re-validation for employee_details
                 form.trigger("employee_details");
 
                 toast.success("Global month applied to all employees");
-            }, 
+            },
         },
         {
             name: "global_effective_date",
             type: "date",
             label: "Global Effective Date",
-            colSpan: "col-span-12 md:col-span-4", 
+            colSpan: "col-span-12 md:col-span-4",
             visibility:
                 (form.watch("scope_type") === "company" ||
                     form.watch("scope_type") === "project") &&
-                !isEdit && !isDelete,
-            handleChange: (value, form) => {  
+                !isEdit &&
+                !isDelete,
+            handleChange: (value, form) => {
                 // Update the global month itself
-                form.setValue("global_effective_date", value, { shouldDirty: true });
+                form.setValue("global_effective_date", value, {
+                    shouldDirty: true,
+                });
 
                 // Get all employee rows
                 const employees = form.getValues("employee_details") || [];
 
                 // Update each employee's month
                 employees.forEach((_, index) => {
-                    form.setValue(`employee_details.${index}.effective_date`, value, {
-                        shouldDirty: true,
-                    });
+                    form.setValue(
+                        `employee_details.${index}.effective_date`,
+                        value,
+                        {
+                            shouldDirty: true,
+                        },
+                    );
                 });
 
                 // Trigger re-validation for employee_details
                 form.trigger("employee_details");
 
                 toast.success("Global effective date applied to all employees");
-            }, 
-        }, 
+            },
+        },
 
         {
             name: "process_button",
@@ -456,7 +484,7 @@ const fields = (form, actions) => {
         {
             name: "employee_details",
             type: "group-form-paginated",
-            label: "Employee Details",
+            label: "Employee Details (Check to include employee in punishment)",
             colSpan: "col-span-12",
             addButtonLabel: false,
             isDelete: false,
@@ -479,14 +507,14 @@ const fields = (form, actions) => {
                     label: "Select",
                     colSpan: "col-span-12 md:col-span-1",
                     disabled: isView,
-                }, 
+                },
                 {
                     name: "employee_name",
                     type: "text",
                     label: "Employee Name",
                     colSpan: "col-span-12 md:col-span-2",
                     disabled: true,
-                },   
+                },
                 {
                     name: "punishment_month",
                     type: "month",
@@ -499,7 +527,7 @@ const fields = (form, actions) => {
                     name: "effective_date",
                     type: "date",
                     label: "Effective Date *",
-                    colSpan: "col-span-12 md:col-span-2", 
+                    colSpan: "col-span-12 md:col-span-2",
                     rules: { required: "Month is required" },
                 },
                 {
@@ -514,17 +542,16 @@ const fields = (form, actions) => {
                         { label: "Basic (%)", value: "basic" },
                         { label: "Gross (%)", value: "gross" },
                     ],
-                    handleChange: (e, forms, index) => { 
-                        
+                    handleChange: (e, forms, index) => {
                         const base = `employee_details.${index}`;
 
                         form.setValue(`${base}.amount_type`, e.value);
 
                         // 🧹 Clear opposite field
                         if (e.value === "fixed") {
-                        form.setValue(`${base}.no_of_day`, null);
+                            form.setValue(`${base}.no_of_day`, null);
                         } else {
-                        form.setValue(`${base}.amount`, null);
+                            form.setValue(`${base}.amount`, null);
                         }
                     },
                     rules: { required: "Amount type is required" },
@@ -534,21 +561,27 @@ const fields = (form, actions) => {
                     name: "amount",
                     type: "number",
                     label: "Amount",
-                    colSpan: "col-span-12 md:col-span-2", 
-                    visibility: (index) => form.watch(`employee_details.${index}.amount_type`) == "fixed",
+                    colSpan: "col-span-12 md:col-span-2",
+                    visibility: (index) =>
+                        form.watch(`employee_details.${index}.amount_type`) ==
+                        "fixed",
                     disabled: isDelete,
                     inputProps: { min: 0, step: "0.01", type: "number" },
                 },
- 
+
                 {
                     name: "no_of_day",
                     type: "number",
                     label: "Number of days",
-                    colSpan: "col-span-12 md:col-span-2",  
-                    visibility: (index) => form.watch(`employee_details.${index}.amount_type`) == "basic" || form.watch(`employee_details.${index}.amount_type`) == "gross",
+                    colSpan: "col-span-12 md:col-span-2",
+                    visibility: (index) =>
+                        form.watch(`employee_details.${index}.amount_type`) ==
+                            "basic" ||
+                        form.watch(`employee_details.${index}.amount_type`) ==
+                            "gross",
                     disabled: isDelete,
-                    inputProps: { min: 0, step: "0.01",type:"number" }, 
-                }, 
+                    inputProps: { min: 0, step: "0.01", type: "number" },
+                },
                 {
                     name: "status",
                     type: "select",
@@ -563,7 +596,7 @@ const fields = (form, actions) => {
                     rules: {
                         required: "Status is required",
                     },
-                }, 
+                },
                 {
                     name: "employee_id",
                     type: "text",
@@ -571,7 +604,7 @@ const fields = (form, actions) => {
                     colSpan: "col-span-12 md:col-span-6",
                     disabled: true,
                     visibility: false,
-                },  
+                },
             ],
         },
     ];

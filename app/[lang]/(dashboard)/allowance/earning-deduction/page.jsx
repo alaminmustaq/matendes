@@ -62,13 +62,13 @@ const EarningDeductionPage = () => {
                     EarningDeduction: {
                         label: "Add Earning / Deduction",
                         action: actions.onEarningDeduction,
-                        permission: "create-holiday",
+                        permission: "create-earning-deduction",
                         color: 'primary'
                     },
                     DeleteGroupApplication: {
                         label: "Delete Group Earning / Deduction",
                         action: actions.onDeleteGroupApplication,
-                        permission: "delete-group-holiday",
+                        permission: "delete-group-earning-deduction",
                         color: 'destructive'
                     },
                 }}

@@ -62,19 +62,19 @@ const AdvancePage = () => {
             )}
 
             <BasicTableLayout
-                addPermission={"manual-attendance"}
+                addPermission={"create-advance"}
                 addButtonLabel={{
                     Advance: {
                         label: "Add Advance",
                         action: actions.onOpenModal,
-                        permission: "manual-attendance",
-                        color: 'primary'
+                        permission: "create-advance",
+                        color: "primary",
                     },
                     DeleteGroup: {
                         label: "Bulk Delete",
                         action: actions.onOpenDeleteGroupModal,
-                        permission: "manual-attendance",
-                        color: 'destructive'
+                        permission: "delete-group-advance",
+                        color: "destructive",
                     },
                 }}
                 columns={advanceColumns(actions)}

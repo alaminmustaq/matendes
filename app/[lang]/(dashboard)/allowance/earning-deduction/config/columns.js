@@ -111,9 +111,9 @@ const leaveApplicationColumns = (actions) => [
           data={row.original}
           label="Actions"
           items={[
-            { label: "View", onClick: actions?.onView, permission: "view-holiday" },
-            { label: "Edit", onClick: actions?.onEdit, permission: "edit-holiday" },
-            { label: "Delete", onClick: actions?.onDelete, danger: true, passId: true, permission: "delete-holiday" },
+            { label: "View", onClick: actions?.onView, permission: "view-earning-deduction" },
+            { label: "Edit", onClick: actions?.onEdit, permission: "edit-earning-deduction" },
+            { label: "Delete", onClick: actions?.onDelete, danger: true, passId: true, permission: "delete-earning-deduction" },
           ]}
         />
       );

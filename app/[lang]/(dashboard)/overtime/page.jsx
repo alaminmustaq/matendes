@@ -50,7 +50,7 @@ const OvertimePage = () => {
                     Overtime: {
                         label: "Add Overtime",
                         action: actions.onOpenModal, 
-                        permission: "create-holiday", // Adjust permission
+                        permission: "create-overtime", // Adjust permission
                         color: 'primary'
                     },
                 }}

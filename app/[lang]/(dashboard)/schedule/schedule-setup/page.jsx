@@ -44,12 +44,12 @@ const ScheduleSetupPage = () => {
                 </div>
             )}
             <BasicTableLayout
-                addPermission={"manual-attendance"}
+                addPermission={"create-schedule"}
                 addButtonLabel={{
                     ScheduleSetup: {
                         label: "Add Schedule",
                         action: actions.onScheduleSetup,
-                        permission: "create-holiday",
+                        permission: "create-schedule",
                     },
                     DeleteGroupApplication: {
                         label: "Delete Group Schedule",

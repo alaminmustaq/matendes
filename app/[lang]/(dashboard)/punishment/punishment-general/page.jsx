@@ -57,23 +57,23 @@ const PunishmentGeneralPage = () => {
                 </div>
             )}
             <BasicTableLayout
-                addPermission={"manual-attendance"}
+                addPermission={"create-punishment"}
                 addButtonLabel={{
                     PunishmentGeneral: {
                         label: "Add Punishment",
                         action: actions.onPunishmentGeneral,
-                        permission: "create-holiday",
-                        color: 'primary'
+                        permission: "create-punishment",
+                        color: "primary",
                     },
                     DeleteGroupApplication: {
                         label: "Delete Group Punishment",
                         action: actions.onDeleteGroupApplication,
-                        permission: "delete-group-holiday",
-                        color: 'destructive'
+                        permission: "delete-group-punishment",
+                        color: "destructive",
                     },
                 }}
                 columns={columns(actions)}
-                state={punishmentGeneralState} 
+                state={punishmentGeneralState}
             />
 
             <BasicModel
@@ -177,7 +177,8 @@ const PunishmentGeneralPage = () => {
                                         </td>
 
                                         <td className="px-4 py-3 text-sm text-gray-600">
-                                            {employee.note || "Punishment Deduction skipped"}
+                                            {employee.note ||
+                                                "Punishment Deduction skipped"}
                                         </td>
                                     </tr>
                                 ),

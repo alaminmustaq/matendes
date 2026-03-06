@@ -7,41 +7,41 @@ import {
 
 const fields = (form, actions) => {
     const { user } = useAuth();
-    
+
     const isView = form.watch("mode") === "view";
     const isEdit = form.watch("mode") === "edit";
 
     // Prepare employee details load option
     const preparedLoadOptions = [
-            "hrm/employees", // URL
-            "employees", // dataKey in response
-            // dataMapper function
-            (employee) => ({
-                id: employee.id,
-                employee_id: employee.id,
-                employee_name:
-                    `${employee.personal_info?.first_name || ""} ${employee.personal_info?.last_name || ""}`.trim() ||
-                    employee.first_name ||
-                    "Unknown",
-                status: 'active', // Default status for new entries
-                amount_type: 'basic', // Default amount type
-            }),
+        "hrm/employees", // URL
+        "employees", // dataKey in response
+        // dataMapper function
+        (employee) => ({
+            id: employee.id,
+            employee_id: employee.id,
+            employee_name:
+                `${employee.personal_info?.first_name || ""} ${employee.personal_info?.last_name || ""}`.trim() ||
+                employee.first_name ||
+                "Unknown",
+            status: "active", // Default status for new entries
+            amount_type: "basic", // Default amount type
+        }),
 
-            // filterFields - fields to use as filters from form
-            [
-                "branch_id",
-                `${
-                    form.watch("scope_type") == "company"
-                        ? "department_id"
-                        : "project_id"
-                }`,
-                
-                "employee_type",
-                "job_position_id",
-            ],
-        ];
+        // filterFields - fields to use as filters from form
+        [
+            "branch_id",
+            `${
+                form.watch("scope_type") == "company"
+                    ? "department_id"
+                    : "project_id"
+            }`,
 
-    return [ 
+            "employee_type",
+            "job_position_id",
+        ],
+    ];
+
+    return [
         {
             name: "scope_type",
             type: "select",
@@ -53,21 +53,21 @@ const fields = (form, actions) => {
                 { label: "Project wise", value: "project" },
             ],
             handleChange: (e) => {
-                if (isView) return; 
+                if (isView) return;
                 form.setValue("scope_type", e.value);
-                
+
                 // Clear filters
                 form.setValue("employee_ids", null);
                 form.setValue("project_id", null);
                 form.setValue("department_id", null);
-                
+
                 // Set employee_type for backend filtering
                 if (e.value === "company") {
                     form.setValue("employee_type", "company");
                 } else if (e.value === "project") {
                     form.setValue("employee_type", "project");
                 }
-                
+
                 // Set default branch for current user
                 form.setValue(
                     "branch_id",
@@ -126,7 +126,7 @@ const fields = (form, actions) => {
             disabled: isView,
             rules: { required: "Project is required" },
         },
-        
+
         // Single Edit Mode Fields
         {
             name: "amount",
@@ -159,16 +159,17 @@ const fields = (form, actions) => {
                 { label: "Active", value: "active" },
                 { label: "Inactive", value: "inactive" },
             ],
-        }, 
-        
+        },
+
         // Global Fields for Create Mode (Bulk)
         {
             name: "global_amount",
             type: "number",
             label: "Global Amount (Per Hour)",
-            colSpan: "col-span-12 md:col-span-4",  
+            colSpan: "col-span-12 md:col-span-4",
             inputProps: { min: 0, step: "0.01", type: "number" },
-            visibility: (form.watch("scope_type") === "company" ||
+            visibility:
+                (form.watch("scope_type") === "company" ||
                     form.watch("scope_type") === "project") &&
                 !isEdit,
             handleChange: (value) => {
@@ -181,32 +182,37 @@ const fields = (form, actions) => {
                 form.trigger("employee_details");
                 toast.success("Global amount applied to all employees");
             },
-        }, 
+        },
         {
             name: "global_amount_type",
             type: "select",
             label: "Global Amount Type",
-            colSpan: "col-span-12 md:col-span-4",  
+            colSpan: "col-span-12 md:col-span-4",
             options: [
                 { label: "Fixed", value: "fixed" },
                 { label: "Basic", value: "basic" },
             ],
-            visibility: (form.watch("scope_type") === "company" ||
+            visibility:
+                (form.watch("scope_type") === "company" ||
                     form.watch("scope_type") === "project") &&
                 !isEdit,
             handleChange: (e) => {
                 const value = e?.value;
-                if(!value) return;
+                if (!value) return;
                 const employees = form.getValues("employee_details") || [];
                 employees.forEach((_, index) => {
-                    form.setValue(`employee_details.${index}.amount_type`, value, {
-                        shouldDirty: true,
-                    });
+                    form.setValue(
+                        `employee_details.${index}.amount_type`,
+                        value,
+                        {
+                            shouldDirty: true,
+                        },
+                    );
                 });
                 form.trigger("employee_details");
                 toast.success("Global amount type applied to all employees");
             },
-        }, 
+        },
 
         {
             name: "process_button",
@@ -214,15 +220,21 @@ const fields = (form, actions) => {
             placeholder: "Load Employees",
             colSpan: "col-span-12 md:col-span-4",
             disabled: isView,
-            visibility: (form.watch("scope_type") === "company" ||
+            visibility:
+                (form.watch("scope_type") === "company" ||
                     form.watch("scope_type") === "project") &&
                 !isEdit,
             handleChange: (e, form) => {
                 setTimeout(() => {
-                    if (form._paginatedLoaders && form._paginatedLoaders.employee_details) {
+                    if (
+                        form._paginatedLoaders &&
+                        form._paginatedLoaders.employee_details
+                    ) {
                         form._paginatedLoaders.employee_details();
                     } else {
-                        console.warn("Paginated loader not found for employee_details");
+                        console.warn(
+                            "Paginated loader not found for employee_details",
+                        );
                     }
                 }, 100);
             },
@@ -232,7 +244,7 @@ const fields = (form, actions) => {
         {
             name: "employee_details",
             type: "group-form-paginated",
-            label: "Employee Details",
+            label: "Employee Details (Check to exclude employee from overtime)",
             colSpan: "col-span-12",
             addButtonLabel: false,
             isDelete: false,
@@ -243,7 +255,8 @@ const fields = (form, actions) => {
             enableSearch: true,
             searchPlaceholder: "Search employees...",
 
-            visibility: (form.watch("scope_type") === "company" ||
+            visibility:
+                (form.watch("scope_type") === "company" ||
                     form.watch("scope_type") === "project") &&
                 !isEdit,
             loadOptions: preparedLoadOptions,
@@ -254,14 +267,14 @@ const fields = (form, actions) => {
                     label: "Select",
                     colSpan: "col-span-12 md:col-span-1",
                     disabled: isView,
-                }, 
+                },
                 {
                     name: "employee_name",
                     type: "text",
                     label: "Employee Name",
                     colSpan: "col-span-12 md:col-span-3",
                     disabled: true,
-                },   
+                },
                 {
                     name: "amount",
                     type: "number",
@@ -298,7 +311,7 @@ const fields = (form, actions) => {
                     colSpan: "col-span-12 md:col-span-6",
                     disabled: true,
                     visibility: false,
-                },  
+                },
             ],
         },
     ];

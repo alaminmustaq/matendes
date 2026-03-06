@@ -32,22 +32,25 @@ const fields = (form, actions) => {
 
     const isView = form.watch("mode") === "view"; // 🔑 detect view mode
     const isEdit = form.watch("mode") === "edit"; // 🔑 detect view mode
-    const isDelete = form.watch("model_for") === "delete_group_earning_deduction"; // 🔑 detect view mode
+    const isDelete =
+        form.watch("model_for") === "delete_group_earning_deduction"; // 🔑 detect view mode
 
     // Prepare employee details load option
     let preparedLoadOptions = [];
     if (form.watch("model_for") === "delete_group_earning_deduction") {
         preparedLoadOptions = [
             "allowance/earning_deduction", // API URL
-            "items",                       // dataKey in response
-            (item) => {                     // data mapper
-                const employee = item.employee || {}; 
-                
+            "items", // dataKey in response
+            (item) => {
+                // data mapper
+                const employee = item.employee || {};
+
                 return {
                     id: item.id,
-                    employee_name: [employee.first_name || "", employee.last_name || ""]
-                        .join(" ")
-                        .trim() || "Unknown",
+                    employee_name:
+                        [employee.first_name || "", employee.last_name || ""]
+                            .join(" ")
+                            .trim() || "Unknown",
                     employee_code: employee.employee_code || "N/A",
                     amount: item.amount ?? 0,
                     status: item.status == 1 ? "active" : "inactive",
@@ -88,7 +91,10 @@ const fields = (form, actions) => {
                     employee.primary_phone ||
                     "",
                 amount: employee.earning_deduction?.amount || "", // <-- match backend
-                status: employee.earning_deduction?.status == 1 ? 'active':'inactive', // <-- match backend
+                status:
+                    employee.earning_deduction?.status == 1
+                        ? "active"
+                        : "inactive", // <-- match backend
             }),
 
             // filterFields - fields to use as filters from form
@@ -99,10 +105,10 @@ const fields = (form, actions) => {
                         ? "department_id"
                         : "project_id"
                 }`,
-                
+
                 "employee_type",
                 "job_position_id",
-                "allowance_type_id"
+                "allowance_type_id",
             ],
         ];
     }
@@ -121,7 +127,7 @@ const fields = (form, actions) => {
             rules: {
                 required: "Type is required",
             },
-        }, 
+        },
         {
             name: "allowance_type_id",
             type: "async-select",
@@ -130,13 +136,13 @@ const fields = (form, actions) => {
                 "allowance/allowance_type",
                 "allowance_types",
                 "leaveTypeSearchTemplate",
-                "type"
+                "type",
             ],
             placeholder: "Select",
             colSpan: "col-span-12 md:col-span-4",
             disabled: isView,
             rules: { required: "Allowance type is required" },
-        }, 
+        },
         {
             name: "scope_type",
             type: "select",
@@ -250,7 +256,7 @@ const fields = (form, actions) => {
                 "organization/job-positions",
                 "job_positions",
                 "jobPositionsTemplate",
-                ["branch_id","project_id","department_id"],
+                ["branch_id", "project_id", "department_id"],
             ],
         },
         // {
@@ -270,9 +276,9 @@ const fields = (form, actions) => {
             type: "number",
             label: "Amount",
             visibility: isEdit,
-            colSpan: "col-span-12 md:col-span-3",  
-            inputProps: { min: 0, step: "0.01",type:"number" }, 
-        }, 
+            colSpan: "col-span-12 md:col-span-3",
+            inputProps: { min: 0, step: "0.01", type: "number" },
+        },
         {
             name: "status",
             type: "select",
@@ -287,7 +293,7 @@ const fields = (form, actions) => {
             rules: {
                 required: "Status is required",
             },
-        }, 
+        },
         {
             name: "global_amount",
             type: "number",
@@ -295,7 +301,8 @@ const fields = (form, actions) => {
             visibility:
                 (form.watch("scope_type") === "company" ||
                     form.watch("scope_type") === "project") &&
-                !isEdit && !isDelete,
+                !isEdit &&
+                !isDelete,
             colSpan: "col-span-12 md:col-span-3",
             inputProps: { min: 0, step: "0.01", type: "number" },
             handleChange: (value, form) => {
@@ -342,13 +349,13 @@ const fields = (form, actions) => {
                     }
                 }, 100);
             },
-        }, 
+        },
 
         // ===== Dynamic Employee Details with Pagination =====
         {
             name: "employee_details",
             type: "group-form-paginated",
-            label: "Employee Details",
+            label: "Employee Details (Check to include employee in earning deduction)",
             colSpan: "col-span-12",
             addButtonLabel: false,
             isDelete: false,
@@ -378,15 +385,15 @@ const fields = (form, actions) => {
                     label: "Employee Name",
                     colSpan: "col-span-12 md:col-span-4",
                     disabled: true,
-                },  
+                },
                 {
                     name: "amount",
                     type: "number",
                     label: "Amount",
-                    colSpan: "col-span-12 md:col-span-3",  
+                    colSpan: "col-span-12 md:col-span-3",
                     disabled: isDelete,
-                    inputProps: { min: 0, step: "0.01",type:"number" }, 
-                }, 
+                    inputProps: { min: 0, step: "0.01", type: "number" },
+                },
                 {
                     name: "status",
                     type: "select",
@@ -401,7 +408,7 @@ const fields = (form, actions) => {
                     rules: {
                         required: "Status is required",
                     },
-                }, 
+                },
                 {
                     name: "employee_id",
                     type: "text",
@@ -409,7 +416,7 @@ const fields = (form, actions) => {
                     colSpan: "col-span-12 md:col-span-6",
                     disabled: true,
                     visibility: false,
-                },  
+                },
             ],
         },
     ];

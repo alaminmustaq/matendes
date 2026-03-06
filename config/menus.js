@@ -35,7 +35,7 @@ import {
     CalendarClock,
     CalendarSearch,
     CalendarPlus,
-    Landmark, 
+    Landmark,
     Coins,
     Gavel,
     Gift,
@@ -105,7 +105,7 @@ export const menusConfig = {
                     title: "View Attendance",
                     href: "/attendance/view-attendance",
                     icon: UserCircle,
-                    permission: "view-attendance",
+                    permission: "manual-attendance",
                 },
                 {
                     title: "Manual Attendance",
@@ -245,7 +245,6 @@ export const menusConfig = {
                     icon: UserCircle,
                     permission: "view-holiday-type",
                 },
-              
             ],
         },
         {
@@ -257,13 +256,13 @@ export const menusConfig = {
                     href: "/punishment/punishment-type",
                     icon: UserCircle,
                     permission: "view-holiday-type",
-                }, 
+                },
                 {
                     title: "General Punishment",
                     href: "/punishment/punishment-general",
                     icon: UserCircle,
                     permission: "view-holiday-type",
-                }, 
+                },
             ],
         },
         {
@@ -613,7 +612,7 @@ export const menusConfig = {
                         title: "View Attendance",
                         href: "/attendance/view-attendance",
                         icon: UserCircle,
-                        permission: "view-attendance",
+                        permission: "manual-attendance",
                     },
                     {
                         title: "Manual Attendance",
@@ -753,7 +752,6 @@ export const menusConfig = {
                         icon: UserCircle,
                         permission: "view-holiday-type",
                     },
-                   
                 ],
             },
             {
@@ -765,13 +763,13 @@ export const menusConfig = {
                         href: "/punishment/punishment-type",
                         icon: UserCircle,
                         permission: "view-holiday-type",
-                    }, 
+                    },
                     {
                         title: "General Punishment",
                         href: "/punishment/punishment-general",
                         icon: UserCircle,
                         permission: "view-holiday-type",
-                    }, 
+                    },
                 ],
             },
             {
@@ -1111,7 +1109,7 @@ export const menusConfig = {
                         title: "View Attendance",
                         href: "/attendance/view-attendance",
                         icon: UserCircle,
-                        permission: "view-attendance",
+                        permission: "manual-attendance",
                     },
                     {
                         title: "Manual Attendance",
@@ -1248,7 +1246,7 @@ export const menusConfig = {
                         permission: "view-holiday-type",
                     },
                 ],
-            }, 
+            },
             {
                 title: "Bonus",
                 icon: Gift,
@@ -1286,15 +1284,15 @@ export const menusConfig = {
                         href: "/punishment/punishment-type",
                         icon: UserCircle,
                         permission: "view-holiday-type",
-                    }, 
+                    },
                     {
                         title: "General Punishment",
                         href: "/punishment/punishment-general",
                         icon: UserCircle,
                         permission: "view-holiday-type",
-                    }, 
+                    },
                 ],
-            }, 
+            },
             {
                 title: "Contact Person",
                 icon: UserSquare,

@@ -7,7 +7,7 @@ import {
 
 const fields = (form, actions) => {
     const { user } = useAuth();
-    
+
     const isView = form.watch("mode") === "view";
     const isEdit = form.watch("mode") === "edit";
     const isDelete = form.watch("model_for") === "delete_group_advance";
@@ -18,16 +18,26 @@ const fields = (form, actions) => {
             "hrm/advance",
             "items",
             (item) => {
-                const employee = item.employee || {}; 
+                const employee = item.employee || {};
                 return {
                     id: item.id,
-                    employee_name: [employee.first_name || "", employee.last_name || ""].join(" ").trim() || "Unknown",
+                    employee_name:
+                        [employee.first_name || "", employee.last_name || ""]
+                            .join(" ")
+                            .trim() || "Unknown",
                     employee_code: employee.employee_code || "N/A",
                     amount: item.amount ?? 0,
                     status: item.status,
                 };
             },
-            ["project_id", "branch_id", "department_id", "scope_type", "status", "model_for"],
+            [
+                "project_id",
+                "branch_id",
+                "department_id",
+                "scope_type",
+                "status",
+                "model_for",
+            ],
         ];
     } else {
         preparedLoadOptions = [
@@ -35,20 +45,36 @@ const fields = (form, actions) => {
             "employees",
             (employee) => ({
                 id: employee.id,
-                employee_name: employee.personal_info?.full_name || `${employee.personal_info?.first_name || ""} ${employee.personal_info?.last_name || ""}`.trim() || employee.first_name || "Unknown",
-                employee_email: employee.contact_info?.work_email || employee.work_email || "",
-                employee_phone: employee.contact_info?.primary_phone || employee.primary_phone || "",
+                employee_name:
+                    employee.personal_info?.full_name ||
+                    `${employee.personal_info?.first_name || ""} ${employee.personal_info?.last_name || ""}`.trim() ||
+                    employee.first_name ||
+                    "Unknown",
+                employee_email:
+                    employee.contact_info?.work_email ||
+                    employee.work_email ||
+                    "",
+                employee_phone:
+                    employee.contact_info?.primary_phone ||
+                    employee.primary_phone ||
+                    "",
                 amount: "",
                 status: "active",
                 month: "",
                 year: new Date().getFullYear().toString(),
-                advance_date: new Date().toISOString().split('T')[0],
+                advance_date: new Date().toISOString().split("T")[0],
             }),
-            ["branch_id", form.watch("scope_type") === "company" ? "department_id" : "project_id", "employee_type"],
+            [
+                "branch_id",
+                form.watch("scope_type") === "company"
+                    ? "department_id"
+                    : "project_id",
+                "employee_type",
+            ],
         ];
     }
 
-    return [ 
+    return [
         {
             name: "scope_type",
             type: "select",
@@ -62,8 +88,20 @@ const fields = (form, actions) => {
             handleChange: (e) => {
                 if (isView || isEdit) return;
                 form.setValue("scope_type", e.value);
-                form.setValue("branch_id", branchSearchTemplate(user?.employee?.branch ? [user?.employee?.branch] : [])?.at(0) ?? null);
-                form.setValue("department_id", departmentSearchTemplate(user?.employee?.department ? [user?.employee?.department] : [])?.at(0) ?? null);
+                form.setValue(
+                    "branch_id",
+                    branchSearchTemplate(
+                        user?.employee?.branch ? [user?.employee?.branch] : [],
+                    )?.at(0) ?? null,
+                );
+                form.setValue(
+                    "department_id",
+                    departmentSearchTemplate(
+                        user?.employee?.department
+                            ? [user?.employee?.department]
+                            : [],
+                    )?.at(0) ?? null,
+                );
                 form.setValue("employee_ids", null);
                 form.setValue("project_id", null);
                 form.setValue("employee_type", e.value);
@@ -74,7 +112,11 @@ const fields = (form, actions) => {
             name: "branch_id",
             type: "async-select",
             label: "Branch *",
-            loadOptions: ["organization/branches", "branches", "branchSearchTemplate"],
+            loadOptions: [
+                "organization/branches",
+                "branches",
+                "branchSearchTemplate",
+            ],
             placeholder: "Select",
             colSpan: "col-span-12 md:col-span-4",
             disabled: isView || isEdit,
@@ -85,7 +127,12 @@ const fields = (form, actions) => {
             type: "async-select",
             label: "Department",
             visibility: form.watch("scope_type") === "company",
-            loadOptions: ["organization/departments", "departments", "departmentSearchTemplate", ["branch_id"]],
+            loadOptions: [
+                "organization/departments",
+                "departments",
+                "departmentSearchTemplate",
+                ["branch_id"],
+            ],
             placeholder: "Optional",
             colSpan: "col-span-12 md:col-span-4",
             disabled: isView || isEdit,
@@ -95,7 +142,12 @@ const fields = (form, actions) => {
             type: "async-select",
             label: "Project *",
             visibility: form.watch("scope_type") === "project",
-            loadOptions: ["projects", "projects", "projectTemplate", ["branch_id", "scope_type"]],
+            loadOptions: [
+                "projects",
+                "projects",
+                "projectTemplate",
+                ["branch_id", "scope_type"],
+            ],
             placeholder: "Select",
             colSpan: "col-span-12 md:col-span-4",
             disabled: isView || isEdit,
@@ -107,7 +159,7 @@ const fields = (form, actions) => {
             type: "date",
             label: "Advance Date *",
             visibility: isEdit,
-            colSpan: "col-span-12 md:col-span-4", 
+            colSpan: "col-span-12 md:col-span-4",
             rules: { required: "Date is required" },
         },
         {
@@ -178,7 +230,12 @@ const fields = (form, actions) => {
             colSpan: "col-span-12 md:col-span-3",
             handleChange: (value) => {
                 const employees = form.getValues("employee_details") || [];
-                employees.forEach((_, index) => form.setValue(`employee_details.${index}.advance_date`, value));
+                employees.forEach((_, index) =>
+                    form.setValue(
+                        `employee_details.${index}.advance_date`,
+                        value,
+                    ),
+                );
                 toast.success("Global date applied");
             },
         },
@@ -204,7 +261,12 @@ const fields = (form, actions) => {
             ],
             handleChange: (value) => {
                 const employees = form.getValues("employee_details") || [];
-                employees.forEach((_, index) => form.setValue(`employee_details.${index}.month`, value.value));
+                employees.forEach((_, index) =>
+                    form.setValue(
+                        `employee_details.${index}.month`,
+                        value.value,
+                    ),
+                );
                 toast.success("Global month applied");
             },
         },
@@ -216,7 +278,9 @@ const fields = (form, actions) => {
             colSpan: "col-span-12 md:col-span-3",
             handleChange: (value) => {
                 const employees = form.getValues("employee_details") || [];
-                employees.forEach((_, index) => form.setValue(`employee_details.${index}.year`, value));
+                employees.forEach((_, index) =>
+                    form.setValue(`employee_details.${index}.year`, value),
+                );
                 toast.success("Global year applied");
             },
         },
@@ -229,7 +293,9 @@ const fields = (form, actions) => {
             inputProps: { min: 0, step: "0.01", type: "number" },
             handleChange: (value) => {
                 const employees = form.getValues("employee_details") || [];
-                employees.forEach((_, index) => form.setValue(`employee_details.${index}.amount`, value));
+                employees.forEach((_, index) =>
+                    form.setValue(`employee_details.${index}.amount`, value),
+                );
                 toast.success("Global amount applied");
             },
         },
@@ -250,7 +316,7 @@ const fields = (form, actions) => {
         {
             name: "employee_details",
             type: "group-form-paginated",
-            label: "Employee Details",
+            label: "Employee Details (Check to include employee in advance)",
             colSpan: "col-span-12",
             addButtonLabel: false,
             isDelete: false,
@@ -265,14 +331,14 @@ const fields = (form, actions) => {
                     type: "checkbox",
                     label: "Select",
                     colSpan: "col-span-12 md:col-span-1",
-                }, 
+                },
                 {
                     name: "employee_name",
                     type: "text",
                     label: "Employee",
                     colSpan: "col-span-12 md:col-span-2",
                     disabled: true,
-                },   
+                },
                 {
                     name: "advance_date",
                     type: "date",
@@ -287,10 +353,18 @@ const fields = (form, actions) => {
                     colSpan: "col-span-12 md:col-span-2",
                     disabled: isDelete,
                     options: [
-                        { label: "Jan", value: "01" }, { label: "Feb", value: "02" }, { label: "Mar", value: "03" },
-                        { label: "Apr", value: "04" }, { label: "May", value: "05" }, { label: "Jun", value: "06" },
-                        { label: "Jul", value: "07" }, { label: "Aug", value: "08" }, { label: "Sep", value: "09" },
-                        { label: "Oct", value: "10" }, { label: "Nov", value: "11" }, { label: "Dec", value: "12" },
+                        { label: "Jan", value: "01" },
+                        { label: "Feb", value: "02" },
+                        { label: "Mar", value: "03" },
+                        { label: "Apr", value: "04" },
+                        { label: "May", value: "05" },
+                        { label: "Jun", value: "06" },
+                        { label: "Jul", value: "07" },
+                        { label: "Aug", value: "08" },
+                        { label: "Sep", value: "09" },
+                        { label: "Oct", value: "10" },
+                        { label: "Nov", value: "11" },
+                        { label: "Dec", value: "12" },
                     ],
                 },
                 {

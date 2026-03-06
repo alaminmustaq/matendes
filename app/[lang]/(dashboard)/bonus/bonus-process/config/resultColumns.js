@@ -19,7 +19,10 @@ const resultColumns = (actions) => [
     {
         accessorKey: "bonus_setup",
         header: "Bonus Name",
-        cell: ({ row }) => row.original.bonus_setup?.bonus_name ?? row.original.bonus_setup?.bonus_type?.name ?? "—",
+        cell: ({ row }) =>
+            row.original.bonus_setup?.bonus_name ??
+            row.original.bonus_setup?.bonus_type?.name ??
+            "—",
     },
     {
         accessorKey: "start_date",
@@ -43,14 +46,16 @@ const resultColumns = (actions) => [
         header: "Basic Salary",
         thClass: "!text-right",
         tdClass: "!text-right",
-        cell: ({ row }) => Number(row.original.basic_salary ?? 0).toLocaleString(),
+        cell: ({ row }) =>
+            Number(row.original.basic_salary ?? 0).toLocaleString(),
     },
     {
         accessorKey: "bonus_amount",
         header: "Bonus Amount",
         thClass: "!text-right",
         tdClass: "!text-right",
-        cell: ({ row }) => Number(row.original.bonus_amount ?? 0).toLocaleString(),
+        cell: ({ row }) =>
+            Number(row.original.bonus_amount ?? 0).toLocaleString(),
     },
     {
         accessorKey: "created_at",
@@ -85,7 +90,7 @@ const resultColumns = (actions) => [
                         onClick: actions?.onDelete,
                         danger: true,
                         passId: true,
-                        permission: "delete-holiday-type",
+                        permission: "delete-bonus-setup",
                     },
                 ]}
             />
