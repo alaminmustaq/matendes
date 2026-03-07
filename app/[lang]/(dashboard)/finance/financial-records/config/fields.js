@@ -36,16 +36,6 @@ export default function fields(defaultForm) {
                 return e?.value;
             },
         },
-
-        {
-            name: "project_id",
-            type: "async-select",
-            label: "Project",
-            loadOptions: ["/projects", "projects", "projectTemplate"],
-            placeholder: "Select project",
-            colSpan: "col-span-12 md:col-span-4",
-        },
-
         {
             name: "branch_id",
             type: "async-select",
@@ -56,6 +46,19 @@ export default function fields(defaultForm) {
                 "branchSearchTemplate",
             ],
             placeholder: "Branch",
+            colSpan: "col-span-12 md:col-span-4",
+        },
+        {
+            name: "project_id",
+            type: "async-select",
+            label: "Project",
+            loadOptions: [
+                "/projects",
+                "projects",
+                "projectTemplate",
+                "branch_id",
+            ],
+            placeholder: "Select project",
             colSpan: "col-span-12 md:col-span-4",
         },
 

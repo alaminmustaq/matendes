@@ -33,7 +33,7 @@ const RulesPage = () => {
                     form={generalForm}
                     fields={fields()}
                     onSubmit={onSubmit}
-                    submitLabel={null}  
+                    submitLabel={null}
                 />
 
                 <div className="mt-6 flex justify-end">
@@ -60,7 +60,9 @@ const RulesPage = () => {
                 <div className="mt-6 flex justify-end">
                     <button
                         type="button"
-                        onClick={punishmentForm.handleSubmit(onPunishmentSubmit)}
+                        onClick={punishmentForm.handleSubmit(
+                            onPunishmentSubmit,
+                        )}
                         className="bg-primary text-white px-5 py-2 rounded-md"
                     >
                         Save Punishment Rules

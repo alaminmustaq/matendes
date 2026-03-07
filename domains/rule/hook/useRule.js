@@ -19,7 +19,7 @@ export const useRule = () => {
 
     // 🔹 Populate General Rules
     useEffect(() => {
-        if (data?.data?.general) {
+        if (data?.data?.general && Object.keys(data.data.general).length > 0) {
             generalForm.reset(data.data.general);
         }
     }, [data]);
