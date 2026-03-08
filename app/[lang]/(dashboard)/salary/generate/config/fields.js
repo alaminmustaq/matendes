@@ -1,9 +1,8 @@
 import { useAppSelector } from "@/hooks/use-redux";
 
-const fields = (form,actions) => {
-    const { user } = useAppSelector((state) => state.auth); 
+const fields = (form, actions) => {
+    const { user } = useAppSelector((state) => state.auth);
 
-    
     return [
         // =============== Salary Generation Scope ===============
         {
@@ -29,15 +28,19 @@ const fields = (form,actions) => {
             name: "branch_id",
             type: "async-select",
             label: "Branch *",
-            visibility: form.watch("scope_type") === "company" || form.watch("scope_type") === "project",
+            visibility:
+                form.watch("scope_type") === "company" ||
+                form.watch("scope_type") === "project",
             loadOptions: [
                 "organization/branches",
                 "branches",
                 "branchSearchTemplate",
-
             ],
             placeholder: "Select",
-            firstChildren: user?.employee ? [] : [{label: "All Branch",value:"all-branch"}],
+            firstChildren:
+                user?.employee || form.watch("scope_type") === "project"
+                    ? []
+                    : [{ label: "All Branch", value: "all-branch" }],
             colSpan: "col-span-12 md:col-span-6",
             rules: { required: "Branch is required" },
         },
@@ -74,10 +77,9 @@ const fields = (form,actions) => {
                         return "Project is required for project wise salary generation";
                     }
                     return true;
-                }
+                },
             },
         },
-     
 
         // =============== Salary Details ===============
         {
@@ -88,7 +90,7 @@ const fields = (form,actions) => {
             inputProps: { type: "month" }, // controlled by RHF
             rules: { required: "Salary month is required" },
         },
-     
+
         // =============== Status ===============
         // {
         //     name: "status",
