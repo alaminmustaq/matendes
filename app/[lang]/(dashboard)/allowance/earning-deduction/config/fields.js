@@ -355,7 +355,7 @@ const fields = (form, actions) => {
         {
             name: "employee_details",
             type: "group-form-paginated",
-            label: "Employee Details (Check to include employee in earning deduction)",
+            label: `Employee Details (Check to ${isDelete ? "exclude" : "include"} employee in earning deduction)`,
             colSpan: "col-span-12",
             addButtonLabel: false,
             isDelete: false,

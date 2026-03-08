@@ -44,7 +44,11 @@ const fields = (form) => [
             ["bonus_type_id"],
         ],
         rules: { required: "Bonus name is required" },
-        disabled: (form) => !(form?.watch?.("bonus_type_id")?.value ?? form?.watch?.("bonus_type_id")),
+        disabled: (form) =>
+            !(
+                form?.watch?.("bonus_type_id")?.value ??
+                form?.watch?.("bonus_type_id")
+            ),
     },
     {
         name: "salary_type",
@@ -54,7 +58,7 @@ const fields = (form) => [
         colSpan: "col-span-12 md:col-span-4",
         options: [
             { label: "Basic", value: "basic" },
-            { label: "Gross", value: "gross" },
+            // { label: "Gross", value: "gross" },
         ],
         rules: { required: "Salary type is required" },
     },
