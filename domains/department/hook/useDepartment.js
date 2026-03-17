@@ -8,7 +8,11 @@ import {
 } from "../services/departmentApi";
 import toast from "react-hot-toast";
 import { useForm } from "react-hook-form";
-import { formReset, normalizeSelectValues, prepareFilterPayload, } from "@/utility/helpers";
+import {
+    formReset,
+    normalizeSelectValues,
+    prepareFilterPayload,
+} from "@/utility/helpers";
 import { debounce } from "@/utility/helpers";
 import { useState } from "react";
 import {
@@ -29,10 +33,13 @@ import useAuth from "@/domains/auth/hooks/useAuth";
 
 export const useDepartment = () => {
     const router = useRouter();
-    const [departmentCreate] = useDepartmentCreateMutation();
-    const [departmentUpdate] = useDepartmentUpdateMutation();
-    const [departmentDelete] = useDepartmentDeleteMutation();
-     // For Filters
+    const [departmentCreate, { isLoading: isCreating }] =
+        useDepartmentCreateMutation();
+    const [departmentUpdate, { isLoading: isUpdating }] =
+        useDepartmentUpdateMutation();
+    const [departmentDelete, { isLoading: isDeleting }] =
+        useDepartmentDeleteMutation();
+    // For Filters
     const [filters, setFilters] = useState({});
     const pathname = usePathname();
     const searchParams = useSearchParams();
@@ -41,7 +48,11 @@ export const useDepartment = () => {
         ...filters,
         ...(pageFromUrl ? { page: pageFromUrl } : {}),
     };
-    const { data: department, refetch, isFetching } = useDepartmentFetchQuery({ params: queryParams });
+    const {
+        data: department,
+        refetch,
+        isFetching,
+    } = useDepartmentFetchQuery({ params: queryParams });
 
     const { user } = useAuth();
 
@@ -49,12 +60,12 @@ export const useDepartment = () => {
         mode: "onBlur",
         reValidateMode: "onSubmit",
         shouldFocusError: true,
-    }); 
+    });
 
     const defaultValue = {
         branch_id:
             branchSearchTemplate(
-                user?.employee?.branch ? [user?.employee?.branch] : []
+                user?.employee?.branch ? [user?.employee?.branch] : [],
             )?.at(0) ?? null,
 
         type: "department",
@@ -63,7 +74,7 @@ export const useDepartment = () => {
 
     const { data: departmentSearchResult } = useDepartmentSearchQuery(
         { search: form.watch("search") },
-        { skip: !form.watch("search") } // skip query if empty
+        { skip: !form.watch("search") }, // skip query if empty
     );
 
     const departmentState = {
@@ -75,10 +86,11 @@ export const useDepartment = () => {
         refetch,
         pagination: department?.data?.pagination || {},
         isFetching,
+        isMutating: isCreating || isUpdating || isDeleting,
     };
 
     const actions = {
-          //  FILTER
+        //  FILTER
         onFilter: async () => {
             const values = form.getValues();
             const payload = prepareFilterPayload(values, searchParams);
@@ -141,11 +153,11 @@ export const useDepartment = () => {
                 id: data.id || "",
                 branch_id:
                     branchSearchTemplate(data?.branch ? [data.branch] : [])?.at(
-                        0
+                        0,
                     ) ?? null,
                 parent_department_id:
                     commonSearchTemplate(
-                        data?.parent_department ? [data.parent_department] : []
+                        data?.parent_department ? [data.parent_department] : [],
                     )?.at(0) ?? null,
 
                 // Core
@@ -159,7 +171,7 @@ export const useDepartment = () => {
                 // Hierarchy
 
                 is_main_department: Boolean(
-                    data?.hierarchy_info?.is_main_department
+                    data?.hierarchy_info?.is_main_department,
                 ),
                 sort_order: data.sort_order ?? 0,
 
@@ -235,7 +247,9 @@ export const useDepartment = () => {
         },
         onDelete: async (id) => {
             try {
-                if (confirm("Are you sure you want to delete this Department?")) {
+                if (
+                    confirm("Are you sure you want to delete this Department?")
+                ) {
                     const response = await departmentDelete({ id });
 
                     if (response?.data?.success) {
@@ -245,7 +259,7 @@ export const useDepartment = () => {
                         toast.error(response?.error?.data?.errors?.message);
                     } else {
                         toast.error(
-                            "Failed to delete department. Please try again."
+                            "Failed to delete department. Please try again.",
                         );
                     }
                 }
@@ -256,7 +270,7 @@ export const useDepartment = () => {
                     toast.error(error.response.data.message);
                 } else {
                     toast.error(
-                        "Something went wrong while deleting department."
+                        "Something went wrong while deleting department.",
                     );
                 }
             }

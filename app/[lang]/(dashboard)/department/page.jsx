@@ -63,6 +63,7 @@ const departmentPage = () => {
                     form={departmentState.form}
                     fields={fields}
                     actions={actions}
+                    isLoading={departmentState.isMutating}
                 />
             </PageLayout>
         </>

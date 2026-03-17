@@ -28,9 +28,9 @@ import {
 
 export const useBranch = () => {
     const router = useRouter();
-    const [branchCreate] = useBranchCreateMutation();
-    const [branchUpdate] = useBranchUpdateMutation();
-    const [branchDelete] = useBranchDeleteMutation();
+    const [branchCreate, { isLoading: isCreating }] = useBranchCreateMutation();
+    const [branchUpdate, { isLoading: isUpdating }] = useBranchUpdateMutation();
+    const [branchDelete, { isLoading: isDeleting }] = useBranchDeleteMutation();
     // For Filters
     const [filters, setFilters] = useState({});
     const pathname = usePathname();
@@ -74,6 +74,7 @@ export const useBranch = () => {
         refetch,
         pagination: branch?.data?.pagination || {},
         isFetching,
+        isMutating: isCreating || isUpdating || isDeleting,
     };
 
     const actions = {
