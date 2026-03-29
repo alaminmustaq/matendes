@@ -45,7 +45,7 @@ const JobListPage = () => {
             )}
 
             <BasicTableLayout
-                addPermission={"create-job-list"}
+                addPermission={"view-project"}
                 addButtonLabel="Add Job"
                 columns={columns(actions)}
                 state={jobListState}
@@ -53,9 +53,7 @@ const JobListPage = () => {
 
             <BasicModel
                 title={
-                    jobListState?.form?.watch("id")
-                        ? "Edit Job"
-                        : "Create Job"
+                    jobListState?.form?.watch("id") ? "Edit Job" : "Create Job"
                 }
                 submitLabel={
                     jobListState?.form?.watch("id") ? "Update" : "Create"

@@ -52,26 +52,26 @@ const jobListColumns = (actions) => [
                     {
                         label: "Edit",
                         onClick: actions?.onEdit,
-                        permission: "edit-job-list",
+                        permission: "view-project",
                     },
                     {
                         label: "View Details",
                         onClick: actions?.onViewJobDetails,
                         passId: true,
-                        permission: "edit-job-list",
+                        permission: "view-project",
                     },
                     {
                         label: "Copy Link",
                         onClick: actions?.onCopyLink,
                         passId: true,
-                        permission: "edit-job-list",
+                        permission: "view-project",
                     },
                     {
                         label: "Delete",
                         onClick: actions?.onDelete,
                         danger: true,
                         passId: true,
-                        permission: "delete-job-list",
+                        permission: "view-project",
                     },
                 ]}
             />
