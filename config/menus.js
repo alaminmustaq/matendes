@@ -377,6 +377,24 @@ export const menusConfig = {
             ],
         },
         {
+            title: "Recruitment",
+            icon: Briefcase,
+            child: [
+                {
+                    title: "Job list",
+                    href: "/recruitment/job-list",
+                    icon: ClipboardList,
+                    permission: "view-project",
+                },
+                {
+                    title: "Applicant list",
+                    href: "/recruitment/applicants",
+                    icon: Users,
+                    permission: "view-project",
+                },
+            ],
+        },
+        {
             title: "Document",
             icon: FileCheck,
             child: [
@@ -877,6 +895,24 @@ export const menusConfig = {
                         title: "Project List",
                         href: "/project",
                         icon: ClipboardList, // represents task/project listing
+                        permission: "view-project",
+                    },
+                ],
+            },
+            {
+                title: "Recruitment",
+                icon: Briefcase,
+                child: [
+                    {
+                        title: "Job list",
+                        href: "/recruitment/job-list",
+                        icon: ClipboardList,
+                        permission: "view-project",
+                    },
+                    {
+                        title: "Applicant list",
+                        href: "/recruitment/applicants",
+                        icon: Users,
                         permission: "view-project",
                     },
                 ],
@@ -1400,6 +1436,24 @@ export const menusConfig = {
                         title: "Project list",
                         href: "/project",
                         icon: ClipboardList,
+                        permission: "view-project",
+                    },
+                ],
+            },
+            {
+                title: "Recruitment",
+                icon: Briefcase,
+                child: [
+                    {
+                        title: "Job list",
+                        href: "/recruitment/job-list",
+                        icon: ClipboardList,
+                        permission: "view-project",
+                    },
+                    {
+                        title: "Applicant list",
+                        href: "/recruitment/applicants",
+                        icon: Users,
                         permission: "view-project",
                     },
                 ],

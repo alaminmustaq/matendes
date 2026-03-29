@@ -3,7 +3,7 @@ import { match } from "@formatjs/intl-localematcher";
 import Negotiator from "negotiator";
 
 let defaultLocale = "en";
-let locales = ["bn", "en", "ar","pt"];
+let locales = ["bn", "en", "ar", "pt"];
 
 // Protected routes that require authentication
 const protectedRoutes = [
@@ -17,7 +17,7 @@ const protectedRoutes = [
     "/users",
     "/roles",
     "/permissions",
-    "/attendance", 
+    "/attendance",
     "/attendance/view-attendance",
     "/attendance/manual-attendance",
     "/generate-qr",
@@ -40,7 +40,7 @@ const protectedRoutes = [
     "/document/documents",
     "/role",
     "/language",
-    "/activity"
+    "/activity",
 ];
 // Public routes that should redirect to dashboard if authenticated
 const authRoutes = ["/login", "/register", "/forgot-password"];
@@ -81,7 +81,7 @@ export function middleware(request) {
     // Check if there is any supported locale in the pathname
     const pathnameIsMissingLocale = locales.every(
         (locale) =>
-            !pathname.startsWith(`/${locale}/`) && pathname !== `/${locale}`
+            !pathname.startsWith(`/${locale}/`) && pathname !== `/${locale}`,
     );
 
     // Handle missing locale
@@ -91,18 +91,18 @@ export function middleware(request) {
 
         // Check if it's a protected route
         const isProtectedRoute = protectedRoutes.some((route) =>
-            pathWithoutLocale.startsWith(route)
+            pathWithoutLocale.startsWith(route),
         );
 
         // Check if it's an auth route (login, register, etc.)
         const isAuthRoute = authRoutes.some((route) =>
-            pathWithoutLocale.startsWith(route)
+            pathWithoutLocale.startsWith(route),
         );
 
         // If user has token and tries to access auth routes, redirect to dashboard
         if (hasToken && (isAuthRoute || pathWithoutLocale === "/")) {
             return NextResponse.redirect(
-                new URL(`/${locale}/dashboard`, request.url)
+                new URL(`/${locale}/dashboard`, request.url),
             );
         }
 
@@ -113,7 +113,7 @@ export function middleware(request) {
 
         // Normal locale redirection
         return NextResponse.redirect(
-            new URL(`/${locale}${pathname}`, request.url)
+            new URL(`/${locale}${pathname}`, request.url),
         );
     }
 
@@ -122,17 +122,17 @@ export function middleware(request) {
     const locale = pathname.split("/")[1];
 
     const isProtectedRoute = protectedRoutes.some((route) =>
-        pathWithoutLocale.startsWith(route)
+        pathWithoutLocale.startsWith(route),
     );
 
     const isAuthRoute = authRoutes.some((route) =>
-        pathWithoutLocale.startsWith(route)
+        pathWithoutLocale.startsWith(route),
     );
 
     // If user has token and tries to access auth routes, redirect to dashboard
     if (hasToken && (isAuthRoute || pathWithoutLocale === "/")) {
         return NextResponse.redirect(
-            new URL(`/${locale}/dashboard`, request.url)
+            new URL(`/${locale}/dashboard`, request.url),
         );
     }
 
@@ -150,6 +150,5 @@ export const config = {
         //"/((?!api|assets|.*\\..*|_next).*)",
         "/((?!api|assets|docs|.*\\..*|_next).*)",
         // Optional: only run on root (/) URL
-        
     ],
 };

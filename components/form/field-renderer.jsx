@@ -22,6 +22,11 @@ import DynamicAsyncSelect from "./dynamic-async-select";
 import GroupFormPaginatedField from "./group-form-paginated";
 import { translate } from "@/lib/utils";
 import Select from "react-select";
+import dynamic from "next/dynamic";
+const RichTextEditor = dynamic(
+    () => import("@/components/ui/RichTextEditor"),
+    { ssr: false },
+);
 import { useSelector } from "react-redux";
 /**
  * FieldConfig (JS docs):
@@ -365,6 +370,13 @@ const FieldRenderer = ({ fieldConfig, form }) => {
                                     fieldConfig={fieldConfig}
                                     form={form}
                                     addButtonLabel={addButtonLabel}
+                                />
+                            ) : type === "rich-text" ? (
+                                <RichTextEditor
+                                    value={field.value || ""}
+                                    onChange={(html) => field.onChange(html)}
+                                    placeholder={placeholder}
+                                    disabled={resolvedDisabled}
                                 />
                             ) : type === "text-display" ? (
                                 <div>

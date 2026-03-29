@@ -19,20 +19,19 @@ import { useState } from "react";
 import { useEffect } from "react";
 import { useSelector } from "react-redux";
 import { translate } from "@/lib/utils";
-import { useRouter,useParams } from "next/navigation";
+import { useRouter, useParams } from "next/navigation";
 
 const NotificationMessage = () => {
-    const router = useRouter(); 
+    const router = useRouter();
     const params = useParams();
     const lang = params?.lang || "en";
     const handleClick = () => {
         router.push(`/${lang}/all-notification`);
     };
 
-    const { notificationData,user } = useAppSelector((state) => state.auth);
+    const { notificationData, user } = useAppSelector((state) => state.auth);
 
     console.log(user?.user?.roles[0]?.level);
-    
 
     const translation_state = useSelector((state) => state.auth.translation);
     const count = notificationData?.count;
@@ -57,25 +56,20 @@ const NotificationMessage = () => {
           data-[state=open]:bg-default-100  dark:data-[state=open]:bg-default-200 
            hover:text-primary text-default-500 dark:text-default-800  rounded-full  "
                 >
-                    <Bell className="h-5 w-5 " />
-
-                    {/*  Show badge only if count > 0 */}
-                    {counts > 0 && (
-                        <Badge
-                            className="w-4 h-4 p-0 text-xs font-medium items-center justify-center 
-              absolute left-[calc(100%-18px)] bottom-[calc(100%-16px)] 
-              ring-2 ring-primary-foreground"
-                        >
-                            {counts}
-                        </Badge>
-                    )}
+                    <span className="relative flex items-center justify-center">
+                        <Bell className="h-5 w-5 " />
+                        {counts > 0 && (
+                            <Badge className="w-4 h-4 p-0 text-xs font-medium items-center justify-center absolute -top-2 -right-2 ring-2 ring-primary-foreground">
+                                {counts}
+                            </Badge>
+                        )}
+                    </span>
                 </Button>
             </DropdownMenuTrigger>
             <DropdownMenuContent
                 align="end"
                 className=" z-999 mx-4 lg:w-[412px] p-0"
             >
-                
                 <DropdownMenuLabel
                     style={{ backgroundImage: `url(${shortImage.src})` }}
                     className="w-full h-full bg-cover bg-no-repeat p-4 flex items-center"
@@ -83,13 +77,14 @@ const NotificationMessage = () => {
                     <span className="text-base font-semibold text-white flex-1">
                         {translate("Notification", translation_state)}
                     </span>
-                    {!(user?.user?.roles[0]?.level == 0 || user?.user?.roles[0]?.level == 1) ? <span
-                        onClick={() => actions.markAllAsRead(setCount)}
-                        className="text-xs font-medium text-white cursor-pointer hover:underline hover:decoration-default-100 dark:decoration-default-900"
-                    >
-                        Mark all as read
-                    </span>:''}
-                    
+                    {notifications?.length > 0 && (
+                        <span
+                            onClick={() => actions.markAllAsRead(setCount)}
+                            className="text-xs font-medium text-white cursor-pointer hover:underline hover:decoration-default-100 dark:decoration-default-900"
+                        >
+                            Mark all as read
+                        </span>
+                    )}
                 </DropdownMenuLabel>
                 <div className="h-[300px] xl:h-[350px]">
                     <ScrollArea className="h-full">
@@ -145,10 +140,14 @@ const NotificationMessage = () => {
 
                 <DropdownMenuSeparator />
                 <div className="m-4 mt-5">
-                <Button asChild type="text" className="w-full" onClick={handleClick}>
-                    <p>View All</p>
-                </Button>
-        </div>
+                    <Button
+                        type="button"
+                        className="w-full font-medium"
+                        onClick={handleClick}
+                    >
+                        View All
+                    </Button>
+                </div>
             </DropdownMenuContent>
         </DropdownMenu>
     );
