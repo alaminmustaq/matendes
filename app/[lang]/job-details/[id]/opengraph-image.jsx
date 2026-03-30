@@ -25,7 +25,7 @@ export default async function Image({ params }) {
         const res = await fetch(url, { cache: 'no-store' })
         if (res.ok) {
             const json = await res.json()
-            job = json?.data ?? null
+            job = json?.data?.job_list ?? json?.data ?? json
         }
     } catch {
         // fallback

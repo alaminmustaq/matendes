@@ -21,24 +21,25 @@ export async function generateMetadata({ params }) {
         const res = await fetch(url, { cache: 'no-store' })
         if (res.ok) {
             const json = await res.json()
-            job = json?.data ?? null
+            job = json?.data?.job_list ?? json?.data ?? json
         }
     } catch {
         // fall through to defaults
     }
 
-    const jobTitle = job?.job_title ?? 'Job Opening'
-    const company = job?.company?.name ?? ''
+    const jobTitle = job?.job_title ?? 'Open Position'
+    const company = job?.company?.name ?? 'Matendes HRM'
     const jobType = job?.job_type ?? ''
     const location = job?.location ?? ''
     const description = job?.short_description
-        ?? `${jobType ? jobType + ' · ' : ''}${location ? location + ' · ' : ''}We are hiring! Apply now.`
+        ?? `${jobType ? jobType + ' · ' : ''}${location ? location + ' · ' : ''}Join our team! Apply now.`
 
-    const appUrl = process.env.NEXT_PUBLIC_APP_URL || 'http://localhost:3000'
-    const ogImageUrl = `${appUrl}/en/job-details/${id}/opengraph-image`
+    const lang = params?.lang || 'en'
+    const appUrl = process.env.NEXT_PUBLIC_APP_URL || 'https://matendes-hrm.vercel.app'
+    const ogImageUrl = `${appUrl}/${lang}/job-details/${id}/opengraph-image`
 
     return {
-        title: company ? `${jobTitle} — ${company}` : jobTitle,
+        title: company ? `${jobTitle} | ${company}` : jobTitle,
         description,
         openGraph: {
             title: company ? `${jobTitle} — ${company}` : jobTitle,
