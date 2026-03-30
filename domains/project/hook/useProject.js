@@ -25,11 +25,10 @@ import {
 import toast from "react-hot-toast";
 import { useForm } from "react-hook-form";
 import { useFieldArray } from "react-hook-form";
-import { useRef } from "react";
+import { useRef, useState, useEffect } from "react";
 import { useAppDispatch } from "@/hooks/use-redux";
 // import { useParams } from "next/navigation";
 import useAuth from "@/domains/auth/hooks/useAuth";
-import { useState } from "react";
 import {
     useRouter,
     usePathname,
@@ -60,23 +59,24 @@ export const useProject = () => {
         data: project,
         refetch,
         isFetching,
+        isSuccess,
     } = useProjectFetchQuery(
         id
             ? {
                   id,
-                  params: queryParams, // <-- send your queryParams here
+                  params: queryParams,
               }
-            : { params: queryParams }, // if id is not present, still send params {
+            : { params: queryParams },
         {
             refetchOnMountOrArgChange: true,
-            selectFromResult: (result) => {
-                if (result?.data) {
-                    dispatch(setProjectData(result?.data?.data));
-                }
-                return result;
-            },
         },
     );
+
+    useEffect(() => {
+        if (isSuccess && project?.data) {
+            dispatch(setProjectData(project.data.data));
+        }
+    }, [isSuccess, project?.data, dispatch]);
 
     //Lazy query
     const [triggerGetProject] = useLazyProjectFetchQuery();

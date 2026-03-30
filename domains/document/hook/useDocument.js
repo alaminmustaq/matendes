@@ -25,7 +25,7 @@ import {
 import { setDocumentData } from "../model/documentSlice";
 // import { useParams } from "next/navigation";
 import useAuth from "@/domains/auth/hooks/useAuth";
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import {
     useRouter,
     usePathname,
@@ -59,24 +59,24 @@ export const useDocument = () => {
         data: documentResponse,
         refetch,
         isFetching,
+        isSuccess,
     } = useFetchDocumentsQuery(
         id
             ? {
                   id,
-                  params: queryParams, // <-- send your queryParams here
+                  params: queryParams,
               }
             : { params: queryParams },
         {
             refetchOnMountOrArgChange: true,
-            selectFromResult: (result) => {
-                if (result?.data) {
-                    dispatch(setDocumentData(result?.data?.data));
-                }
-
-                return result;
-            },
         },
     );
+
+    useEffect(() => {
+        if (isSuccess && documentResponse?.data) {
+            dispatch(setDocumentData(documentResponse.data.data));
+        }
+    }, [isSuccess, documentResponse?.data, dispatch]);
 
     const { user } = useAuth();
 
