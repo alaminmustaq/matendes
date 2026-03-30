@@ -47,12 +47,22 @@ const authRoutes = ["/login", "/register", "/forgot-password"];
 
 // Get the preferred locale, similar to above or using a library
 function getLocale(request) {
-    const acceptedLanguage =
-        request.headers.get("accept-language") ?? undefined;
-    let headers = { "accept-language": acceptedLanguage };
-    let languages = new Negotiator({ headers }).languages();
+    try {
+        const acceptedLanguage = request.headers.get("accept-language");
+        if (!acceptedLanguage) return defaultLocale;
 
-    return match(languages, locales, defaultLocale); // -> 'en-US'
+        let headers = { "accept-language": acceptedLanguage };
+        let languages = new Negotiator({ headers }).languages();
+
+        if (!languages || languages.length === 0 || (languages.length === 1 && languages[0] === '*')) {
+          return defaultLocale;
+        }
+
+        return match(languages, locales, defaultLocale);
+    } catch (e) {
+        console.error("Error in getLocale:", e);
+        return defaultLocale;
+    }
 }
 
 // Check if user has token in cookies
