@@ -56,7 +56,8 @@ const PublicJobDetailsPage = () => {
                 });
 
                 if (!res.ok) {
-                    setErrorMsg(`Failed to load job details: ${res.status}`);
+                    const errorJson = await res.json().catch(() => ({}));
+                    setErrorMsg(errorJson.message || `Failed to load job details: ${res.status}`);
                 } else {
                     const json = await res.json();
                     // Handle wrapped data from Laravel controller
@@ -144,7 +145,7 @@ const PublicJobDetailsPage = () => {
                     className="error-card"
                 >
                     <Info className="error-icon" />
-                    <h2>Something went wrong</h2>
+                    <h2>{errorMsg?.toLowerCase().includes('unavailable') ? 'Job Unavailable' : 'Something went wrong'}</h2>
                     <p>{errorMsg || "Job details not found."}</p>
                     <button
                         onClick={() => window.location.reload()}

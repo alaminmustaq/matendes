@@ -4,7 +4,14 @@ const filterFields = () => [
         label: "Job Title",
         type: "input",
         placeholder: "Filter by job title",
-        colSpan: "col-span-12 md:col-span-6",
+        colSpan: "col-span-12 md:col-span-4",
+    },
+    {
+        name: "address",
+        label: "Address",
+        type: "input",
+        placeholder: "Filter by address",
+        colSpan: "col-span-12 md:col-span-4",
     },
     {
         name: "status",
@@ -17,7 +24,7 @@ const filterFields = () => [
             { value: "rejected", label: "Rejected" },
             { value: "interview", label: "Interview" },
         ],
-        colSpan: "col-span-12 md:col-span-6",
+        colSpan: "col-span-12 md:col-span-4",
     },
 ];
 

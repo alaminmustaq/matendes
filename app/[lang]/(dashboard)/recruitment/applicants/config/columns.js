@@ -10,7 +10,7 @@ import {
     DropdownMenuSeparator,
     DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
-import { MoreHorizontal, Eye, Download, Calendar } from "lucide-react";
+import { MoreHorizontal, Eye, Download, Calendar, MapPin } from "lucide-react";
 import { useState } from "react";
 import {
     Dialog,
@@ -156,6 +156,18 @@ const columns = (actions) => [
         ),
     },
     {
+        accessorKey: "address",
+        header: "Address",
+        cell: ({ row }) => (
+            <div className="flex items-center gap-2 min-w-[120px]">
+                <MapPin size={14} className="text-slate-400 shrink-0" />
+                <span className="text-xs text-slate-600 line-clamp-2">
+                    {row.original.address || "N/A"}
+                </span>
+            </div>
+        ),
+    },
+    {
         accessorKey: "cv_path",
         header: "CV",
         cell: ({ row }) => {
@@ -182,24 +194,40 @@ const columns = (actions) => [
         header: "Status",
         cell: ({ row }) => {
             const status = row.getValue("status");
-            const colors = {
-                applied: "default",
-                confirmed: "success",
-                rejected: "destructive",
-                interview: "info",
+            const statusStyles = {
+                applied: {
+                    bg: "bg-slate-50 text-slate-700 border-slate-200",
+                    dot: "bg-slate-400"
+                },
+                confirmed: {
+                    bg: "bg-emerald-50 text-emerald-700 border-emerald-200",
+                    dot: "bg-emerald-500"
+                },
+                rejected: {
+                    bg: "bg-rose-50 text-rose-700 border-rose-200",
+                    dot: "bg-rose-500"
+                },
+                interview: {
+                    bg: "bg-amber-50 text-amber-700 border-amber-200",
+                    dot: "bg-amber-500"
+                },
             };
+            
+            const currentStyle = statusStyles[status] || statusStyles.applied;
+            
             return (
-                <div className="flex flex-col gap-1">
+                <div className="flex flex-col gap-1.5">
                     <Badge
-                        variant={colors[status] || "default"}
-                        className="capitalize w-fit"
+                        variant="outline"
+                        className={`capitalize w-fit px-2 py-0.5 font-semibold text-[11px] flex items-center gap-1.5 border-opacity-60 shadow-sm ${currentStyle.bg}`}
                     >
+                        <span className={`w-1.5 h-1.5 rounded-full ${currentStyle.dot} animate-pulse`} />
                         {status}
                     </Badge>
                     {status === "interview" && row.original.interview_date && (
-                        <div className="text-[10px] text-slate-500 flex items-center gap-1">
-                            <Calendar size={12} />
-                            <span>{new Date(row.original.interview_date).toLocaleString()}</span>
+                        <div className="text-[10px] text-slate-500 flex items-center gap-1 px-0.5">
+                            <Calendar size={12} className="text-slate-400" />
+                            <span className="font-medium">{new Date(row.original.interview_date).toLocaleString([], { dateStyle: 'medium', timeStyle: 'short' })}</span>
                         </div>
                     )}
                 </div>

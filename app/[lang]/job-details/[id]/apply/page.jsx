@@ -13,6 +13,7 @@ import {
     X,
     CheckCircle2,
     Loader2,
+    Info,
 } from "lucide-react";
 import { cn } from "@/lib/utils";
 import { toast } from "react-hot-toast";
@@ -108,7 +109,10 @@ const JobApplyPage = () => {
             setIsSuccess(true);
         } catch (error) {
             console.error("Submission error:", error);
-            toast.error(error.message || "Failed to submit application. Please try again.");
+            toast.error(
+                error.message ||
+                    "Failed to submit application. Please try again.",
+            );
         } finally {
             setIsSubmitting(false);
         }
@@ -198,7 +202,10 @@ const JobApplyPage = () => {
                         className="form-inner"
                     >
                         <div className="field-group">
-                            <label>Full Name</label>
+                            <label>
+                                Full Name{" "}
+                                <span className="text-rose-500 ml-0.5">*</span>
+                            </label>
                             <input
                                 {...register("full_name", {
                                     required: "Required",
@@ -217,7 +224,12 @@ const JobApplyPage = () => {
 
                         <div className="field-row">
                             <div className="field-group">
-                                <label>Email Address</label>
+                                <label>
+                                    Email Address{" "}
+                                    <span className="text-rose-500 ml-0.5">
+                                        *
+                                    </span>
+                                </label>
                                 <input
                                     {...register("email", {
                                         required: "Required",
@@ -239,7 +251,12 @@ const JobApplyPage = () => {
                                 )}
                             </div>
                             <div className="field-group">
-                                <label>Phone</label>
+                                <label>
+                                    Phone{" "}
+                                    <span className="text-rose-500 ml-0.5">
+                                        *
+                                    </span>
+                                </label>
                                 <input
                                     {...register("phone", {
                                         required: "Required",
@@ -259,25 +276,29 @@ const JobApplyPage = () => {
 
                         <div className="field-group">
                             <label>Address</label>
-                            <input
+                            <textarea
                                 {...register("address")}
                                 className="input"
                                 placeholder="Your current location"
                             />
                         </div>
 
-                        <div className="field-group">
-                            <label>Message / Cover Letter</label>
+                        {/* <div className="field-group">
+                            <label>Cover Letter</label>
                             <textarea
                                 {...register("message")}
                                 className="input textarea"
                                 rows="4"
+                                minLength={1000}
                                 placeholder="Brief summary of why you're applying..."
                             />
-                        </div>
+                        </div> */}
 
                         <div className="field-group">
-                            <label>CV / Resume</label>
+                            <label>
+                                CV / Resume{" "}
+                                <span className="text-rose-500 ml-0.5">*</span>
+                            </label>
                             <div
                                 {...getRootProps()}
                                 className={cn("dropzone", {
@@ -338,6 +359,13 @@ const JobApplyPage = () => {
                                     )}
                                 </AnimatePresence>
                             </div>
+                            <div className="cv-helper-text flex items-center gap-1.5 mt-2 text-[11px] text-slate-500 font-medium">
+                                <Info size={14} className="text-slate-400" />
+                                <span>
+                                    Max size 10MB. Accepted formats: PDF, DOC,
+                                    DOCX.
+                                </span>
+                            </div>
                             <Controller
                                 name="cv_file"
                                 control={control}
@@ -360,7 +388,10 @@ const JobApplyPage = () => {
                             >
                                 {isSubmitting ? (
                                     <>
-                                        <Loader2 size={18} className="spin" />{" "}
+                                        <Loader2
+                                            size={18}
+                                            className="animate-spin"
+                                        />{" "}
                                         Sending...
                                     </>
                                 ) : (
@@ -577,18 +608,6 @@ const JobApplyPage = () => {
                 .submit-button:disabled {
                     opacity: 0.6;
                     cursor: not-allowed;
-                }
-
-                .spin {
-                    animation: rotate 1s linear infinite;
-                }
-                @keyframes rotate {
-                    from {
-                        transform: rotate(0deg);
-                    }
-                    to {
-                        transform: rotate(360deg);
-                    }
                 }
 
                 @media (max-width: 600px) {
