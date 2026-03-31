@@ -136,7 +136,6 @@ export default function FaceAttendance() {
       // keep camera gated behind location
       disabled: isRequesting || !locationGranted,
     },
-    
     camera: {
       label: "📸 Take Photo",
       action: takePhoto,
