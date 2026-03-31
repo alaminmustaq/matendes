@@ -1,7 +1,6 @@
 import { createApi } from "@reduxjs/toolkit/query/react";
 import { baseQuery } from "@/utility/baseQuery";
 import { getFilterParams } from "@/utility/helpers";
-console.log(getFilterParams);
 export const allNotificationApi = createApi({
   reducerPath: "AllNotification",
   baseQuery,
