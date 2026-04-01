@@ -8,9 +8,9 @@ export const jobListApi = createApi({
     tagTypes: ["job-list"],
     endpoints: (builder) => ({
         fetchJobList: builder.query({
-            query: ({ params } = {}) => ({
+            query: ({ params, useFilters = true } = {}) => ({
                 url: "recruitment/job_list",
-                params: { ...getFilterParams(), ...params },
+                params: { ...(useFilters ? getFilterParams() : {}), ...params },
             }),
             providesTags: ["job-list"],
         }),

@@ -1,16 +1,13 @@
-const filterFields = () => [
+const filterFields = (jobs = []) => [
     {
-        name: "job_title",
-        label: "Job Title",
-        type: "input",
-        placeholder: "Filter by job title",
-        colSpan: "col-span-12 md:col-span-4",
-    },
-    {
-        name: "address",
-        label: "Address",
-        type: "input",
-        placeholder: "Filter by address",
+        name: "job_id",
+        label: "Job Position",
+        type: "select",
+        placeholder: "Select Job",
+        options: jobs.map((job) => ({
+            value: job.id,
+            label: job.job_title,
+        })),
         colSpan: "col-span-12 md:col-span-4",
     },
     {

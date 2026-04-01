@@ -7,6 +7,7 @@ import {
     useFetchApplicantsQuery,
     useUpdateApplicantStatusMutation,
 } from "../services/applicantsApi";
+import { useFetchJobListQuery } from "../../job-list/services/jobListApi";
 import toast from "react-hot-toast";
 import { useForm } from "react-hook-form";
 import { useState } from "react";
@@ -30,6 +31,13 @@ export const useApplicants = () => {
         isFetching,
     } = useFetchApplicantsQuery({ params: queryParams });
 
+    // Fetch Job List
+    const { data: jobListData } = useFetchJobListQuery({ 
+        params: { per_page: 100, isActive: true }, 
+        useFilters: false 
+    });
+    const jobs = jobListData?.data?.job_lists || [];
+
     const form = useForm({
         mode: "onBlur",
         reValidateMode: "onSubmit",
@@ -38,6 +46,7 @@ export const useApplicants = () => {
 
     const applicantState = {
         data: applicantsData?.data?.applications || [],
+        jobs,
         form: {
             ...form,
         },

@@ -27,7 +27,7 @@ const ApplicantsPage = () => {
                 <div className="bg-white p-6 rounded-md shadow mb-6 transition-all duration-300">
                     <DynamicForm
                         form={applicantState.form}
-                        fields={filterFields()}
+                        fields={filterFields(applicantState.jobs)}
                         onSubmit={actions.onFilter}
                     />
                     <ReportActions

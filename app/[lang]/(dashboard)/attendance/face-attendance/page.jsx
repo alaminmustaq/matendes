@@ -148,7 +148,6 @@ export default function FaceAttendance() {
       disabled: false,
     },
   };
-  
 
   const { label, action, disabled, title } = buttonConfig[step];
 
